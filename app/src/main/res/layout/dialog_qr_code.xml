@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/qr_code_bg">
+
+    <com.lc.app.ui.SimpleImageView
+        android:id="@+id/qr_img"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        fresco:actualImageScaleType="fitCenter"
+        fresco:fadeDuration="100"
+        fresco:roundedCornerRadius="5dp"
+        fresco:roundingBorderWidth="1dp"
+        fresco:src="@drawable/ic_corn" />
+
+    <TextView
+        android:id="@+id/account_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/colorPrimaryDark" />
+
+</FrameLayout>

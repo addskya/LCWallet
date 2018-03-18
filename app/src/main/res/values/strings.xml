@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">"低碳钱包"</string>
+
+    <string name="text_scan_account">"账户扫描"</string>
+    <string name="text_account_details">"账户详情"</string>
+
+    <string name="menu_create_account">"新增账户"</string>
+    <string name="menu_import_account">"导入账户"</string>
+    <string name="menu_verify_account">"账户认证"</string>
+    <string name="menu_settings">"设置"</string>
+
+
+    <string name="text_remain">"余额"</string>
+    <string name="text_account">"账户"</string>
+    <string name="text_account_remain">"账户余额"</string>
+
+    <string name="text_create_account">"新建账户"</string>
+    <string name="hint_password">"请输入密码"</string>
+    <string name="hint_password_rep">"请再次输入密码"</string>
+    <string name="text_create_account_password_summury">"请设置一个不小于8为数的密码\n该密码用于账户的消费兑换,请务必妥善保存,丢失密码将没有任何方法找回."</string>
+    <string name="error_two_password_invalid">"两次输入的密码不一致"</string>
+    <string name="error_password_short">"密码长度不够"</string>
+
+</resources>

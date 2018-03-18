@@ -1,0 +1,21 @@
+<resources>
+
+
+    <!-- 普通输入框 -->
+    <style name="InputStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">40dp</item>
+    </style>
+
+    <!-- 登录界面输入框 -->
+    <style name="LoginInput" parent="InputStyle">
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:background">@drawable/input_bg</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColorHint">#CCCCCC</item>
+        <item name="android:textColor">#302B2A</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:gravity">center_vertical|start</item>
+    </style>
+
+</resources>

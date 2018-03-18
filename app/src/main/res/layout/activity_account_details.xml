@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <data>
+
+        <import type="com.lc.app.account.AccountDetailsContract.View" />
+
+        <import type="com.lc.app.model.Account" />
+
+        <variable
+            name="view"
+            type="View" />
+
+        <variable
+            name="account"
+            type="Account" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".account.AccountDetailsActivity">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:contentDescription="@null"
+                android:onClick="@{() -> view.back()}"
+                android:src="@drawable/ic_back" />
+
+            <TextView
+                android:id="@+id/account_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@{account.name}"
+                android:textColor="@color/gray"
+                android:textSize="20sp" />
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="10dp"
+                android:contentDescription="@null"
+                android:onClick="@{() -> view.showMoreOperate()}"
+                android:paddingEnd="5dp"
+                android:paddingStart="5dp"
+                android:src="@drawable/ic_more" />
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/dialog_bg">
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="10dp"
+                android:contentDescription="@null"
+                android:onClick="@{() -> view.showQrCode(account)}"
+                android:paddingBottom="5dp"
+                android:paddingEnd="5dp"
+                android:paddingStart="5dp"
+                android:paddingTop="5dp"
+                android:src="@drawable/code" />
+
+            <TextView
+                android:id="@+id/remain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/text_remain"
+                android:textColor="@color/gray"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/account_remain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/remain"
+                android:layout_below="@id/remain"
+                android:layout_marginTop="10dp"
+                android:text="@{String.valueOf(account.remain),default=555}"
+                android:textColor="@color/gray"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/account"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/account_remain"
+                android:layout_below="@id/account_remain"
+                android:layout_marginTop="10dp"
+                android:text="@string/text_account"
+                android:textColor="@color/gray"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/account_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/account"
+                android:layout_below="@id/account"
+                android:layout_marginTop="10dp"
+                android:text="@{String.valueOf(account.number),default=12345678931456}"
+                android:textColor="@color/gray"
+                android:textSize="20sp" />
+
+            <ImageView
+                android:id="@+id/backup"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="40dp"
+                android:layout_marginEnd="15dp"
+                android:contentDescription="@null"
+                android:onClick="@{() -> view.backup(account)}"
+                android:src="@drawable/ic_corn" />
+
+            <CheckBox
+                android:id="@+id/see"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="40dp"
+                android:layout_toStartOf="@+id/backup"
+                android:background="@drawable/checkable"
+                android:button="@null"
+                android:checked="false"
+                android:onCheckedChanged="@{(v,checked) -> view.onAccountVisibleChanged(checked)}"
+                android:padding="5dp" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</layout>
