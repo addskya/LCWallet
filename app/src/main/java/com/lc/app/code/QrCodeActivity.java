@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.google.zxing.integration.android.IntentIntegrator;
 import com.lc.app.BaseActivity;
 
 
@@ -27,8 +28,9 @@ public class QrCodeActivity extends BaseActivity {
     public static void intentTo(@NonNull Activity activity, int requestCode) {
         //Intent intent = new Intent(activity, QrCodeActivity.class);
         //activity.startActivityForResult(intent, requestCode);
-
-
+        new IntentIntegrator(activity)
+                .setOrientationLocked(false)
+                .initiateScan();
     }
 
     @Override

@@ -7,10 +7,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.PopupMenu;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.lc.app.BaseActivity;
 import com.lc.app.BaseAdapter;
 import com.lc.app.BaseDialog;
@@ -29,7 +32,7 @@ public class HomeActivity extends BaseActivity implements HomeContract.View {
 
     private static final String TAG = "HomeActivity";
     private static final int REQUEST_CODE_CREATE_ACCOUNT = 0x10;
-    private static final int REQUEST_CODE_SCAN_QR_CODE = 0x20;
+    private static final int REQUEST_CODE_SCAN_QR_CODE = IntentIntegrator.REQUEST_CODE;
     private HomeContract.Presenter mPresenter;
     private BaseAdapter<Account, HomeContract.View> mAdapter;
     private ActivityHomeBinding mBinding;
@@ -68,6 +71,13 @@ public class HomeActivity extends BaseActivity implements HomeContract.View {
         switch (requestCode) {
             case REQUEST_CODE_CREATE_ACCOUNT: {
                 mPresenter.loadAccounts(true);
+                break;
+            }
+            case REQUEST_CODE_SCAN_QR_CODE: {
+                IntentResult result = IntentIntegrator.parseActivityResult(
+                        requestCode, resultCode, data);
+                String content = result.getContents();
+                Log.i(TAG, "content:" + content);
                 break;
             }
         }
