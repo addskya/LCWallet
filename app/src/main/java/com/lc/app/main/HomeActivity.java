@@ -19,6 +19,7 @@ import com.lc.app.BaseAdapter;
 import com.lc.app.BaseDialog;
 import com.lc.app.R;
 import com.lc.app.account.AccountDetailsActivity;
+import com.lc.app.browser.BrowserActivity;
 import com.lc.app.code.QrCodeActivity;
 import com.lc.app.code.QrCodeDialog;
 import com.lc.app.create.CreateAccountActivity;
@@ -101,7 +102,7 @@ public class HomeActivity extends BaseActivity implements HomeContract.View {
                             break;
                         }
                         case R.id.menu_import_account: {
-
+                            BrowserActivity.intentTo(HomeActivity.this);
                             break;
                         }
                         case R.id.menu_verify_account: {
