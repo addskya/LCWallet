@@ -110,6 +110,7 @@ public class HomeActivity extends BaseActivity implements HomeContract.View {
                             };
                             String []permissions = {
                                     Manifest.permission.BLUETOOTH,
+                                    Manifest.permission.READ_PHONE_STATE
                             };
                             requestPermissions(permissions, runnable);
                             break;

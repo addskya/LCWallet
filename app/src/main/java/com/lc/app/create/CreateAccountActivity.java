@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.lc.app.BaseActivity;
 import com.lc.app.BaseDialog;
+import com.lc.app.JsBaseActivity;
 import com.lc.app.R;
 import com.lc.app.databinding.ActivityCreateAccountBinding;
 import com.lc.app.model.Account;
@@ -21,7 +22,7 @@ import com.lc.app.ui.LoadingDialog;
  * Created by Orange on 18-3-18.
  * Email:addskya@163.com
  */
-public class CreateAccountActivity extends BaseActivity implements CreateContract.View {
+public class CreateAccountActivity extends JsBaseActivity implements CreateContract.View {
 
     private static final String TAG = "CreateAccountActivity";
 
@@ -121,7 +122,12 @@ public class CreateAccountActivity extends BaseActivity implements CreateContrac
             return;
         }
 
+        String walletName = "Android20180324";
+
+        initWallet();
+        createWallet(walletName, password1);
+
         // Create Wallet
-        mPresenter.createWallet(password1);
+        // mPresenter.createWallet(password1);
     }
 }

@@ -20,6 +20,8 @@ public abstract class BaseActivity extends PermissionsActivity {
         Log.i(TAG, "onCreate");
     }
 
+
+
     /**
      * Whether or NOT the Activity has finished.
      *

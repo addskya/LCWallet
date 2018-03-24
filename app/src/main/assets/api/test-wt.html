@@ -5,17 +5,27 @@
 <script type="text/javascript" src="./web3.min.js"></script>
 <script type="text/javascript" src="./ctoken.min.js"></script>
 <script type="text/javascript">
-//var URL = "http://192.168.85.128:8545/";
 var URL = "http://47.100.55.67:8545/";
+//var URL = "ws://47.100.55.67:8545/";
+//var URL = "http://192.168.85.128:8545/";
 //var URL = "ws://192.168.85.128:8546";
 var contract = "0x4230deEe19c832D6e7F2AaC175427c7eEB5E04eC";
+var object = new Web3(new Web3.providers.HttpProvider(URL ));
 
+console.log("object:" + object.version);
 var mycoin = new CToken(URL, contract);
-mycoin.initCToken();
 
-var address1 = "0xecdc6df288ac3a3a282d63286649ce1599f6eebc"; //ÐèÒª¸ù¾ÝÉú³ÉµÄwallet1µØÖ·½øÐÐÌæ»»
-var address2 = "0xb2effe53c773aa5cfc1d98b4e56ca3b5d77b7992"; //ÐèÒª¸ù¾ÝÉú³ÉµÄwallet2µØÖ·½øÐÐÌæ»»
+
+
+
+var address1 = "0xecdc6df288ac3a3a282d63286649ce1599f6eebc"; //ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Éµï¿½wallet1ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½æ»»
+var address2 = "0xb2effe53c773aa5cfc1d98b4e56ca3b5d77b7992"; //ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Éµï¿½wallet2ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½æ»»
 var owner_addr = "0xf606a91f7e929bc14794c26a9c6da9dba1b503cf";
+
+function init() {
+    mycoin.initCToken();
+}
+
 
 function testWallet(password){
     address1 = mycoin.createWallet("wallet1",password);
@@ -24,10 +34,10 @@ function testWallet(password){
     console.log(address2);
 	
 	var private_address1 = mycoin.loadWallet("wallet1", password, address1);	
-	console.log(address1 , " private key:", private_address1);
+	console.log(address1 + " private key:"+ private_address1);
 
 	var private_address2 = mycoin.loadWallet("wallet2", "1q2w3e4r5t6y", address2);	
-	console.log(address2, " private key:", private_address2);
+	console.log(address2+ " private key:"+ private_address2);
 
 
 	var json = '[{"address":"f606a91f7e929bc14794c26a9c6da9dba1b503cf","crypto":{"cipher":"aes-128-ctr","ciphertext":"3544ea7416b7991bca0ce83ac4980e9c1315ded8e27a4b4e8346376f2fd28377","cipherparams":{"iv":"e07352052588595581ebc6bfab797db0"},"kdf":"scrypt","kdfparams":{"dklen":32,"n":262144,"p":1,"r":8,"salt":"447aaeb6e8aec6cb2a07914bf1680a34f3cc56124ea29586f05dea9c0510b2f3"},"mac":"7f74dfb487abe154ccd777daee64ad7b71592a6300a86dbf4c481a53ad307b6a"},"id":"28ab5388-d6ba-4593-8146-327b106afa33","version":3}]';
@@ -35,7 +45,7 @@ function testWallet(password){
 	owner_addr = mycoin.importWallet("wallet_owner", json, '111');
 }
 
-//´ÓÖ÷ÕË»§ÖÐ×ª3¸ö±Ò¸øaddress2ÕË»§
+//ï¿½ï¿½ï¿½ï¿½ï¿½Ë»ï¿½ï¿½ï¿½×ª3ï¿½ï¿½ï¿½Ò¸ï¿½address2ï¿½Ë»ï¿½
 function testTransfer(){
 	var from = owner_addr; 
 	var to= address1; 
@@ -45,34 +55,34 @@ function testTransfer(){
 
 	function callback_balanceOfToNow(error, result){
 		toBalance = result;
-		console.log("toBalance: ", toBalance);
-		console.log("success", prevBalanceFrom, " ", prevBalanceTo, " ", fromBalance, " ", toBalance);
+		console.log("toBalance: "+ toBalance);
+		console.log("success"+ prevBalanceFrom+ " "+ prevBalanceTo+ " "+ fromBalance+ " "+ toBalance);
 	}
 
 	function callback_balanceOfFromNow(error, result){
 		fromBalance = result;
-		console.log("fromBalance: ", fromBalance);
+		console.log("fromBalance: "+ fromBalance);
 		mycoin.balanceOf(to, callback_balanceOfToNow);
 	}
 
 	function callback_transfer(error, result){
-		console.log("transfer TXID: ", result);	
+		console.log("transfer TXID: "+ result);
 		mycoin.balanceOf(from, callback_balanceOfFromNow);
 	}
 
 	function callback_balanceOfTo(error, result){
 		prevBalanceTo = result;
 		if(prevBalanceFrom < value){
-			console.log(from, " balance: ", prevBalanceFrom, "less than ", value);
+			console.log(from+ " balance: "+ prevBalanceFrom+ "less than "+ value);
 			return;
 		}
-		console.log("prevBalanceTo: ", prevBalanceTo);
+		console.log("prevBalanceTo: "+ prevBalanceTo);
 		mycoin.transfer("wallet_owner", "111", from, to, value, callback_transfer);
 	}
 
 	function callback_balanceOfFrom(error, result){
 		prevBalanceFrom = result;
-		console.log("prevBalanceFrom: ", prevBalanceFrom);
+		console.log("prevBalanceFrom: "+ prevBalanceFrom);
 		mycoin.balanceOf(to, callback_balanceOfTo);
 	}
 	
@@ -89,34 +99,37 @@ function testTransferByFee(){
 
 	function callback_balanceOfToNow(error, result){
 		toBalance = result;
-		console.log("toBalance: ", toBalance);
-		console.log("success", prevBalanceFrom, " ", prevBalanceTo, " ", fromBalance, " ", toBalance);
+		console.log("toBalance: "+ toBalance);
+		console.log("success"+ prevBalanceFrom+ " "+ prevBalanceTo+ " "+ fromBalance+" "+ toBalance);
 	}
 
 	function callback_balanceOfFromNow(error, result){
 		fromBalance = result;
-		console.log("fromBalance: ", fromBalance);
+		console.log("fromBalance: "+ fromBalance);
 		mycoin.balanceOf(to, callback_balanceOfToNow);
 	}
 
 	function callback_transferByFee(error, result){
-		console.log("transfer TXID: ", result);	
+		console.log("transfer TXID: "+ result);
 		mycoin.balanceOf(from, callback_balanceOfFromNow);
 	}
 
 	function callback_balanceOfTo(error, result){
 		prevBalanceTo = result;
 		if(prevBalanceFrom < value){
-			console.log(from, " balance: ", prevBalanceFrom, "less than ", value);
+			console.log(from+ " balance: "+ prevBalanceFrom+ "less than "+ value);
 			return;
 		}
-		console.log("prevBalanceTo: ", prevBalanceTo);
+		console.log("prevBalanceTo: "+ prevBalanceTo);
+		console.log("prevBalanceTo: " +  prevBalanceTo);
+		console.log("prevBalanceTo: " +  prevBalanceTo);
+		console.log("********** ");
 		mycoin.transferByFee("wallet_owner", "111", from, to, value, callback_transferByFee);
 	}
 
 	function callback_balanceOfFrom(error, result){
 		prevBalanceFrom = result;
-		console.log("prevBalanceFrom: ", prevBalanceFrom);
+		console.log("prevBalanceFrom: "+ prevBalanceFrom);
 		mycoin.balanceOf(to, callback_balanceOfTo);
 	}
 	
@@ -127,7 +140,7 @@ function testBalanceOwner() {
 	var owner = mycoin.contractOwner;
 	
 	function callback_owner(error, result){
-		console.log("remainder fund: ", result);
+		console.log("remainder fund: "+ result);
 	}
 	mycoin.balanceOf(owner, callback_owner);
 	
@@ -138,16 +151,27 @@ function testHistory(){
 
 	function callback_showHistoryTransaction(error, result){
 		for(var i = 0; i < result.length; i++){
-			console.log("from: ", result[i].from, " to: ", result[i].to, " value: ", result[i].value, " time: ", result[i].time);
+			console.log("from: "+ result[i].from+ " to: "+ result[i].to+ " value: "+ result[i].value+" time: "+ result[i].time);
 		}	
 	}
     mycoin.showHistoryTransactions(addr, callback_showHistoryTransaction);
 
 }
 
+function testSayHello() {
+    console.log("Hello from JS.");
+    handler.toastMessage("Hello from JavaScript");
+}
+
 </script>
 </head>
 <body>
+
+<h5>test init</h5>
+<button type="test init" onClick="init();">test init</button>
+<div></div>
+
+
 	<h5>test wallet</h5>
 	<button type="test wallet" onClick="testWallet('Abcd123456');">test Wallet</button>
     <div></div>
@@ -168,6 +192,9 @@ function testHistory(){
 	<h5>test showHistory</h5>
     <button type="test showHistory" onClick="testHistory();">test showHistory</button>
     <div></div>
+
+
+
 
 </body>
 </html>

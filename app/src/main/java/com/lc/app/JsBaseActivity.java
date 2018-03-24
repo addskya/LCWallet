@@ -1,10 +1,8 @@
-package com.lc.app.browser;
+package com.lc.app;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
@@ -16,6 +14,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.ClientCertRequest;
 import android.webkit.ConsoleMessage;
 import android.webkit.CookieManager;
@@ -32,49 +31,41 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.lc.app.BaseActivity;
-import com.lc.app.R;
-import com.lc.app.databinding.ActivityBrowserBinding;
 import com.lc.app.javascript.JavaScriptApi;
 
-
-
 /**
- * Created by Orange on 18-3-13.
+ * Created by Orange on 18-3-24.
  * Email:addskya@163.com
  */
-
-public class BrowserActivity extends BaseActivity {
-
-    private static final String TAG = "BrowserActivity";
+public abstract class JsBaseActivity extends BaseActivity {
+    private static final String TAG = "JsBaseActivity";
     private WebView mWebView;
-    private ActivityBrowserBinding mBinding;
-
-    public static void intentTo(@NonNull Activity activity) {
-        Intent intent = new Intent(activity, BrowserActivity.class);
-        activity.startActivity(intent);
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_browser);
-        mWebView = mBinding.webView;
-        initWebView();
+
+        buildWebView();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        String url = "file:///android_asset/api/test-wt.html";
+    private void buildWebView() {
+        Log.d(TAG, "buildWebView");
+        mWebView = new WebView(this);
+        initWebView(mWebView);
+        mWebView.setVisibility(View.VISIBLE);
+        String url = "file:///android_asset/api/api.html";
         mWebView.loadUrl(url);
+        int width = 100;
+        int height = 100;
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(width, height);
+        getWindow().addContentView(mWebView, params);
+        Log.e(TAG, "addWebView");
     }
-
 
 
     @SuppressLint("JavascriptInterface")
-    private void initWebView() {
-        WebSettings webSettings = mWebView.getSettings();
+    private void initWebView(@NonNull WebView webView) {
+        final WebSettings webSettings = webView.getSettings();
 
         webSettings.setAllowUniversalAccessFromFileURLs(true);
         webSettings.setAllowContentAccess(true);
@@ -99,8 +90,7 @@ public class BrowserActivity extends BaseActivity {
 
         CookieManager.setAcceptFileSchemeCookies(true);
         CookieManager.getInstance().setAcceptCookie(true);
-        CookieManager.getInstance().setAcceptThirdPartyCookies(mWebView,true);
-
+        CookieManager.getInstance().setAcceptThirdPartyCookies(mWebView, true);
 
         // Debug Code
         mWebView.addJavascriptInterface(new JavaScriptApi(), "handler");
@@ -116,7 +106,7 @@ public class BrowserActivity extends BaseActivity {
 
             @Override
             public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
-                Log.i(TAG,"onConsoleMessage:" + consoleMessage.message());
+                Log.i(TAG, "onConsoleMessage:" + consoleMessage.message());
                 return super.onConsoleMessage(consoleMessage);
             }
 
@@ -128,89 +118,89 @@ public class BrowserActivity extends BaseActivity {
 
             @Override
             public boolean onJsConfirm(WebView view, String url, String message, JsResult result) {
-                Log.i(TAG,"onJsConfirm");
+                Log.i(TAG, "onJsConfirm");
                 return super.onJsConfirm(view, url, message, result);
             }
 
             @Override
             public boolean onJsPrompt(WebView view, String url, String message,
                                       String defaultValue, JsPromptResult result) {
-                Log.i(TAG,"onJsPrompt");
+                Log.i(TAG, "onJsPrompt");
                 return super.onJsPrompt(view, url, message, defaultValue, result);
             }
 
             @Override
             public boolean onJsBeforeUnload(WebView view, String url,
                                             String message, JsResult result) {
-                Log.i(TAG,"onJsBeforeUnload");
+                Log.i(TAG, "onJsBeforeUnload");
                 return super.onJsBeforeUnload(view, url, message, result);
             }
 
 
             @Override
             public void onReceivedTitle(WebView view, String title) {
-                Log.i(TAG,"onReceivedTitle");
+                Log.i(TAG, "onReceivedTitle");
                 super.onReceivedTitle(view, title);
             }
 
             @Override
             public void onReceivedTouchIconUrl(WebView view, String url, boolean precomposed) {
-                Log.i(TAG,"onReceivedTouchIconUrl");
+                Log.i(TAG, "onReceivedTouchIconUrl");
                 super.onReceivedTouchIconUrl(view, url, precomposed);
             }
 
             @Override
             public boolean onCreateWindow(WebView view, boolean isDialog, boolean isUserGesture, Message resultMsg) {
-                Log.i(TAG,"onCreateWindow");
+                Log.i(TAG, "onCreateWindow");
                 return super.onCreateWindow(view, isDialog, isUserGesture, resultMsg);
             }
 
             @Override
             public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
-                Log.i(TAG,"onShowFileChooser");
+                Log.i(TAG, "onShowFileChooser");
                 return super.onShowFileChooser(webView, filePathCallback, fileChooserParams);
             }
 
             @Override
             public void onCloseWindow(WebView window) {
                 super.onCloseWindow(window);
-                Log.i(TAG,"onCloseWindow");
+                Log.i(TAG, "onCloseWindow");
             }
 
             @Override
             public void onGeolocationPermissionsHidePrompt() {
                 super.onGeolocationPermissionsHidePrompt();
-                Log.i(TAG,"onGeolocationPermissionsHidePrompt");
+                Log.i(TAG, "onGeolocationPermissionsHidePrompt");
             }
 
 
             @Override
             public void onHideCustomView() {
                 super.onHideCustomView();
-                Log.i(TAG,"onHideCustomView");
+                Log.i(TAG, "onHideCustomView");
             }
 
             @Override
             public void onReceivedIcon(WebView view, Bitmap icon) {
-                Log.i(TAG,"onReceivedIcon");
+                Log.i(TAG, "onReceivedIcon");
                 super.onReceivedIcon(view, icon);
             }
 
             @Override
             public void onRequestFocus(WebView view) {
-                Log.i(TAG,"onRequestFocus");
+                Log.i(TAG, "onRequestFocus");
                 super.onRequestFocus(view);
             }
 
             @Override
             public void onShowCustomView(View view, CustomViewCallback callback) {
-                Log.i(TAG,"onShowCustomView");
+                Log.i(TAG, "onShowCustomView");
                 super.onShowCustomView(view, callback);
             }
 
             @Override
             public boolean onJsTimeout() {
-                Log.i(TAG,"onJsTimeout");
+                Log.i(TAG, "onJsTimeout");
                 return super.onJsTimeout();
             }
         });
@@ -219,11 +209,10 @@ public class BrowserActivity extends BaseActivity {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 Log.e(TAG, "url:" + url);
-                /*if (!handleUrl(url)) {
+                if (!handleUrl(url)) {
                     view.loadUrl(url);
                 }
-                return true;*/
-                return false;
+                return true;
             }
 
             @Override
@@ -269,7 +258,6 @@ public class BrowserActivity extends BaseActivity {
             }
 
 
-
             @Override
             public void onPageFinished(WebView view, String url) {
 
@@ -301,7 +289,8 @@ public class BrowserActivity extends BaseActivity {
             @Override
             public void onScaleChanged(WebView view, float oldScale, float newScale) {
 
-                Log.i(TAG, "onScaleChanged");super.onScaleChanged(view, oldScale, newScale);
+                Log.i(TAG, "onScaleChanged");
+                super.onScaleChanged(view, oldScale, newScale);
             }
 
             @Override
@@ -311,18 +300,7 @@ public class BrowserActivity extends BaseActivity {
             }
         });
     }
-/**
- * String call = "javascript:testRate()";
- *        mWebView.loadUrl(call);
- *
- * */
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        //String call = "javascript:testSayHello()";
-        //mWebView.loadUrl(call);
-    }
 
     /**
      * 实现对特殊协议的处理:
@@ -372,5 +350,22 @@ public class BrowserActivity extends BaseActivity {
             return false;
         }
         return true;
+    }
+
+    protected void initWallet() {
+        String call = "javascript:initWallet()";
+        mWebView.evaluateJavascript(call, null);
+    }
+
+    protected void createWallet(@NonNull CharSequence walletName,
+                                @NonNull CharSequence password) {
+        String call = "javascript:createWallet(\"" + walletName + "\",\"" + password + "\")";
+        Log.d(TAG, "execute:" + call);
+        mWebView.evaluateJavascript(call, new ValueCallback<String>() {
+            @Override
+            public void onReceiveValue(String value) {
+                Log.e(TAG, "value:" + value);
+            }
+        });
     }
 }
