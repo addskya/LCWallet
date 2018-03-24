@@ -102,7 +102,16 @@ public class HomeActivity extends BaseActivity implements HomeContract.View {
                             break;
                         }
                         case R.id.menu_import_account: {
-                            BrowserActivity.intentTo(HomeActivity.this);
+                            Runnable runnable = new Runnable() {
+                                @Override
+                                public void run() {
+                                    BrowserActivity.intentTo(HomeActivity.this);
+                                }
+                            };
+                            String []permissions = {
+                                    Manifest.permission.BLUETOOTH,
+                            };
+                            requestPermissions(permissions, runnable);
                             break;
                         }
                         case R.id.menu_verify_account: {

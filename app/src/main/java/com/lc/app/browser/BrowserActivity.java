@@ -8,13 +8,19 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
+import android.net.http.SslError;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.DownloadListener;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -23,6 +29,9 @@ import com.lc.app.BaseActivity;
 import com.lc.app.R;
 import com.lc.app.databinding.ActivityBrowserBinding;
 import com.lc.app.javascript.JavaScriptApi;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 
 /**
@@ -46,10 +55,30 @@ public class BrowserActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_browser);
         mWebView = mBinding.webView;
+        disableSecrut();
         initWebView();
 
-        String url = "file:///android_asset/api/test.html";
+        String url = "file:///android_asset/api/test-wt.html";
         mWebView.loadUrl(url);
+    }
+
+    private void disableSecrut() {
+        try {
+            Class<?> clazz = mWebView.getSettings().getClass();
+            Method method = clazz.getMethod(
+                    "setAllowUniversalAccessFromFileURLs", boolean.class);
+            if (method != null) {
+                method.invoke(mWebView.getSettings(), true);
+            }
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
     }
 
     @SuppressLint("JavascriptInterface")
@@ -71,7 +100,7 @@ public class BrowserActivity extends BaseActivity {
         webSettings.setLoadsImagesAutomatically(true);
 
         // Debug Code
-        mWebView.addJavascriptInterface(new JavaScriptApi(),"handler");
+        mWebView.addJavascriptInterface(new JavaScriptApi(), "handler");
 
         webSettings.setUserAgentString(webSettings.getUserAgentString());
 
@@ -104,16 +133,37 @@ public class BrowserActivity extends BaseActivity {
                 }
                 return true;
             }
+
+            @Override
+            public void onReceivedSslError(WebView view,
+                                           SslErrorHandler handler,
+                                           SslError error) {
+                Log.e(TAG, "onReceivedSslError:" + error);
+                super.onReceivedSslError(view, handler, error);
+            }
+
+            @Override
+            public void onReceivedError(WebView view,
+                                        WebResourceRequest request,
+                                        WebResourceError error) {
+                Log.e(TAG, "onReceivedError error:" + error);
+                super.onReceivedError(view, request, error);
+            }
+
+            @Override
+            public void onReceivedHttpError(WebView view,
+                                            WebResourceRequest request,
+                                            WebResourceResponse errorResponse) {
+                Log.e(TAG, "onReceivedHttpError request:" + request);
+                super.onReceivedHttpError(view, request, errorResponse);
+            }
         });
     }
-
-    @Override
-    public void onBackPressed() {
-        //String call = "javascript:alertMessage(\"Hello Orange\")";
-        //String call = "javascript:toastMessage(\"Hello Orange\")";
-        String call = "javascript:testRate()";
-        mWebView.loadUrl(call);
-    }
+/**
+ * String call = "javascript:testRate()";
+ *        mWebView.loadUrl(call);
+ *
+ * */
 
     /**
      * 实现对特殊协议的处理:
