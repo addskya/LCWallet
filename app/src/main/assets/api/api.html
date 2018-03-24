@@ -14,13 +14,41 @@ var walletApi;
 // Call only one time
 function initWallet() {
     walletApi = new CToken(URL, contract);
-    walletApi.initCToken();
+    return walletApi.initCToken();
 }
 
-
+// 创建钱包,一个钱包仅允许一个账户,并使用口令进行加密保护
+// @param {walletName} 钱包名称 {password} 钱包加密保护口令
+// @return 成功返回钱包内部账户地址信息,失败返回 null
 function createWallet(walletName, password) {
     account = walletApi.createWallet("wallet1",password);
     return account;
+}
+
+// 使用口令打开钱包
+// @param {walletName} 钱包名称,使用钱包名称区分不同钱包
+// {password} 钱包访问口令
+// {accountAddress optional} 账户地址信息
+// @return 成功则返回账户私钥,失败则返回 null
+function loadWallet(walletName,password,accountAddress) {
+    return walletApi.loadWallet(walletName, password, accountAddress);
+}
+
+// 导出 wallet keystore 信息,导出前需要进行口令认证
+// @param {walletName} 钱包名称,使用钱包名称区分不同钱包
+// {password} 钱包访问口令
+// @return 成功则导出钱包 keystore 信息,失败则返回 null
+function exportWallet(walletName, password) {
+    return walletApi.exportWallet(walletName, password);
+}
+
+// 导入 wallet keystore 信息
+// @param {walletName} 导入钱包名称
+// {keystore} 钱包 keystore 信息
+// {password} keystore 保护口令
+// @return 成功则导出 keystore 对应的账户地址信息,失败则返回 null
+function importWallet(walletName, keystore, password) {
+    return walletApi.importWallet(walletName, keystore, password);
 }
 
 </script>
