@@ -30,8 +30,11 @@ public interface HomeContract {
 
 
         void onLoadAccountStart();
+
         void onLoadAccounts(List<Account> accounts, boolean refresh);
+
         void onLoadAccountError(Throwable error);
+
         void onLoadAccountCompleted();
 
         float getAccountRemain();
@@ -39,12 +42,13 @@ public interface HomeContract {
 
     interface Presenter extends BasePresenter {
 
-        void loadAccounts(boolean refresh);
+        void loadAccounts(@NonNull String walletFolderPath,
+                          boolean refresh);
 
     }
 
     interface Model {
 
-        Observable<List<Account>> queryAccount();
+        Observable<List<Account>> queryAccount(@NonNull String walletFolderPath);
     }
 }

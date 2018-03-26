@@ -16,30 +16,30 @@ public interface CreateContract {
 
     interface View extends BaseView<Presenter> {
 
-        void onCreateWalletStart();
+        void onSaveWalletStart();
 
-        void onCreateWalletSuccess(@NonNull Account account);
+        void onSaveWalletSuccess(@NonNull Boolean success,
+                                 @NonNull Account account);
 
-        void onCreateWalletFailure();
+        void onSaveWalletError(Throwable error);
 
-        void onCreateWalletError(Throwable error);
-
-        void onCreateWalletCompleted();
+        void onSaveWalletCompleted();
 
 
         void back();
 
         void createWallet();
-
     }
 
     interface Presenter extends BasePresenter  {
 
-        void createWallet (@NonNull CharSequence password);
+        void saveWallet (@NonNull String accountFilePath,
+                         @NonNull Account account);
     }
 
     interface Model {
 
-        Observable<Account> createWallet(@NonNull CharSequence password);
+        Observable<Boolean> saveWallet(@NonNull String accountFilePath,
+                                       @NonNull Account account);
     }
 }

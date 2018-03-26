@@ -14,7 +14,7 @@ import rx.schedulers.Schedulers;
  * Created by Orange on 18-3-17.
  * Email:addskya@163.com
  */
-public class HomePresenter implements HomeContract.Presenter {
+class HomePresenter implements HomeContract.Presenter {
 
     private static final String TAG = "HomePresenter";
 
@@ -24,12 +24,13 @@ public class HomePresenter implements HomeContract.Presenter {
     HomePresenter(@NonNull HomeContract.View view) {
         view.setPresenter(this);
         mView = view;
-        mData = new MockModel();
+        mData = new HomeModel();
     }
 
     @Override
-    public void loadAccounts(final boolean refresh) {
-        mData.queryAccount()
+    public void loadAccounts(@NonNull String walletFolderPath,
+                             final boolean refresh) {
+        mData.queryAccount(walletFolderPath)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

@@ -42,12 +42,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
+            android:layout_marginEnd="50dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
             android:layout_toEndOf="@id/account_logo"
-            android:text="@{account.name,default=NameOfAccount}"
+            android:text="@{account.walletName,default=NameOfAccount}"
             android:textColor="@color/white"
-            android:textSize="25sp" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/remain"
@@ -55,7 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/account_name"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:layout_toEndOf="@+id/account_logo"
             android:text="@string/text_remain"
             android:textColor="@color/green"
@@ -67,11 +68,11 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/remain"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="5dp"
             android:layout_toEndOf="@+id/account_logo"
             android:text="@{String.valueOf(account.remain),default=5555}"
             android:textColor="@color/white"
-            android:textSize="25sp" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/account"
@@ -79,7 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/account_remain"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:layout_toEndOf="@+id/account_logo"
             android:text="@string/text_account"
             android:textColor="@color/green" />
@@ -88,12 +89,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/account"
+            android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_toEndOf="@+id/account_logo"
-            android:text="@{account.number,default=ABCDEFGHIJKL}"
+            android:text="@{account.address,default=ABCDEFGHIJKL}"
             android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <ImageView
             android:layout_width="35dp"

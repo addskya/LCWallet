@@ -1,6 +1,7 @@
 package com.lc.app.account;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.lc.app.BasePresenter;
 import com.lc.app.BaseView;
@@ -23,6 +24,8 @@ public interface AccountDetailsContract {
         void onAccountVisibleChanged(boolean isChecked);
 
         void backup(@NonNull Account account);
+
+        void export(@Nullable Account account);
     }
 
     interface Presenter extends BasePresenter {

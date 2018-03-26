@@ -12,7 +12,7 @@ import rx.schedulers.Schedulers;
  * Created by Orange on 18-3-18.
  * Email:addskya@163.com
  */
-public class CreatePresenter implements CreateContract.Presenter {
+class CreatePresenter implements CreateContract.Presenter {
     private static final String TAG = "";
 
     private CreateContract.View mView;
@@ -21,7 +21,7 @@ public class CreatePresenter implements CreateContract.Presenter {
     CreatePresenter(@NonNull CreateContract.View view) {
         view.setPresenter(this);
         mView = view;
-        mData = new MockModel();
+        mData = new CreateModel();
     }
 
 
@@ -32,38 +32,39 @@ public class CreatePresenter implements CreateContract.Presenter {
     }
 
     @Override
-    public void createWallet(@NonNull CharSequence password) {
-        mData.createWallet(password)
+    public void saveWallet(@NonNull String accountFilePath,
+                           @NonNull final Account account) {
+        mData.saveWallet(accountFilePath, account)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DefaultObserver<Account>(){
+                .subscribe(new DefaultObserver<Boolean>(){
 
                     @Override
                     public void onStart() {
                         if (mView.isAdded()) {
-                            mView.onCreateWalletStart();
+                            mView.onSaveWalletStart();
                         }
                     }
 
                     @Override
-                    public void onNext(Account account) {
+                    public void onNext(Boolean success) {
                         if (mView.isAdded()) {
-                            mView.onCreateWalletSuccess(account);
+                            mView.onSaveWalletSuccess(success, account);
                         }
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         if (mView.isAdded()) {
-                            mView.onCreateWalletError(e);
+                            mView.onSaveWalletError(e);
                         }
                     }
 
                     @Override
                     public void onCompleted() {
                         if (mView.isAdded()) {
-                            mView.onCreateWalletCompleted();
+                            mView.onSaveWalletCompleted();
                         }
                     }
                 });

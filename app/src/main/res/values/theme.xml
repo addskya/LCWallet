@@ -30,9 +30,7 @@
 
     <!-- Base application theme. -->
     <style name="AccountDetailsTheme" parent="AppThemeNoActionBar">
-        <item name="colorPrimary">@color/gray</item>
-        <item name="colorPrimaryDark">@color/gray</item>
-        <item name="colorAccent">@color/gray</item>
+
     </style>
 
 </resources>

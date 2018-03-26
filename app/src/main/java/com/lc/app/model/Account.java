@@ -7,29 +7,90 @@ import android.os.Parcelable;
 
 import com.lc.app.BR;
 
+import java.io.Serializable;
+
 /**
  * Created by Orange on 18-3-17.
  * Email:addskya@163.com
  */
-public class Account extends BaseObservable implements Parcelable {
+public class Account extends BaseObservable
+        implements Serializable, Parcelable {
 
-    private String name;
+    public static final int serialVersionUID = 0x00000001;
 
+    // 钱包名称
+    private String walletName;
+
+    // 钱包密码
+    private String password;
+
+    // 钱包地址
+    private String address;
+
+    // 钱包密钥
+    private String keystore;
+
+    // 钱包余额
     private float remain;
 
-    private String number;
+    private transient boolean secret = true;
 
     public Account() {
     }
 
     @Bindable
-    public String getName() {
-        return name;
+    public String getWalletName() {
+        return walletName;
     }
 
-    public void setName(String name) {
-        this.name = name;
-        notifyPropertyChanged(BR.name);
+
+    public void setWalletName(String walletName) {
+        this.walletName = walletName;
+        notifyPropertyChanged(BR.walletName);
+    }
+
+    @Bindable
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+        notifyPropertyChanged(BR.password);
+    }
+
+    @Bindable
+    public String getAddress() {
+        if (!secret) {
+            return address;
+        } else {
+            StringBuilder sb = new StringBuilder(address);
+            sb.replace(sb.length() - 10, sb.length(), "**********");
+            return sb.toString();
+        }
+    }
+
+    public String getRealAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+        notifyPropertyChanged(BR.address);
+    }
+
+    public void setSecret(boolean secret) {
+        this.secret = secret;
+        notifyPropertyChanged(BR.address);
+    }
+
+    @Bindable
+    public String getKeystore() {
+        return keystore;
+    }
+
+    public void setKeystore(String keystore) {
+        this.keystore = keystore;
     }
 
     @Bindable
@@ -39,25 +100,16 @@ public class Account extends BaseObservable implements Parcelable {
 
     public void setRemain(float remain) {
         this.remain = remain;
-        notifyPropertyChanged(BR.remain);
-    }
-
-    @Bindable
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
-        notifyPropertyChanged(BR.number);
     }
 
     @Override
     public String toString() {
         return "Account{" +
-                "name='" + name + '\'' +
+                "walletName='" + walletName + '\'' +
+                ", password='" + password + '\'' +
+                ", keystore='" + keystore + '\'' +
+                ", address='" + address + '\'' +
                 ", remain=" + remain +
-                ", number='" + number + '\'' +
                 '}';
     }
 
@@ -68,15 +120,19 @@ public class Account extends BaseObservable implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.name);
+        dest.writeString(this.walletName);
+        dest.writeString(this.password);
+        dest.writeString(this.keystore);
+        dest.writeString(this.address);
         dest.writeFloat(this.remain);
-        dest.writeString(this.number);
     }
 
     protected Account(Parcel in) {
-        this.name = in.readString();
+        this.walletName = in.readString();
+        this.password = in.readString();
+        this.keystore = in.readString();
+        this.address = in.readString();
         this.remain = in.readFloat();
-        this.number = in.readString();
     }
 
     public static final Creator<Account> CREATOR = new Creator<Account>() {

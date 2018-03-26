@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.webkit.ClientCertRequest;
 import android.webkit.ConsoleMessage;
 import android.webkit.CookieManager;
@@ -32,6 +33,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.lc.app.javascript.JavaScriptApi;
+import com.lc.app.ui.LoadingDialog;
 
 /**
  * Created by Orange on 18-3-24.
@@ -41,10 +43,12 @@ public abstract class JsBaseActivity extends BaseActivity {
     private static final String TAG = "JsBaseActivity";
     private WebView mWebView;
 
+    // 标记钱包是否已经初始化,钱包api只有在初始化后才能正常使用.
+    static boolean sWalletHasInit;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         buildWebView();
     }
 
@@ -61,7 +65,6 @@ public abstract class JsBaseActivity extends BaseActivity {
         getWindow().addContentView(mWebView, params);
         Log.e(TAG, "addWebView");
     }
-
 
     @SuppressLint("JavascriptInterface")
     private void initWebView(@NonNull WebView webView) {
@@ -101,7 +104,6 @@ public abstract class JsBaseActivity extends BaseActivity {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 super.onProgressChanged(view, newProgress);
-
             }
 
             @Override
@@ -301,6 +303,15 @@ public abstract class JsBaseActivity extends BaseActivity {
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mWebView.destroy();
+        ViewParent parent = mWebView.getParent();
+        if (parent instanceof ViewGroup) {
+            ((ViewGroup) parent).removeView(mWebView);
+        }
+    }
 
     /**
      * 实现对特殊协议的处理:
@@ -353,19 +364,111 @@ public abstract class JsBaseActivity extends BaseActivity {
     }
 
     protected void initWallet() {
-        String call = "javascript:initWallet()";
-        mWebView.evaluateJavascript(call, null);
+        if (!sWalletHasInit) {
+            String call = "javascript:initWallet()";
+            Log.d(TAG, "initWallet execute:" + call);
+            mWebView.evaluateJavascript(call, null);
+            sWalletHasInit = true;
+        }
     }
 
+    /**
+     * @param walletName
+     * @param password
+     * @param callback
+     */
     protected void createWallet(@NonNull CharSequence walletName,
-                                @NonNull CharSequence password) {
+                                @NonNull CharSequence password,
+                                @Nullable ValueCallback<String> callback) {
+        initWallet();
         String call = "javascript:createWallet(\"" + walletName + "\",\"" + password + "\")";
         Log.d(TAG, "execute:" + call);
-        mWebView.evaluateJavascript(call, new ValueCallback<String>() {
-            @Override
-            public void onReceiveValue(String value) {
-                Log.e(TAG, "value:" + value);
+        mWebView.evaluateJavascript(call, new ValueCallbackWrapper<>(callback));
+    }
+
+
+    protected void loadWallet(@NonNull CharSequence walletName,
+                              @NonNull CharSequence password,
+                              @NonNull CharSequence address,
+                              @Nullable ValueCallback<String> callback) {
+        initWallet();
+        String call = "javascript:loadWallet(\"" + walletName + "\",\"" + password + "\"," + address + ")";
+        Log.d(TAG, "execute:" + call);
+        mWebView.evaluateJavascript(call, new ValueCallbackWrapper<>(callback));
+    }
+
+    /**
+     * export the Wallet
+     *
+     * @param walletName
+     * @param password
+     * @param callback
+     */
+    protected void exportWallet(@NonNull CharSequence walletName,
+                                @NonNull CharSequence password,
+                                @Nullable ValueCallback<String> callback) {
+        initWallet();
+        String call = "javascript:exportWallet(\"" + walletName + "\",\"" + password + "\")";
+        Log.d(TAG, "execute:" + call);
+        mWebView.evaluateJavascript(call, new ValueCallbackWrapper<>(callback));
+    }
+
+
+    protected void importWallet(@NonNull CharSequence walletName,
+                                @NonNull CharSequence keystore,
+                                @NonNull CharSequence password,
+                                @Nullable ValueCallback<String> callback) {
+        initWallet();
+        String call = "javascript:importWallet(\"" + walletName + "\",\"" + keystore + "\",\"" + password + "\")";
+        Log.d(TAG, "execute:" + call);
+        mWebView.evaluateJavascript(call, new ValueCallbackWrapper<>(callback));
+    }
+
+
+    protected void getRate(@Nullable ValueCallback<String> callback) {
+        initWallet();
+        String call = "javascript:getRate()";
+        Log.d(TAG, "execute:" + call);
+        mWebView.evaluateJavascript(call, new ValueCallbackWrapper<>(callback));
+    }
+
+
+
+    private final class ValueCallbackWrapper<T> implements ValueCallback<T> {
+
+        private ValueCallback<T> mBaseCallback;
+
+        ValueCallbackWrapper(@Nullable ValueCallback<T> base) {
+            mBaseCallback = base;
+        }
+
+        @Override
+        public void onReceiveValue(T value) {
+            Log.i(TAG, "onReceiveValue:" + value);
+            if (mBaseCallback != null) {
+                mBaseCallback.onReceiveValue(value);
             }
-        });
+        }
+    }
+
+    private LoadingDialog mDialog;
+
+    protected void showProgressDialog() {
+        if (mDialog == null) {
+            mDialog = new LoadingDialog(this);
+        }
+        mDialog.show();
+    }
+
+    protected void dismissProgressDialog() {
+        if (mDialog != null) {
+            mDialog.dismiss();
+        }
+        mDialog = null;
+    }
+
+    @NonNull
+    protected String getWalletFolder() {
+        return ((App) getApplication()).getWalletFolder();
     }
 }

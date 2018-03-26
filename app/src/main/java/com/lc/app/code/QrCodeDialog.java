@@ -60,7 +60,7 @@ public class QrCodeDialog extends BaseDialog {
     }
 
     private void setAccount(@NonNull Account account) {
-        CharSequence content = "[name:" + account.getName() + ",pwd:" + account.getNumber() + "]";
+        CharSequence content = account.getRealAddress();
         Log.i(TAG, "content:" + content);
 
         File outputFile = new File(getBaseContext().getCacheDir(), "account_qr.png");
@@ -68,7 +68,7 @@ public class QrCodeDialog extends BaseDialog {
         if (success) {
             final Uri uri = Uri.fromFile(outputFile);
             mQrCodeImageView.setImageURI(uri);
-            mAccountName.setText(account.getName());
+            mAccountName.setText(account.getWalletName());
         }
     }
 }

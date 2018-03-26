@@ -4,18 +4,19 @@ import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
+import android.webkit.ValueCallback;
 import android.widget.Toast;
 
-import com.lc.app.BaseActivity;
-import com.lc.app.BaseDialog;
+import com.lc.app.App;
 import com.lc.app.JsBaseActivity;
 import com.lc.app.R;
 import com.lc.app.databinding.ActivityCreateAccountBinding;
 import com.lc.app.model.Account;
-import com.lc.app.ui.LoadingDialog;
 
 
 /**
@@ -25,6 +26,8 @@ import com.lc.app.ui.LoadingDialog;
 public class CreateAccountActivity extends JsBaseActivity implements CreateContract.View {
 
     private static final String TAG = "CreateAccountActivity";
+    private static final String KEY_ACCOUNT =
+            "com.lc.app.EXTRA_ACCOUNT";
 
     /**
      * Create a Account
@@ -36,6 +39,12 @@ public class CreateAccountActivity extends JsBaseActivity implements CreateContr
                                 int requestCode) {
         Intent intent = new Intent(activity, CreateAccountActivity.class);
         activity.startActivityForResult(intent, requestCode);
+    }
+
+    private static Intent packResult(@NonNull Account account) {
+        Intent intent = new Intent();
+        intent.putExtra(KEY_ACCOUNT, (Parcelable) account);
+        return intent;
     }
 
     private ActivityCreateAccountBinding mBinding;
@@ -57,7 +66,6 @@ public class CreateAccountActivity extends JsBaseActivity implements CreateContr
         super.onDestroy();
         mPresenter.destroy();
         mPresenter = null;
-        mLoadDialog = null;
     }
 
     @Override
@@ -65,37 +73,27 @@ public class CreateAccountActivity extends JsBaseActivity implements CreateContr
         mPresenter = presenter;
     }
 
-    private BaseDialog mLoadDialog;
-
     @Override
-    public void onCreateWalletStart() {
-        mLoadDialog = new LoadingDialog(this);
-        mLoadDialog.show();
+    public void onSaveWalletStart() {
+        showProgressDialog();
     }
 
     @Override
-    public void onCreateWalletSuccess(@NonNull Account account) {
-        setResult(RESULT_OK);
+    public void onSaveWalletSuccess(@NonNull Boolean success,
+                                    @NonNull Account account) {
+        setResult(RESULT_OK, packResult(account));
+    }
+
+    @Override
+    public void onSaveWalletError(Throwable error) {
+        Log.e(TAG, "onSaveWalletError", error);
+        dismissProgressDialog();
+    }
+
+    @Override
+    public void onSaveWalletCompleted() {
+        dismissProgressDialog();
         finish();
-    }
-
-    @Override
-    public void onCreateWalletFailure() {
-
-    }
-
-    @Override
-    public void onCreateWalletError(Throwable error) {
-        if (mLoadDialog != null) {
-            mLoadDialog.dismiss();
-        }
-    }
-
-    @Override
-    public void onCreateWalletCompleted() {
-        if (mLoadDialog != null) {
-            mLoadDialog.dismiss();
-        }
     }
 
     @Override
@@ -105,9 +103,8 @@ public class CreateAccountActivity extends JsBaseActivity implements CreateContr
 
     @Override
     public void createWallet() {
-        //
-        CharSequence password1 = mBinding.password1.getText();
-        CharSequence password2 = mBinding.password2.getText();
+        final CharSequence password1 = mBinding.password1.getText();
+        final CharSequence password2 = mBinding.password2.getText();
 
         if (!TextUtils.equals(password1, password2)) {
             Toast.makeText(this, R.string.error_two_password_invalid,
@@ -122,12 +119,33 @@ public class CreateAccountActivity extends JsBaseActivity implements CreateContr
             return;
         }
 
-        String walletName = "Android20180324";
+        final String walletName = generateWalletName();
 
-        initWallet();
-        createWallet(walletName, password1);
+        showProgressDialog();
+        createWallet(walletName, password1, new ValueCallback<String>() {
+            @Override
+            public void onReceiveValue(String value) {
+                dismissProgressDialog();
+                if (TextUtils.isEmpty(value)
+                        || "null".equalsIgnoreCase(value)) {
+                    Toast.makeText(CreateAccountActivity.this,
+                            R.string.text_create_wallet_failed,
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-        // Create Wallet
-        // mPresenter.createWallet(password1);
+                // 成功时,返回钱包内部账户地址信息,失败时为空
+                Log.i(TAG, "onReceiveValue:" + value);
+                Account account = new Account();
+                account.setWalletName(walletName);
+                account.setPassword(String.valueOf(password1));
+                account.setAddress(value);
+                mPresenter.saveWallet(getWalletFolder(), account);
+            }
+        });
+    }
+
+    private String generateWalletName() {
+        return ((App) getApplication()).generateWalletName();
     }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+        xmlns:tools="http://schemas.android.com/tools">
 
 
     <data>
@@ -28,9 +28,11 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark">
 
             <ImageView
+                android:id="@+id/back"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_alignParentStart="true"
@@ -40,16 +42,8 @@
                 android:onClick="@{() -> view.back()}"
                 android:src="@drawable/ic_back" />
 
-            <TextView
-                android:id="@+id/account_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@{account.name}"
-                android:textColor="@color/gray"
-                android:textSize="20sp" />
-
             <ImageView
+                android:id="@+id/more"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_alignParentEnd="true"
@@ -61,8 +55,19 @@
                 android:paddingStart="5dp"
                 android:src="@drawable/ic_more" />
 
-        </RelativeLayout>
+            <TextView
+                android:id="@+id/account_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/back"
+                android:layout_toStartOf="@+id/more"
+                android:gravity="center"
+                android:text="@{account.walletName}"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
 
+        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -70,7 +75,9 @@
             android:layout_marginEnd="20dp"
             android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/dialog_bg">
+            android:background="@drawable/dialog_bg"
+            android:paddingEnd="5dp"
+            android:paddingStart="20dp">
 
             <ImageView
                 android:layout_width="35dp"
@@ -127,21 +134,22 @@
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@id/account"
                 android:layout_below="@id/account"
+                android:layout_marginEnd="10dp"
                 android:layout_marginTop="10dp"
-                android:text="@{String.valueOf(account.number),default=12345678931456}"
+                android:text="@{String.valueOf(account.address),default=12345678931456}"
                 android:textColor="@color/gray"
                 android:textSize="20sp" />
 
             <ImageView
-                android:id="@+id/backup"
+                android:id="@+id/export"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginBottom="40dp"
+                android:layout_marginBottom="10dp"
                 android:layout_marginEnd="15dp"
                 android:contentDescription="@null"
-                android:onClick="@{() -> view.backup(account)}"
+                android:onClick="@{() -> view.export(account)}"
                 android:src="@drawable/ic_corn" />
 
             <CheckBox
@@ -149,11 +157,12 @@
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_alignParentBottom="true"
-                android:layout_marginBottom="40dp"
-                android:layout_toStartOf="@+id/backup"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="15dp"
+                android:layout_toStartOf="@+id/export"
                 android:background="@drawable/checkable"
                 android:button="@null"
-                android:checked="false"
+                android:checked="true"
                 android:onCheckedChanged="@{(v,checked) -> view.onAccountVisibleChanged(checked)}"
                 android:padding="5dp" />
 
