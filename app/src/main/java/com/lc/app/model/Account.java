@@ -4,6 +4,7 @@ import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import com.lc.app.BR;
 
@@ -111,6 +112,15 @@ public class Account extends BaseObservable
                 ", address='" + address + '\'' +
                 ", remain=" + remain +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Account) {
+            return !TextUtils.isEmpty(address) &&
+                    address.equalsIgnoreCase(((Account)obj).getRealAddress());
+        }
+        return false;
     }
 
     @Override

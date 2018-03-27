@@ -92,7 +92,7 @@ public class AccountDetailsActivity extends JsBaseActivity implements
         final CharSequence address = account.getRealAddress();
         final CharSequence keystore = account.getKeystore();
 
-        if (TextUtils.isEmpty(keystore)) {
+        if (TextUtils.isEmpty(keystore) && false ) {
             showProgressDialog();
             loadWallet(walletName, password, address, new ValueCallback<String>() {
                 @Override

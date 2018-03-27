@@ -7,13 +7,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.MenuItem;
-import android.webkit.ValueCallback;
 import android.widget.PopupMenu;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.lc.app.BaseAdapter;
-import com.lc.app.BaseDialog;
 import com.lc.app.JsBaseActivity;
 import com.lc.app.R;
 import com.lc.app.account.AccountDetailsActivity;
@@ -23,7 +21,6 @@ import com.lc.app.create.CreateAccountActivity;
 import com.lc.app.databinding.ActivityHomeBinding;
 import com.lc.app.model.Account;
 import com.lc.app.portim.ImportActivity;
-import com.lc.app.ui.LoadingDialog;
 
 import java.util.List;
 
@@ -85,17 +82,6 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
                 break;
             }
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        //super.onBackPressed();
-        getRate(new ValueCallback<String>() {
-            @Override
-            public void onReceiveValue(String value) {
-                Log.e(TAG, "onReceiveValue:" + value);
-            }
-        });
     }
 
     @Override
@@ -182,12 +168,9 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
         return accountRemain;
     }
 
-    private BaseDialog mDialog;
-
     @Override
     public void onLoadAccountStart() {
-        mDialog = new LoadingDialog(this);
-        mDialog.show();
+        showProgressDialog();
     }
 
     @Override
@@ -197,17 +180,13 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
 
     @Override
     public void onLoadAccountError(Throwable error) {
-        if (mDialog != null) {
-            mDialog.dismiss();
-        }
         mBinding.swipe.setRefreshing(false);
+        dismissProgressDialog();
     }
 
     @Override
     public void onLoadAccountCompleted() {
-        if (mDialog != null) {
-            mDialog.dismiss();
-        }
         mBinding.swipe.setRefreshing(false);
+        dismissProgressDialog();
     }
 }
