@@ -24,6 +24,11 @@ import java.io.File;
 public class QrCodeDialog extends BaseDialog {
 
     private static final String TAG = "QrCodeDialog";
+    private SimpleImageView mQrCodeImageView;
+    private TextView mAccountName;
+    private QrCodeDialog(@NonNull Context context) {
+        super(context);
+    }
 
     /**
      * Display the Account QrCode
@@ -41,13 +46,6 @@ public class QrCodeDialog extends BaseDialog {
             }
         });
         dialog.show();
-    }
-
-    private SimpleImageView mQrCodeImageView;
-    private TextView mAccountName;
-
-    private QrCodeDialog(@NonNull Context context) {
-        super(context);
     }
 
     @Override

@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.webkit.ValueCallback;
 import android.widget.PopupMenu;
-import android.widget.Toast;
 
 import com.lc.app.DefaultObserver;
 import com.lc.app.JsBaseActivity;
@@ -22,6 +21,7 @@ import com.lc.app.R;
 import com.lc.app.code.QrCodeDialog;
 import com.lc.app.databinding.ActivityAccountDetailsBinding;
 import com.lc.app.model.Account;
+import com.lc.app.transaction.TransactionActivity;
 import com.lc.app.utils.WalletUtil;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -37,6 +37,33 @@ public class AccountDetailsActivity extends JsBaseActivity implements
     private static final String EXTRA_ACCOUNT =
             "com.lc.app.EXTRA_ACCOUNT";
 
+    private static final int REQUEST_CODE_TRANSACTION = 0x20;
+    private ActivityAccountDetailsBinding mBinding;
+    private AccountDetailsContract.Presenter mPresenter;
+    private PopupMenu mPopupMenu;
+    private PopupMenu.OnMenuItemClickListener mOnMenuItemClickListener =
+            new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    switch (item.getItemId()) {
+                        case R.id.menu_transaction: {
+                            TransactionActivity.intentTo(AccountDetailsActivity.this,
+                                    mBinding.getAccount(),
+                                    REQUEST_CODE_TRANSACTION);
+                            return true;
+                        }
+
+                        case R.id.menu_transaction_history: {
+
+                            return true;
+                        }
+                        default: {
+                            return false;
+                        }
+                    }
+                }
+            };
+
     /**
      * 显示账户详情界面
      *
@@ -49,10 +76,6 @@ public class AccountDetailsActivity extends JsBaseActivity implements
         intent.putExtra(EXTRA_ACCOUNT, (Parcelable) account);
         context.startActivity(intent);
     }
-
-    private ActivityAccountDetailsBinding mBinding;
-    private AccountDetailsContract.Presenter mPresenter;
-    private PopupMenu mPopupMenu;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -92,7 +115,7 @@ public class AccountDetailsActivity extends JsBaseActivity implements
         final CharSequence address = account.getRealAddress();
         final CharSequence keystore = account.getKeystore();
 
-        if (TextUtils.isEmpty(keystore) && false ) {
+        if (TextUtils.isEmpty(keystore) && false) {
             showProgressDialog();
             loadWallet(walletName, password, address, new ValueCallback<String>() {
                 @Override
@@ -134,27 +157,6 @@ public class AccountDetailsActivity extends JsBaseActivity implements
         }
 
     }
-
-    private PopupMenu.OnMenuItemClickListener mOnMenuItemClickListener =
-            new PopupMenu.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    switch (item.getItemId()) {
-                        case R.id.menu_transaction: {
-
-                            return true;
-                        }
-
-                        case R.id.menu_transaction_history: {
-
-                            return true;
-                        }
-                        default: {
-                            return false;
-                        }
-                    }
-                }
-            };
 
     @Override
     public void setPresenter(AccountDetailsContract.Presenter presenter) {
@@ -206,9 +208,7 @@ public class AccountDetailsActivity extends JsBaseActivity implements
                 if (TextUtils.isEmpty(value) ||
                         "null".equalsIgnoreCase(value)) {
                     // Export failed.
-                    Toast.makeText(AccountDetailsActivity.this,
-                            R.string.text_export_failed,
-                            Toast.LENGTH_SHORT).show();
+                    toastMessage(R.string.text_export_failed);
                     return;
                 }
 
@@ -226,9 +226,7 @@ public class AccountDetailsActivity extends JsBaseActivity implements
                 if (manager != null) {
                     ClipData data = ClipData.newPlainText("keystore", value);
                     manager.setPrimaryClip(data);
-                    Toast.makeText(AccountDetailsActivity.this,
-                            R.string.text_copyed,
-                            Toast.LENGTH_SHORT).show();
+                    toastMessage(R.string.text_copyed);
                 }
             }
         });

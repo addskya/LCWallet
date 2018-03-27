@@ -1,8 +1,11 @@
 package com.lc.app;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.util.Log;
+import android.widget.Toast;
 
 
 /**
@@ -21,7 +24,6 @@ public abstract class BaseActivity extends PermissionsActivity {
     }
 
 
-
     /**
      * Whether or NOT the Activity has finished.
      *
@@ -29,5 +31,13 @@ public abstract class BaseActivity extends PermissionsActivity {
      */
     public boolean isAdded() {
         return !isFinishing();
+    }
+
+    protected void toastMessage(@StringRes int resId) {
+        toastMessage(getString(resId));
+    }
+
+    protected void toastMessage(@NonNull CharSequence message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }

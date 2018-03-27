@@ -31,10 +31,10 @@ public interface CreateContract {
         void createWallet();
     }
 
-    interface Presenter extends BasePresenter  {
+    interface Presenter extends BasePresenter {
 
-        void saveWallet (@NonNull String accountFilePath,
-                         @NonNull Account account);
+        void saveWallet(@NonNull String accountFilePath,
+                        @NonNull Account account);
     }
 
     interface Model {

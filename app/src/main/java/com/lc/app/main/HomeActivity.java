@@ -34,6 +34,32 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
     private BaseAdapter<Account, HomeContract.View> mAdapter;
     private ActivityHomeBinding mBinding;
     private PopupMenu mPopupMenu;
+    private PopupMenu.OnMenuItemClickListener mOnMenuItemClickListener =
+            new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    switch (item.getItemId()) {
+                        case R.id.menu_create_account: {
+                            CreateAccountActivity.intentTo(
+                                    HomeActivity.this, REQUEST_CODE_CREATE_ACCOUNT);
+                            break;
+                        }
+                        case R.id.menu_import_account: {
+                            ImportActivity.intentTo(HomeActivity.this, REQUEST_CODE_IMPORT);
+                            break;
+                        }
+                        case R.id.menu_verify_account: {
+
+                            break;
+                        }
+                        case R.id.menu_settings: {
+
+                            break;
+                        }
+                    }
+                    return true;
+                }
+            };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,34 +116,6 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
         mPresenter.destroy();
         mOnMenuItemClickListener = null;
     }
-
-    private PopupMenu.OnMenuItemClickListener mOnMenuItemClickListener =
-            new PopupMenu.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    switch (item.getItemId()) {
-                        case R.id.menu_create_account: {
-                            CreateAccountActivity.intentTo(
-                                    HomeActivity.this, REQUEST_CODE_CREATE_ACCOUNT);
-                            break;
-                        }
-                        case R.id.menu_import_account: {
-                            ImportActivity.intentTo(HomeActivity.this, REQUEST_CODE_IMPORT);
-                            break;
-                        }
-                        case R.id.menu_verify_account: {
-
-                            break;
-                        }
-                        case R.id.menu_settings: {
-
-                            break;
-                        }
-                    }
-                    return true;
-                }
-            };
-
 
     @Override
     public void setPresenter(HomeContract.Presenter presenter) {

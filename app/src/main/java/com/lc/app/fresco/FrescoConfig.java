@@ -21,9 +21,10 @@ public class FrescoConfig {
 
     /**
      * init fresco lib
+     *
      * @param applicationContext the application context
      */
-    public static void init(Context applicationContext){
+    public static void init(Context applicationContext) {
 
         int MAX_MEM = 30 * ByteConstants.MB;
         final MemoryCacheParams params = new MemoryCacheParams(MAX_MEM,
@@ -31,7 +32,7 @@ public class FrescoConfig {
                 MAX_MEM,
                 Integer.MAX_VALUE,
                 Integer.MAX_VALUE);
-        Supplier<MemoryCacheParams> supplier =  new Supplier<MemoryCacheParams>() {
+        Supplier<MemoryCacheParams> supplier = new Supplier<MemoryCacheParams>() {
             @Override
             public MemoryCacheParams get() {
                 return params;
@@ -52,10 +53,10 @@ public class FrescoConfig {
                     public void trim(MemoryTrimType trimType) {
                         final double suggestedTrimRatio = trimType.getSuggestedTrimRatio();
 
-                        if(MemoryTrimType.OnCloseToDalvikHeapLimit.getSuggestedTrimRatio() == suggestedTrimRatio
+                        if (MemoryTrimType.OnCloseToDalvikHeapLimit.getSuggestedTrimRatio() == suggestedTrimRatio
                                 || MemoryTrimType.OnSystemLowMemoryWhileAppInBackground.getSuggestedTrimRatio() == suggestedTrimRatio
-                                || MemoryTrimType.OnSystemLowMemoryWhileAppInForeground.getSuggestedTrimRatio() == suggestedTrimRatio){
-                            Log.e("OrangeDebug","clearMemoryCaches");
+                                || MemoryTrimType.OnSystemLowMemoryWhileAppInForeground.getSuggestedTrimRatio() == suggestedTrimRatio) {
+                            Log.e("OrangeDebug", "clearMemoryCaches");
                             ImagePipelineFactory.getInstance().getImagePipeline().clearMemoryCaches();
                         }
                     }
@@ -67,7 +68,7 @@ public class FrescoConfig {
     /**
      * Clear Memory Cache
      */
-    public static void clearMemoryCaches(){
+    public static void clearMemoryCaches() {
         ImagePipelineFactory.getInstance().getImagePipeline().clearMemoryCaches();
         System.gc();
     }

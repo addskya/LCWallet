@@ -8,7 +8,8 @@
     </style>
 
     <!-- 登录界面输入框 -->
-    <style name="LoginInput" parent="InputStyle">
+    <style name="LoginInput"
+           parent="InputStyle">
         <item name="android:layout_marginTop">20dp</item>
         <item name="android:background">@drawable/input_bg</item>
         <item name="android:textSize">17sp</item>

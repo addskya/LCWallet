@@ -24,15 +24,12 @@ import java.util.concurrent.Future;
  * Email:addskya@163.com
  */
 public class FrescoNetworkFetcher extends BaseNetworkFetcher<FetchState> {
-    private static final int NUM_NETWORK_THREADS = 5;
-    private static final int MAX_REDIRECTS = 5;
-
-    private static final int MAX_READ_TIMEOUT = 20 * 1000;
-    private static final int MAX_CONNECT_TIMEOUT = 10 * 1000;
-
     public static final int HTTP_TEMPORARY_REDIRECT = 307;
     public static final int HTTP_PERMANENT_REDIRECT = 308;
-
+    private static final int NUM_NETWORK_THREADS = 5;
+    private static final int MAX_REDIRECTS = 5;
+    private static final int MAX_READ_TIMEOUT = 20 * 1000;
+    private static final int MAX_CONNECT_TIMEOUT = 10 * 1000;
     private final ExecutorService mExecutorService;
 
     public FrescoNetworkFetcher() {
@@ -42,6 +39,38 @@ public class FrescoNetworkFetcher extends BaseNetworkFetcher<FetchState> {
     @VisibleForTesting
     FrescoNetworkFetcher(ExecutorService executorService) {
         mExecutorService = executorService;
+    }
+
+    @VisibleForTesting
+    static HttpURLConnection openConnectionTo(Uri uri) throws IOException {
+        URL url = new URL(uri.toString());
+        HttpURLConnection connect = (HttpURLConnection) url.openConnection();
+        connect.setConnectTimeout(MAX_CONNECT_TIMEOUT);
+        connect.setReadTimeout(MAX_READ_TIMEOUT);
+        return connect;
+    }
+
+    private static boolean isHttpSuccess(int responseCode) {
+        return (responseCode >= HttpURLConnection.HTTP_OK &&
+                responseCode < HttpURLConnection.HTTP_MULT_CHOICE);
+    }
+
+    private static boolean isHttpRedirect(int responseCode) {
+        switch (responseCode) {
+            case HttpURLConnection.HTTP_MULT_CHOICE:
+            case HttpURLConnection.HTTP_MOVED_PERM:
+            case HttpURLConnection.HTTP_MOVED_TEMP:
+            case HttpURLConnection.HTTP_SEE_OTHER:
+            case HTTP_TEMPORARY_REDIRECT:
+            case HTTP_PERMANENT_REDIRECT:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private static String error(String format, Object... args) {
+        return String.format(Locale.getDefault(), format, args);
     }
 
     @Override
@@ -117,37 +146,5 @@ public class FrescoNetworkFetcher extends BaseNetworkFetcher<FetchState> {
             throw new IOException(String
                     .format("Image URL %s returned HTTP code %d", uri.toString(), responseCode));
         }
-    }
-
-    @VisibleForTesting
-    static HttpURLConnection openConnectionTo(Uri uri) throws IOException {
-        URL url = new URL(uri.toString());
-        HttpURLConnection connect = (HttpURLConnection) url.openConnection();
-        connect.setConnectTimeout(MAX_CONNECT_TIMEOUT);
-        connect.setReadTimeout(MAX_READ_TIMEOUT);
-        return connect;
-    }
-
-    private static boolean isHttpSuccess(int responseCode) {
-        return (responseCode >= HttpURLConnection.HTTP_OK &&
-                responseCode < HttpURLConnection.HTTP_MULT_CHOICE);
-    }
-
-    private static boolean isHttpRedirect(int responseCode) {
-        switch (responseCode) {
-            case HttpURLConnection.HTTP_MULT_CHOICE:
-            case HttpURLConnection.HTTP_MOVED_PERM:
-            case HttpURLConnection.HTTP_MOVED_TEMP:
-            case HttpURLConnection.HTTP_SEE_OTHER:
-            case HTTP_TEMPORARY_REDIRECT:
-            case HTTP_PERMANENT_REDIRECT:
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    private static String error(String format, Object... args) {
-        return String.format(Locale.getDefault(), format, args);
     }
 }

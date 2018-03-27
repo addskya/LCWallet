@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.ValueCallback;
-import android.widget.Toast;
 
 import com.lc.app.App;
 import com.lc.app.JsBaseActivity;
@@ -28,6 +27,8 @@ public class CreateAccountActivity extends JsBaseActivity implements CreateContr
     private static final String TAG = "CreateAccountActivity";
     private static final String KEY_ACCOUNT =
             "com.lc.app.EXTRA_ACCOUNT";
+    private ActivityCreateAccountBinding mBinding;
+    private CreateContract.Presenter mPresenter;
 
     /**
      * Create a Account
@@ -46,9 +47,6 @@ public class CreateAccountActivity extends JsBaseActivity implements CreateContr
         intent.putExtra(KEY_ACCOUNT, (Parcelable) account);
         return intent;
     }
-
-    private ActivityCreateAccountBinding mBinding;
-    private CreateContract.Presenter mPresenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -107,15 +105,13 @@ public class CreateAccountActivity extends JsBaseActivity implements CreateContr
         final CharSequence password2 = mBinding.password2.getText();
 
         if (!TextUtils.equals(password1, password2)) {
-            Toast.makeText(this, R.string.error_two_password_invalid,
-                    Toast.LENGTH_SHORT).show();
+            toastMessage(R.string.error_two_password_invalid);
             return;
         }
 
         if (TextUtils.getTrimmedLength(password1) < 8) {
             // 密码长度不够8位
-            Toast.makeText(this, R.string.error_password_short,
-                    Toast.LENGTH_SHORT).show();
+            toastMessage(R.string.error_password_short);
             return;
         }
 
@@ -128,9 +124,7 @@ public class CreateAccountActivity extends JsBaseActivity implements CreateContr
                 dismissProgressDialog();
                 if (TextUtils.isEmpty(value)
                         || "null".equalsIgnoreCase(value)) {
-                    Toast.makeText(CreateAccountActivity.this,
-                            R.string.text_create_wallet_failed,
-                            Toast.LENGTH_SHORT).show();
+                    toastMessage(R.string.text_create_wallet_failed);
                     return;
                 }
 

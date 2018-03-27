@@ -1,35 +1,22 @@
 package com.lc.app;
 
 import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.net.http.SslError;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.webkit.ClientCertRequest;
-import android.webkit.ConsoleMessage;
 import android.webkit.CookieManager;
-import android.webkit.HttpAuthHandler;
-import android.webkit.JsPromptResult;
-import android.webkit.JsResult;
-import android.webkit.SslErrorHandler;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.lc.app.javascript.JavaScriptApi;
+import com.lc.app.javascript.JsCallback;
 import com.lc.app.ui.LoadingDialog;
 
 /**
@@ -39,6 +26,7 @@ import com.lc.app.ui.LoadingDialog;
 public abstract class JsBaseActivity extends BaseActivity {
     private static final String TAG = "JsBaseActivity";
     private WebView mWebView;
+    private LoadingDialog mDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,7 +78,7 @@ public abstract class JsBaseActivity extends BaseActivity {
         CookieManager.getInstance().setAcceptThirdPartyCookies(mWebView, true);
 
         // Debug Code
-        mWebView.addJavascriptInterface(new JavaScriptApi(), "handler");
+        mWebView.addJavascriptInterface(new JavaScriptApi(getJsCallback()), "handler");
 
         webSettings.setUserAgentString(webSettings.getUserAgentString());
 
@@ -99,7 +87,7 @@ public abstract class JsBaseActivity extends BaseActivity {
             public void onProgressChanged(WebView view, int newProgress) {
                 super.onProgressChanged(view, newProgress);
                 if (newProgress >= 100) {
-                    onWebViewInitCompleted();
+                    onWebViewLoadCompleted();
                 }
             }
         });
@@ -108,11 +96,15 @@ public abstract class JsBaseActivity extends BaseActivity {
         });
     }
 
+    protected JsCallback getJsCallback() {
+        return null;
+    }
+
     /**
      * WebView 显示加载完毕,
      * 可以调用javascript接口了
      */
-    protected void onWebViewInitCompleted() {
+    protected void onWebViewLoadCompleted() {
         initWallet();
     }
 
@@ -126,10 +118,22 @@ public abstract class JsBaseActivity extends BaseActivity {
         }
     }
 
-    protected void initWallet() {
+    private void initWallet() {
         String call = "javascript:initWallet()";
         Log.d(TAG, "initWallet execute:" + call);
-        mWebView.evaluateJavascript(call, null);
+        mWebView.evaluateJavascript(call, new ValueCallback<String>() {
+            @Override
+            public void onReceiveValue(String value) {
+                onWalletInitCompleted();
+            }
+        });
+    }
+
+    /**
+     * 钱包初始化完毕,可以执行其他任务
+     */
+    protected void onWalletInitCompleted() {
+
     }
 
     /**
@@ -145,7 +149,6 @@ public abstract class JsBaseActivity extends BaseActivity {
         Log.d(TAG, "execute:" + call);
         mWebView.evaluateJavascript(call, new ValueCallbackWrapper<>(callback));
     }
-
 
     protected void loadWallet(@NonNull CharSequence walletName,
                               @NonNull CharSequence password,
@@ -173,7 +176,6 @@ public abstract class JsBaseActivity extends BaseActivity {
         mWebView.evaluateJavascript(call, new ValueCallbackWrapper<>(callback));
     }
 
-
     protected void importWallet(@NonNull CharSequence walletName,
                                 @NonNull CharSequence keystore,
                                 @NonNull CharSequence password,
@@ -184,7 +186,6 @@ public abstract class JsBaseActivity extends BaseActivity {
         mWebView.evaluateJavascript(call, new ValueCallbackWrapper<>(callback));
     }
 
-
     protected void getRate(@Nullable ValueCallback<String> callback) {
         initWallet();
         String call = "javascript:getRate()";
@@ -192,25 +193,29 @@ public abstract class JsBaseActivity extends BaseActivity {
         mWebView.evaluateJavascript(call, new ValueCallbackWrapper<>(callback));
     }
 
-
-    private final class ValueCallbackWrapper<T> implements ValueCallback<T> {
-
-        private ValueCallback<T> mBaseCallback;
-
-        ValueCallbackWrapper(@Nullable ValueCallback<T> base) {
-            mBaseCallback = base;
-        }
-
-        @Override
-        public void onReceiveValue(T value) {
-            Log.i(TAG, "onReceiveValue:" + value);
-            if (mBaseCallback != null) {
-                mBaseCallback.onReceiveValue(value);
-            }
-        }
+    protected void balanceOf(@NonNull CharSequence address) {
+        initWallet();
+        String call = "javascript:balanceOf(\"" + address + "\")";
+        Log.d(TAG, "execute:" + call);
+        mWebView.evaluateJavascript(call, null);
     }
 
-    private LoadingDialog mDialog;
+    // transferByFee(walletName, password, executeAccount, toAccount ,amount)
+    protected void transferByFee(@NonNull CharSequence walletName,
+                                 @NonNull CharSequence password,
+                                 @NonNull CharSequence executeAccount,
+                                 @NonNull CharSequence toAccount,
+                                 @NonNull float amount) {
+        initWallet();
+        String call = "javascript:transferByFee("
+                + "\"" + walletName + "\","
+                + "\"" + password + "\","
+                + "\"" + executeAccount + "\","
+                + "\"" + toAccount + "\","
+                + "\"" + amount + "\")";
+        Log.d(TAG, "execute:" + call);
+        mWebView.evaluateJavascript(call, null);
+    }
 
     protected void showProgressDialog() {
         if (mDialog == null) {
@@ -229,5 +234,22 @@ public abstract class JsBaseActivity extends BaseActivity {
     @NonNull
     protected String getWalletFolder() {
         return ((App) getApplication()).getWalletFolder();
+    }
+
+    private final class ValueCallbackWrapper<T> implements ValueCallback<T> {
+
+        private ValueCallback<T> mBaseCallback;
+
+        ValueCallbackWrapper(@Nullable ValueCallback<T> base) {
+            mBaseCallback = base;
+        }
+
+        @Override
+        public void onReceiveValue(T value) {
+            Log.i(TAG, "onReceiveValue:" + value);
+            if (mBaseCallback != null) {
+                mBaseCallback.onReceiveValue(value);
+            }
+        }
     }
 }

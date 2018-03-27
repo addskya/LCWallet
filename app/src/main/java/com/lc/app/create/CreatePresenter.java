@@ -38,7 +38,7 @@ class CreatePresenter implements CreateContract.Presenter {
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DefaultObserver<Boolean>(){
+                .subscribe(new DefaultObserver<Boolean>() {
 
                     @Override
                     public void onStart() {

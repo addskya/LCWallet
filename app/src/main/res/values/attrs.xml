@@ -2,24 +2,31 @@
 <resources>
 
     <attr name="orientation">
-        <flag name="vertical" value="0x1" />
-        <flag name="horizontal" value="0x0" />
+        <flag name="vertical"
+              value="0x1" />
+        <flag name="horizontal"
+              value="0x0" />
     </attr>
 
     <declare-styleable name="RecyclerView">
-        <attr name="listDivider" format="color|reference" />
+        <attr name="listDivider"
+              format="color|reference" />
         <attr name="orientation" />
-        <attr name="dividerPaddingStart" format="dimension|reference" />
-        <attr name="dividerPaddingEnd" format="dimension|reference" />
+        <attr name="dividerPaddingStart"
+              format="dimension|reference" />
+        <attr name="dividerPaddingEnd"
+              format="dimension|reference" />
     </declare-styleable>
-    
+
     <declare-styleable name="SimpleImageView">
-        <attr name="src" format="reference" />
+        <attr name="src"
+              format="reference" />
     </declare-styleable>
 
     <declare-styleable name="PasswordView">
-        <attr name="hint" format="string|reference"/>
-        
+        <attr name="hint"
+              format="string|reference" />
+
     </declare-styleable>
-    
+
 </resources>

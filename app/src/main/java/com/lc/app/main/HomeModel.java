@@ -5,12 +5,6 @@ import android.support.annotation.NonNull;
 import com.lc.app.model.Account;
 import com.lc.app.utils.WalletUtil;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;

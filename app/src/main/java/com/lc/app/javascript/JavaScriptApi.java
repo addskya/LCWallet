@@ -1,5 +1,6 @@
 package com.lc.app.javascript;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
 
@@ -12,6 +13,16 @@ public class JavaScriptApi {
 
     private static final String TAG = "JavaScriptApi";
 
+    private JsCallback mCallBack;
+
+    public JavaScriptApi() {
+        this(null);
+    }
+
+    public JavaScriptApi(@Nullable JsCallback callback) {
+        mCallBack = callback;
+    }
+
     /**
      * 查询账户余额回调
      *
@@ -22,6 +33,9 @@ public class JavaScriptApi {
     public void onCallback_BalanceOf(String error, String result) {
         Log.i(TAG, "onCallback_BalanceOf -> error:" + error);
         Log.i(TAG, "onCallback_BalanceOf -> result:" + result);
+        if (mCallBack != null) {
+            mCallBack.onCallback(JsCallback.MESSAGE_BALANCE, error, result);
+        }
     }
 
     /**
@@ -34,6 +48,9 @@ public class JavaScriptApi {
     public void onCallback_getRate(String error, String result) {
         Log.i(TAG, "onCallback_getRate -> error:" + error);
         Log.i(TAG, "onCallback_getRate -> result:" + result);
+        if (mCallBack != null) {
+            mCallBack.onCallback(JsCallback.MESSAGE_RATE, error, result);
+        }
     }
 
     /**
@@ -46,6 +63,9 @@ public class JavaScriptApi {
     public void onCallback_transferByFee(String error, String result) {
         Log.i(TAG, "onCallback_transferByFee -> error:" + error);
         Log.i(TAG, "onCallback_transferByFee -> result:" + result);
+        if (mCallBack != null) {
+            mCallBack.onCallback(JsCallback.MESSAGE_TRANSFER, error, result);
+        }
     }
 
     /**
@@ -58,5 +78,8 @@ public class JavaScriptApi {
     public void onCallback_historyTransactions(String error, Object result) {
         Log.i(TAG, "onCallback_historyTransactions -> error:" + error);
         Log.i(TAG, "onCallback_historyTransactions -> result:" + result);
+        if (mCallBack != null) {
+            mCallBack.onCallback(JsCallback.MESSAGE_TRANSFER_HISTORY, error, result);
+        }
     }
 }

@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.webkit.ValueCallback;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.lc.app.JsBaseActivity;
 import com.lc.app.R;
@@ -57,14 +56,13 @@ public class ImportActivity extends JsBaseActivity {
         final CharSequence password2 = password2View.getText();
 
         if (!TextUtils.equals(password1, password2)) {
-            Toast.makeText(this, R.string.error_two_password_invalid, Toast.LENGTH_SHORT).show();
+            toastMessage(R.string.error_two_password_invalid);
             return;
         }
 
         if (TextUtils.getTrimmedLength(password1) < 8) {
             // 密码长度不够8位
-            Toast.makeText(this, R.string.error_password_short,
-                    Toast.LENGTH_SHORT).show();
+            toastMessage(R.string.error_password_short);
             return;
         }
 
@@ -84,9 +82,7 @@ public class ImportActivity extends JsBaseActivity {
                     return;
                 }
 
-                Toast.makeText(ImportActivity.this,
-                        R.string.text_wallet_import_success,
-                        Toast.LENGTH_SHORT).show();
+                toastMessage(R.string.text_wallet_import_success);
                 setResult(RESULT_OK);
             }
         });

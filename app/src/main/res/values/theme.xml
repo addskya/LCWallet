@@ -2,7 +2,8 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme"
+           parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -10,13 +11,15 @@
     </style>
 
     <!-- Base application theme. -->
-    <style name="AppThemeNoActionBar" parent="AppTheme">
+    <style name="AppThemeNoActionBar"
+           parent="AppTheme">
         <!-- Customize your theme here. -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppThemeDialog" parent="Theme.AppCompat.Dialog">
+    <style name="AppThemeDialog"
+           parent="Theme.AppCompat.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -24,12 +27,14 @@
     </style>
 
     <!-- Base application theme. -->
-    <style name="CreateAccountTheme" parent="AppThemeNoActionBar">
+    <style name="CreateAccountTheme"
+           parent="AppThemeNoActionBar">
 
     </style>
 
     <!-- Base application theme. -->
-    <style name="AccountDetailsTheme" parent="AppThemeNoActionBar">
+    <style name="AccountDetailsTheme"
+           parent="AppThemeNoActionBar">
 
     </style>
 

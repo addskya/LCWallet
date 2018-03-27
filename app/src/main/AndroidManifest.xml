@@ -74,6 +74,12 @@
             android:launchMode="singleInstance"
             android:windowSoftInputMode="stateAlwaysVisible" />
 
+        <activity
+            android:name=".transaction.TransactionActivity"
+            android:exported="false"
+            android:label="@string/text_transaction"
+            android:launchMode="singleInstance"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
 
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
