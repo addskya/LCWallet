@@ -1,7 +1,8 @@
 package com.lc.app;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -27,11 +28,23 @@ public abstract class JsBaseActivity extends BaseActivity {
     private static final String TAG = "JsBaseActivity";
     private WebView mWebView;
     private LoadingDialog mDialog;
+    private Handler mHandler = new Handler(Looper.getMainLooper());
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         buildWebView();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mWebView.destroy();
+        ViewParent parent = mWebView.getParent();
+        if (parent instanceof ViewGroup) {
+            ((ViewGroup) parent).removeView(mWebView);
+        }
+        mHandler = null;
     }
 
     private void buildWebView() {
@@ -48,7 +61,7 @@ public abstract class JsBaseActivity extends BaseActivity {
         Log.e(TAG, "addWebView");
     }
 
-    @SuppressLint("JavascriptInterface")
+    @SuppressWarnings("JavascriptInterface")
     private void initWebView(@NonNull WebView webView) {
         final WebSettings webSettings = webView.getSettings();
 
@@ -83,16 +96,15 @@ public abstract class JsBaseActivity extends BaseActivity {
         webSettings.setUserAgentString(webSettings.getUserAgentString());
 
         mWebView.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public void onProgressChanged(WebView view, int newProgress) {
-                super.onProgressChanged(view, newProgress);
-                if (newProgress >= 100) {
-                    onWebViewLoadCompleted();
-                }
-            }
         });
 
         mWebView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                Log.d(TAG, "onPageFinished:" + url);
+                initWallet();
+            }
         });
     }
 
@@ -100,22 +112,8 @@ public abstract class JsBaseActivity extends BaseActivity {
         return null;
     }
 
-    /**
-     * WebView 显示加载完毕,
-     * 可以调用javascript接口了
-     */
-    protected void onWebViewLoadCompleted() {
-        initWallet();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mWebView.destroy();
-        ViewParent parent = mWebView.getParent();
-        if (parent instanceof ViewGroup) {
-            ((ViewGroup) parent).removeView(mWebView);
-        }
+    protected void sendCommand(@NonNull Runnable action) {
+        mHandler.postDelayed(action, 200);
     }
 
     private void initWallet() {
@@ -133,28 +131,29 @@ public abstract class JsBaseActivity extends BaseActivity {
      * 钱包初始化完毕,可以执行其他任务
      */
     protected void onWalletInitCompleted() {
-
+        Log.d(TAG, "onWalletInitCompleted");
     }
 
     /**
-     * @param walletName
-     * @param password
-     * @param callback
+     * create wallet
+     *
+     * @param walletName the wallet name
+     * @param password   the wallet password
+     * @param callback   the callback after create wallet
      */
     protected void createWallet(@NonNull CharSequence walletName,
                                 @NonNull CharSequence password,
                                 @Nullable ValueCallback<String> callback) {
-        initWallet();
         String call = "javascript:createWallet(\"" + walletName + "\",\"" + password + "\")";
         Log.d(TAG, "execute:" + call);
         mWebView.evaluateJavascript(call, new ValueCallbackWrapper<>(callback));
     }
 
+    @SuppressWarnings("nouse")
     protected void loadWallet(@NonNull CharSequence walletName,
                               @NonNull CharSequence password,
                               @NonNull CharSequence address,
                               @Nullable ValueCallback<String> callback) {
-        initWallet();
         String call = "javascript:loadWallet(\"" + walletName + "\",\"" + password + "\"," + address + ")";
         Log.d(TAG, "execute:" + call);
         mWebView.evaluateJavascript(call, new ValueCallbackWrapper<>(callback));
@@ -163,56 +162,88 @@ public abstract class JsBaseActivity extends BaseActivity {
     /**
      * export the Wallet
      *
-     * @param walletName
-     * @param password
-     * @param callback
+     * @param walletName the wallet name
+     * @param password   the wallet password
+     * @param callback   the callback after export wallet
      */
     protected void exportWallet(@NonNull CharSequence walletName,
                                 @NonNull CharSequence password,
                                 @Nullable ValueCallback<String> callback) {
-        initWallet();
         String call = "javascript:exportWallet(\"" + walletName + "\",\"" + password + "\")";
         Log.d(TAG, "execute:" + call);
         mWebView.evaluateJavascript(call, new ValueCallbackWrapper<>(callback));
     }
 
+    /**
+     * import wallet
+     *
+     * @param walletName the wallet name
+     * @param keystore   the wallet keystore
+     * @param password   the wallet password
+     * @param callback   the callback after import wallet
+     */
     protected void importWallet(@NonNull CharSequence walletName,
                                 @NonNull CharSequence keystore,
                                 @NonNull CharSequence password,
                                 @Nullable ValueCallback<String> callback) {
-        initWallet();
         String call = "javascript:importWallet(\"" + walletName + "\",\"" + keystore + "\",\"" + password + "\")";
         Log.d(TAG, "execute:" + call);
         mWebView.evaluateJavascript(call, new ValueCallbackWrapper<>(callback));
     }
 
+    /**
+     * query the current rate for transfer
+     *
+     * @param callback the callback
+     */
     protected void getRate(@Nullable ValueCallback<String> callback) {
-        initWallet();
         String call = "javascript:getRate()";
         Log.d(TAG, "execute:" + call);
         mWebView.evaluateJavascript(call, new ValueCallbackWrapper<>(callback));
     }
 
+    /**
+     * query the balance of the wallet
+     *
+     * @param address the wallet address
+     */
     protected void balanceOf(@NonNull CharSequence address) {
-        initWallet();
-        String call = "javascript:balanceOf(\"" + address + "\")";
+        String call = "javascript:balanceOf(" + address + ")";
         Log.d(TAG, "execute:" + call);
         mWebView.evaluateJavascript(call, null);
     }
 
-    // transferByFee(walletName, password, executeAccount, toAccount ,amount)
+    /**
+     * transaction to other wallet
+     *
+     * @param walletName     the execute wallet name
+     * @param password       the execute wallet password
+     * @param executeAccount the execute account
+     * @param toAccount      to which account
+     * @param amount         the transfer amount
+     */
     protected void transferByFee(@NonNull CharSequence walletName,
                                  @NonNull CharSequence password,
                                  @NonNull CharSequence executeAccount,
                                  @NonNull CharSequence toAccount,
                                  @NonNull float amount) {
-        initWallet();
         String call = "javascript:transferByFee("
                 + "\"" + walletName + "\","
                 + "\"" + password + "\","
                 + "\"" + executeAccount + "\","
                 + "\"" + toAccount + "\","
                 + "\"" + amount + "\")";
+        Log.d(TAG, "execute:" + call);
+        mWebView.evaluateJavascript(call, null);
+    }
+
+    /**
+     * 查询账户所有交易记录
+     *
+     * @param target 目标账户
+     */
+    protected void showHistoryTransaction(String target) {
+        String call = "javascript:showHistoryTransaction(" + target + ")";
         Log.d(TAG, "execute:" + call);
         mWebView.evaluateJavascript(call, null);
     }

@@ -43,7 +43,7 @@ public class ImportActivity extends JsBaseActivity {
         EditText walletNameView = findViewById(R.id.wallet_name);
 
         PasswordView password1View = findViewById(R.id.password_1);
-        PasswordView password2View = findViewById(R.id.password_2);
+        // PasswordView password2View = findViewById(R.id.password_2);
 
         EditText keystoreView = findViewById(R.id.wallet_keystore);
 
@@ -53,14 +53,15 @@ public class ImportActivity extends JsBaseActivity {
         }
 
         final CharSequence password1 = password1View.getText();
-        final CharSequence password2 = password2View.getText();
+        // final CharSequence password2 = password2View.getText();
 
-        if (!TextUtils.equals(password1, password2)) {
+        /*if (!TextUtils.equals(password1, password2)) {
             toastMessage(R.string.error_two_password_invalid);
             return;
-        }
+        }*/
 
-        if (TextUtils.getTrimmedLength(password1) < 8) {
+        if (TextUtils.getTrimmedLength(password1) <
+                getResources().getInteger(R.integer.min_password_length)) {
             // 密码长度不够8位
             toastMessage(R.string.error_password_short);
             return;

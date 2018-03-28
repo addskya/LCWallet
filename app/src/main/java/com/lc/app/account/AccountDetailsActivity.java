@@ -22,6 +22,7 @@ import com.lc.app.code.QrCodeDialog;
 import com.lc.app.databinding.ActivityAccountDetailsBinding;
 import com.lc.app.model.Account;
 import com.lc.app.transaction.TransactionActivity;
+import com.lc.app.transaction.TransactionHistoryActivity;
 import com.lc.app.utils.WalletUtil;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -38,6 +39,8 @@ public class AccountDetailsActivity extends JsBaseActivity implements
             "com.lc.app.EXTRA_ACCOUNT";
 
     private static final int REQUEST_CODE_TRANSACTION = 0x20;
+
+    private static final int REQUEST_CODE_TRANSACTION_HISTORY = 0x21;
     private ActivityAccountDetailsBinding mBinding;
     private AccountDetailsContract.Presenter mPresenter;
     private PopupMenu mPopupMenu;
@@ -54,7 +57,8 @@ public class AccountDetailsActivity extends JsBaseActivity implements
                         }
 
                         case R.id.menu_transaction_history: {
-
+                            TransactionHistoryActivity.intentTo(AccountDetailsActivity.this,
+                                    mBinding.getAccount());
                             return true;
                         }
                         default: {

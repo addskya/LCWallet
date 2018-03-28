@@ -26,6 +26,7 @@ public class QrCodeDialog extends BaseDialog {
     private static final String TAG = "QrCodeDialog";
     private SimpleImageView mQrCodeImageView;
     private TextView mAccountName;
+
     private QrCodeDialog(@NonNull Context context) {
         super(context);
     }

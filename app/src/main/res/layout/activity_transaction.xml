@@ -43,30 +43,68 @@
         android:layout_marginTop="30dp"
         app:hint="@string/hint_password" />
 
-
-    <EditText
-        android:id="@+id/toAddress"
-        style="@style/LoginInput"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="30dp"
-        android:hint="@string/hint_transaction_to_address"
-        android:minHeight="40dp" />
+        android:layout_marginTop="30dp">
+
+        <EditText
+            android:id="@+id/toAddress"
+            style="@style/LoginInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:hint="@string/hint_transaction_to_address"
+            android:minHeight="40dp" />
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:contentDescription="@null"
+            android:onClick="onPickAddress"
+            android:src="@drawable/ic_qr_code_grey" />
+    </RelativeLayout>
 
 
-    <EditText
-        android:id="@+id/amount"
-        style="@style/LoginInput"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="30dp"
-        android:hint="@string/hint_transaction_amount"
-        android:inputType="numberDecimal"
-        android:minHeight="40dp" />
+        android:layout_marginTop="20dp">
+
+        <EditText
+            android:id="@+id/amount"
+            style="@style/LoginInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:enabled="false"
+            android:hint="@string/hint_transaction_amount"
+            android:inputType="numberDecimal"
+            android:maxLength="15"
+            android:minHeight="40dp" />
+
+        <TextView
+            android:id="@+id/wallet_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="25dp"
+            android:text="@string/text_wallet_amount_loading"
+            android:textColor="@color/green"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
 
     <TextView
         android:id="@+id/rate"
@@ -75,7 +113,7 @@
         android:layout_marginEnd="25dp"
         android:layout_marginStart="25dp"
         android:layout_marginTop="15dp"
-        android:text="@string/text_fee"
+        android:text="@string/text_fee_loading"
         android:textColor="@color/green"
         android:textSize="16sp" />
 

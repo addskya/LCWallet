@@ -17,6 +17,9 @@
         <item name="android:textColor">#302B2A</item>
         <item name="android:paddingStart">20dp</item>
         <item name="android:gravity">center_vertical|start</item>
+        <item name="android:lines">1</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:singleLine">true</item>
     </style>
 
 </resources>
