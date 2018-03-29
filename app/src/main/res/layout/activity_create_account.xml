@@ -44,6 +44,19 @@
 
         </RelativeLayout>
 
+        <EditText
+            android:id="@+id/wallet_name"
+            style="@style/LoginInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="30dp"
+            android:hint="@string/hint_wallet_name"
+            android:inputType="text"
+            android:maxLength="@integer/max_wallet_name_length"
+            android:minHeight="40dp" />
+
         <com.lc.app.ui.PasswordView
             android:id="@+id/password_1"
             android:layout_width="match_parent"

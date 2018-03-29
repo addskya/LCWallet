@@ -34,13 +34,14 @@ import rx.schedulers.Schedulers;
  */
 public class AccountDetailsActivity extends JsBaseActivity implements
         AccountDetailsContract.View {
-    private static final String TAG = "";
+    private static final String TAG = "AccountDetails";
     private static final String EXTRA_ACCOUNT =
             "com.lc.app.EXTRA_ACCOUNT";
 
     private static final int REQUEST_CODE_TRANSACTION = 0x20;
 
     private static final int REQUEST_CODE_TRANSACTION_HISTORY = 0x21;
+
     private ActivityAccountDetailsBinding mBinding;
     private AccountDetailsContract.Presenter mPresenter;
     private PopupMenu mPopupMenu;

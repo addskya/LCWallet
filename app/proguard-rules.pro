@@ -27,3 +27,21 @@
 -keepclassmembers class fqcn.of.javascript.interface.for.webview {
    public *;
 }
+
+-keepclassmembers class * extends android.app.Activity {
+   public void *(android.view.View);
+}
+
+-keep class com.journeyapps.* {
+    *;
+}
+
+-keep class * extends android.databinding.BaseObservable {
+    *;
+}
+
+-keep class * extends com.facebook.drawee.view.DraweeView {
+    *;
+}
+
+-dontwarn com.facebook.*

@@ -73,8 +73,10 @@ public abstract class JsBaseActivity extends BaseActivity {
         webSettings.setDatabaseEnabled(true);
         webSettings.setDisplayZoomControls(true);
         webSettings.setDomStorageEnabled(true);
+        webSettings.setAppCachePath(getCacheDir().getAbsolutePath());
         webSettings.setGeolocationEnabled(true);
         webSettings.setJavaScriptEnabled(true);
+        webSettings.setAppCacheMaxSize(Long.MAX_VALUE);
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         webSettings.setLoadsImagesAutomatically(true);
 
@@ -84,7 +86,6 @@ public abstract class JsBaseActivity extends BaseActivity {
         webSettings.setLoadWithOverviewMode(false);
         webSettings.setTextZoom(100);
         webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-
 
         CookieManager.setAcceptFileSchemeCookies(true);
         CookieManager.getInstance().setAcceptCookie(true);

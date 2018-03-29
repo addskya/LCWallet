@@ -25,7 +25,4 @@ public class App extends Application {
         return new File(getFilesDir(), WALLET_FOLDER_NAME).getAbsolutePath();
     }
 
-    public String generateWalletName() {
-        return UUID.randomUUID().toString();
-    }
 }

@@ -101,6 +101,14 @@ public class CreateAccountActivity extends JsBaseActivity implements CreateContr
 
     @Override
     public void createWallet() {
+        final String walletName = String.valueOf(mBinding.walletName.getText());
+        int minWalletNameLength = getResources().getInteger(
+                R.integer.min_wallet_name_length);
+        if (TextUtils.getTrimmedLength(walletName) < minWalletNameLength) {
+            toastMessage(R.string.error_wallet_name_short);
+            return;
+        }
+
         final CharSequence password1 = mBinding.password1.getText();
         final CharSequence password2 = mBinding.password2.getText();
 
@@ -109,13 +117,12 @@ public class CreateAccountActivity extends JsBaseActivity implements CreateContr
             return;
         }
 
-        if (TextUtils.getTrimmedLength(password1) < 8) {
+        if (TextUtils.getTrimmedLength(password1) <
+                getResources().getInteger(R.integer.min_password_length)) {
             // 密码长度不够8位
             toastMessage(R.string.error_password_short);
             return;
         }
-
-        final String walletName = generateWalletName();
 
         showProgressDialog();
         createWallet(walletName, password1, new ValueCallback<String>() {
@@ -137,9 +144,5 @@ public class CreateAccountActivity extends JsBaseActivity implements CreateContr
                 mPresenter.saveWallet(getWalletFolder(), account);
             }
         });
-    }
-
-    private String generateWalletName() {
-        return ((App) getApplication()).generateWalletName();
     }
 }
