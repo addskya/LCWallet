@@ -188,7 +188,7 @@ public abstract class JsBaseActivity extends BaseActivity {
                                 @NonNull CharSequence keystore,
                                 @NonNull CharSequence password,
                                 @Nullable ValueCallback<String> callback) {
-        String call = "javascript:importWallet(\"" + walletName + "\",\"" + keystore + "\",\"" + password + "\")";
+        String call = "javascript:importWallet(\"" + walletName + "\"," + keystore + ",\"" + password + "\")";
         Log.d(TAG, "execute:" + call);
         mWebView.evaluateJavascript(call, new ValueCallbackWrapper<>(callback));
     }

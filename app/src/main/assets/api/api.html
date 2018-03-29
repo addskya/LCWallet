@@ -7,7 +7,6 @@
     <script type="text/javascript">
 
 var URL = "http://47.100.55.67:8545/";
-//var contract = "0xC6382F2cEE0b165862E465731Ad8072491EFe804";
 var contract = "0x4230deEe19c832D6e7F2AaC175427c7eEB5E04eC";
 
 var walletApi;
@@ -22,7 +21,7 @@ function initWallet() {
 // @param {walletName} 钱包名称 {password} 钱包加密保护口令
 // @return 成功返回钱包内部账户地址信息,失败返回 null
 function createWallet(walletName, password) {
-    account = walletApi.createWallet("wallet1",password);
+    account = walletApi.createWallet(walletName,password);
     return account;
 }
 
@@ -114,6 +113,8 @@ function transferByFee(walletName, password, executeAccount, toAccount ,amount) 
 // @param {error} 错误信息,无错误返回时为Null
 // @param {result} 查找结果,为数组类型,包含{from,to,value,date}
 function callback_history_transactions(error, result) {
+    console.log("error:" + error);
+    console.log("result:" + result);
     handler.onCallback_historyTransactions(error, result);
 }
 
@@ -127,7 +128,7 @@ function showHistoryTransaction(target) {
     </script>
 </head>
 <body>
-HAHAHHAA
+
 </body>
 </html>
 

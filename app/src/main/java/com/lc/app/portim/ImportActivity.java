@@ -73,7 +73,7 @@ public class ImportActivity extends JsBaseActivity {
         }
 
         showProgressDialog();
-        importWallet(walletName, keystore, password1, new ValueCallback<String>() {
+        importWallet(walletName, "'[" + keystore + "]'", password1, new ValueCallback<String>() {
             @Override
             public void onReceiveValue(String value) {
                 dismissProgressDialog();

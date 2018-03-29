@@ -75,7 +75,7 @@ public class JavaScriptApi {
      * @param result 转账的历史记录,使用数组返回,{from,to,value,date}
      */
     @JavascriptInterface
-    public void onCallback_historyTransactions(String error, Object result) {
+    public void onCallback_historyTransactions(String error, Object[] result) {
         Log.i(TAG, "onCallback_historyTransactions -> error:" + error);
         Log.i(TAG, "onCallback_historyTransactions -> result:" + result);
         if (mCallBack != null) {
