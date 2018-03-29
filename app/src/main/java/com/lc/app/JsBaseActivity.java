@@ -76,6 +76,7 @@ public abstract class JsBaseActivity extends BaseActivity {
         webSettings.setAppCachePath(getCacheDir().getAbsolutePath());
         webSettings.setGeolocationEnabled(true);
         webSettings.setJavaScriptEnabled(true);
+        webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         webSettings.setAppCacheMaxSize(Long.MAX_VALUE);
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         webSettings.setLoadsImagesAutomatically(true);
@@ -231,9 +232,9 @@ public abstract class JsBaseActivity extends BaseActivity {
         String call = "javascript:transferByFee("
                 + "\"" + walletName + "\","
                 + "\"" + password + "\","
-                + "\"" + executeAccount + "\","
+                + executeAccount + ","
                 + "\"" + toAccount + "\","
-                + "\"" + amount + "\")";
+                + amount + ")";
         Log.d(TAG, "execute:" + call);
         mWebView.evaluateJavascript(call, null);
     }

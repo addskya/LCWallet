@@ -18,17 +18,7 @@ public class Account extends BaseObservable
         implements Serializable, Parcelable {
 
     public static final int serialVersionUID = 0x00000001;
-    public static final Creator<Account> CREATOR = new Creator<Account>() {
-        @Override
-        public Account createFromParcel(Parcel source) {
-            return new Account(source);
-        }
 
-        @Override
-        public Account[] newArray(int size) {
-            return new Account[size];
-        }
-    };
     // 钱包名称
     private String walletName;
     // 钱包密码
@@ -39,19 +29,14 @@ public class Account extends BaseObservable
     private String keystore;
     // 钱包余额
     private float remain;
+
     private transient boolean secret = true;
 
     public Account() {
     }
 
 
-    protected Account(Parcel in) {
-        this.walletName = in.readString();
-        this.password = in.readString();
-        this.keystore = in.readString();
-        this.address = in.readString();
-        this.remain = in.readFloat();
-    }
+
 
     @Bindable
     public String getWalletName() {
@@ -136,6 +121,7 @@ public class Account extends BaseObservable
         return false;
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -145,8 +131,28 @@ public class Account extends BaseObservable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.walletName);
         dest.writeString(this.password);
-        dest.writeString(this.keystore);
         dest.writeString(this.address);
+        dest.writeString(this.keystore);
         dest.writeFloat(this.remain);
     }
+
+    protected Account(Parcel in) {
+        this.walletName = in.readString();
+        this.password = in.readString();
+        this.address = in.readString();
+        this.keystore = in.readString();
+        this.remain = in.readFloat();
+    }
+
+    public static final Parcelable.Creator<Account> CREATOR = new Parcelable.Creator<Account>() {
+        @Override
+        public Account createFromParcel(Parcel source) {
+            return new Account(source);
+        }
+
+        @Override
+        public Account[] newArray(int size) {
+            return new Account[size];
+        }
+    };
 }
