@@ -20,6 +20,7 @@ import com.lc.app.JsBaseActivity;
 import com.lc.app.R;
 import com.lc.app.code.QrCodeDialog;
 import com.lc.app.databinding.ActivityAccountDetailsBinding;
+import com.lc.app.javascript.JsCallback;
 import com.lc.app.model.Account;
 import com.lc.app.transaction.TransactionActivity;
 import com.lc.app.transaction.TransactionHistoryActivity;
@@ -41,7 +42,7 @@ public class AccountDetailsActivity extends JsBaseActivity implements
     private static final int REQUEST_CODE_TRANSACTION = 0x20;
 
     private static final int REQUEST_CODE_TRANSACTION_HISTORY = 0x21;
-
+    private Account mAccount;
     private ActivityAccountDetailsBinding mBinding;
     private AccountDetailsContract.Presenter mPresenter;
     private PopupMenu mPopupMenu;
@@ -52,14 +53,14 @@ public class AccountDetailsActivity extends JsBaseActivity implements
                     switch (item.getItemId()) {
                         case R.id.menu_transaction: {
                             TransactionActivity.intentTo(AccountDetailsActivity.this,
-                                    mBinding.getAccount(),
+                                    mAccount,
                                     REQUEST_CODE_TRANSACTION);
                             return true;
                         }
 
                         case R.id.menu_transaction_history: {
                             TransactionHistoryActivity.intentTo(AccountDetailsActivity.this,
-                                    mBinding.getAccount());
+                                    mAccount);
                             return true;
                         }
                         default: {
@@ -112,6 +113,7 @@ public class AccountDetailsActivity extends JsBaseActivity implements
         }
 
         final Account account = intent.getParcelableExtra(EXTRA_ACCOUNT);
+        mAccount = account;
         mBinding.setAccount(account);
         mBinding.executePendingBindings();
 
@@ -164,6 +166,20 @@ public class AccountDetailsActivity extends JsBaseActivity implements
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+        switch (requestCode) {
+            case REQUEST_CODE_TRANSACTION: {
+                queryBalance();
+                break;
+            }
+        }
+    }
+
+    @Override
     public void setPresenter(AccountDetailsContract.Presenter presenter) {
         mPresenter = presenter;
     }
@@ -185,7 +201,7 @@ public class AccountDetailsActivity extends JsBaseActivity implements
 
     @Override
     public void onAccountVisibleChanged(boolean isChecked) {
-        Account account = mBinding.getAccount();
+        Account account = mAccount;
         if (account != null) {
             account.setSecret(isChecked);
         }
@@ -235,5 +251,51 @@ public class AccountDetailsActivity extends JsBaseActivity implements
                 }
             }
         });
+    }
+
+    @Override
+    protected void onWalletInitCompleted() {
+        super.onWalletInitCompleted();
+        queryBalance();
+    }
+
+    private void queryBalance() {
+        sendCommand(new Runnable() {
+            @Override
+            public void run() {
+                String address = mAccount.getRealAddress();
+                showProgressDialog();
+                balanceOf(address);
+            }
+        });
+    }
+
+    @Override
+    protected JsCallback getJsCallback() {
+        return new JsCallback() {
+            @Override
+            public void onCallback(final int message, final String error, final Object result) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        switch (message) {
+                            case MESSAGE_BALANCE: {
+                                try {
+                                    float remain = Float.parseFloat(String.valueOf(result));
+                                    Account account = mAccount;
+                                    if (account != null) {
+                                        account.setRemain(remain);
+                                    }
+                                } catch (NumberFormatException e) {
+                                    e.printStackTrace();
+                                }
+                                dismissProgressDialog();
+                                break;
+                            }
+                        }
+                    }
+                });
+            }
+        };
     }
 }

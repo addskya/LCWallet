@@ -8,6 +8,7 @@
     <string name="menu_import_account">"导入账户"</string>
     <string name="menu_verify_account">"账户认证"</string>
     <string name="menu_settings">"设置"</string>
+    <string name="error_load_wallet">"钱包加载出错"</string>
 
     <string name="menu_wallet_transaction">"交易转账"</string>
     <string name="menu_wallet_transaction_history">"交易历史"</string>
@@ -34,6 +35,7 @@
     <string name="hint_wallet_name">"请输入钱包名(5~10位)"</string>
     <string name="hint_wallet_keystore">"请输入钱包密钥"</string>
     <string name="text_import">"导入"</string>
+    <string name="error_import_wallet_fail">"钱包导入失败"</string>
     <string name="text_wallet_import_success">"钱包导入成功"</string>
 
     <string name="text_transaction">"交易"</string>
@@ -47,6 +49,7 @@
     <string name="hint_fee_summary">"交易费 = 当前费率 * 0.01 * 转出金额"</string>
     <string name="error_password_invalid">"密码输入有误"</string>
     <string name="error_transfer_amount_invalid">"转出金额输入有误"</string>
+    <string name="text_transaction_success">"转账成功"</string>
 
     <string name="text_transaction_history">"转账记录"</string>
     <string name="text_no_transaction_history">"无转账历史记录"</string>

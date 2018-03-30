@@ -75,11 +75,16 @@ public class TransactionActivity extends JsBaseActivity {
                             } catch (NumberFormatException e) {
                                 e.printStackTrace();
                             }
+                            break;
                         }
 
                         // 转账结果
                         case MESSAGE_TRANSFER: {
-
+                            if (TextUtils.isEmpty(error)) {
+                                toastMessage(R.string.text_transaction_success);
+                                dismissProgressDialog();
+                                finish();
+                            }
                             break;
                         }
                     }
@@ -234,7 +239,7 @@ public class TransactionActivity extends JsBaseActivity {
         if (amount <= 0) {
             return;
         }
-
+        showProgressDialog();
         transferByFee(walletName, password, executeAccount, toAccount, amount);
     }
 }

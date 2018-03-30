@@ -17,6 +17,7 @@ import com.lc.app.ui.PasswordView;
 /**
  * Created by Orange on 18-3-26.
  * Email:addskya@163.com
+ * 导入钱包UI
  */
 
 public class ImportActivity extends JsBaseActivity {
@@ -38,7 +39,7 @@ public class ImportActivity extends JsBaseActivity {
         finish();
     }
 
-
+    // OnClickListener
     public void importWallet(View view) {
         EditText walletNameView = findViewById(R.id.wallet_name);
 
@@ -79,12 +80,14 @@ public class ImportActivity extends JsBaseActivity {
                 dismissProgressDialog();
                 if (TextUtils.isEmpty(value)
                         || "null".equalsIgnoreCase(value)) {
-                    // fail
+                    toastMessage(R.string.error_import_wallet_fail);
                     return;
                 }
 
                 toastMessage(R.string.text_wallet_import_success);
+                dismissProgressDialog();
                 setResult(RESULT_OK);
+                finish();
             }
         });
     }

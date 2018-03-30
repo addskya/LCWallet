@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.PopupMenu;
@@ -19,10 +21,12 @@ import com.lc.app.code.QrCodeActivity;
 import com.lc.app.code.QrCodeDialog;
 import com.lc.app.create.CreateAccountActivity;
 import com.lc.app.databinding.ActivityHomeBinding;
+import com.lc.app.javascript.JsCallback;
 import com.lc.app.model.Account;
 import com.lc.app.portim.ImportActivity;
 
 import java.util.List;
+import java.util.Stack;
 
 public class HomeActivity extends JsBaseActivity implements HomeContract.View {
 
@@ -79,8 +83,6 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
 
         mAdapter = new AccountAdapter(getLayoutInflater(), this);
         mBinding.account.setAdapter(mAdapter);
-
-        mPresenter.loadAccounts(getWalletFolder(), false);
     }
 
     @Override
@@ -92,8 +94,9 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
             return;
         }
         switch (requestCode) {
-            case REQUEST_CODE_CREATE_ACCOUNT: {
-                mPresenter.loadAccounts(getWalletFolder(), true);
+            case REQUEST_CODE_CREATE_ACCOUNT:
+            case REQUEST_CODE_IMPORT: {
+                refresh();
                 break;
             }
             case REQUEST_CODE_SCAN_QR_CODE: {
@@ -103,9 +106,8 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
                 Log.i(TAG, "content:" + content);
                 break;
             }
-            case REQUEST_CODE_IMPORT: {
-                mPresenter.loadAccounts(getWalletFolder(), true);
-                break;
+            default: {
+                Log.w(TAG, "Unknown requestCode:" + requestCode);
             }
         }
     }
@@ -115,6 +117,19 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
         super.onDestroy();
         mPresenter.destroy();
         mOnMenuItemClickListener = null;
+        mQueryBalance.clear();
+        mQueryBalance = null;
+    }
+
+    @Override
+    protected void onWalletInitCompleted() {
+        super.onWalletInitCompleted();
+        sendCommand(new Runnable() {
+            @Override
+            public void run() {
+                refresh();
+            }
+        });
     }
 
     @Override
@@ -136,7 +151,8 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
         requestPermissions(permission, new Runnable() {
             @Override
             public void run() {
-                QrCodeActivity.intentTo(HomeActivity.this, REQUEST_CODE_SCAN_QR_CODE);
+                QrCodeActivity.intentTo(HomeActivity.this,
+                        REQUEST_CODE_SCAN_QR_CODE);
             }
         });
     }
@@ -156,6 +172,11 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
         QrCodeDialog.intentTo(this, account);
     }
 
+    /**
+     * 计算所有钱包余额之和
+     *
+     * @return 所有钱包余额之和
+     */
     @Override
     public float getAccountRemain() {
         List<Account> accounts = mAdapter.getDatas();
@@ -174,10 +195,12 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
     @Override
     public void onLoadAccounts(List<Account> accounts, boolean refresh) {
         mAdapter.addOrSetData(accounts, refresh);
+        loadBalanceOf(accounts);
     }
 
     @Override
     public void onLoadAccountError(Throwable error) {
+        toastMessage(R.string.error_load_wallet);
         mBinding.swipe.setRefreshing(false);
         dismissProgressDialog();
     }
@@ -186,5 +209,64 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
     public void onLoadAccountCompleted() {
         mBinding.swipe.setRefreshing(false);
         dismissProgressDialog();
+    }
+
+    @Override
+    protected JsCallback getJsCallback() {
+        return new JsCallback() {
+            @Override
+            public void onCallback(final int message, final String error, final Object result) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        switch (message) {
+                            case MESSAGE_BALANCE: {
+                                try {
+                                    float remain = Float.parseFloat(String.valueOf(result));
+                                    if (mQueryBalanceAccount != null) {
+                                        mQueryBalanceAccount.setRemain(remain);
+                                        mAdapter.notifyDataSetChanged();
+                                        startQueryBalance();
+                                    }
+                                } catch (NumberFormatException e) {
+                                    e.printStackTrace();
+                                }
+                                break;
+                            }
+                        }
+                    }
+                });
+            }
+        };
+    }
+
+    private Account mQueryBalanceAccount;
+
+    private Stack<Account> mQueryBalance = new Stack<>();
+
+
+    private void loadBalanceOf(@Nullable List<Account> accounts) {
+        if (accounts == null || accounts.size() == 0) {
+            return;
+        }
+        for (Account account : accounts) {
+            if (account == null) {
+                continue;
+            }
+
+            mQueryBalance.push(account);
+        }
+        startQueryBalance();
+    }
+
+    private void startQueryBalance() {
+        if (!mQueryBalance.empty()) {
+            Account account = mQueryBalance.pop();
+            String address = account.getRealAddress();
+            if (!TextUtils.isEmpty(address)) {
+                mQueryBalanceAccount = account;
+                balanceOf(address);
+            }
+        }
     }
 }

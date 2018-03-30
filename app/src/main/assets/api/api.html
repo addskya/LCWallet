@@ -1,4 +1,5 @@
-<!doctype>
+<!DOCTYPE html>
+
 <html>
 
 <head>
@@ -6,129 +7,128 @@
     <script type="text/javascript" src="./ctoken.min.js"></script>
     <script type="text/javascript">
 
-var URL = "http://47.100.55.67:8545/";
-var contract = "0x4230deEe19c832D6e7F2AaC175427c7eEB5E04eC";
+        var URL = "http://47.100.55.67:8545/";
+        var contract = "0x4230deEe19c832D6e7F2AaC175427c7eEB5E04eC";
 
-var walletApi;
+        var walletApi;
 
-// Call only one time
-function initWallet() {
-    walletApi = new CToken(URL, contract);
-    return walletApi.initCToken();
-}
+        // Call only one time
+        function initWallet() {
+            walletApi = new CToken(URL, contract);
+            return walletApi.initCToken();
+        }
 
-// 创建钱包,一个钱包仅允许一个账户,并使用口令进行加密保护
-// @param {walletName} 钱包名称 {password} 钱包加密保护口令
-// @return 成功返回钱包内部账户地址信息,失败返回 null
-function createWallet(walletName, password) {
-    account = walletApi.createWallet(walletName,password);
-    return account;
-}
+        // 创建钱包,一个钱包仅允许一个账户,并使用口令进行加密保护
+        // @param {walletName} 钱包名称 {password} 钱包加密保护口令
+        // @return 成功返回钱包内部账户地址信息,失败返回 null
+        function createWallet(walletName, password) {
+            return walletApi.createWallet(walletName, password);
+        }
 
-// 使用口令打开钱包
-// @param {walletName} 钱包名称,使用钱包名称区分不同钱包
-// {password} 钱包访问口令
-// {accountAddress optional} 账户地址信息
-// @return 成功则返回账户私钥,失败则返回 null
-function loadWallet(walletName,password,accountAddress) {
-    return walletApi.loadWallet(walletName, password, accountAddress);
-}
+        // 使用口令打开钱包
+        // @param {walletName} 钱包名称,使用钱包名称区分不同钱包
+        // {password} 钱包访问口令
+        // {accountAddress optional} 账户地址信息
+        // @return 成功则返回账户私钥,失败则返回 null
+        function loadWallet(walletName, password, accountAddress) {
+            return walletApi.loadWallet(walletName, password, accountAddress);
+        }
 
-// 导出 wallet keystore 信息,导出前需要进行口令认证
-// @param {walletName} 钱包名称,使用钱包名称区分不同钱包
-// {password} 钱包访问口令
-// @return 成功则导出钱包 keystore 信息,失败则返回 null
-function exportWallet(walletName, password) {
-    return walletApi.exportWallet(walletName, password);
-}
+        // 导出 wallet keystore 信息,导出前需要进行口令认证
+        // @param {walletName} 钱包名称,使用钱包名称区分不同钱包
+        // {password} 钱包访问口令
+        // @return 成功则导出钱包 keystore 信息,失败则返回 null
+        function exportWallet(walletName, password) {
+            return walletApi.exportWallet(walletName, password);
+        }
 
-// 导入 wallet keystore 信息
-// @param {walletName} 导入钱包名称
-// {keystore} 钱包 keystore 信息
-// {password} keystore 保护口令
-// @return 成功则导出 keystore 对应的账户地址信息,失败则返回 null
-function importWallet(walletName, keystore, password) {
-    return walletApi.importWallet(walletName, keystore, password);
-}
+        // 导入 wallet keystore 信息
+        // @param {walletName} 导入钱包名称
+        // {keystore} 钱包 keystore 信息
+        // {password} keystore 保护口令
+        // @return 成功则导出 keystore 对应的账户地址信息,失败则返回 null
+        function importWallet(walletName, keystore, password) {
+            return walletApi.importWallet(walletName, keystore, password);
+        }
 
-// 获取钱包余额回调
-// @param {error} 错误信息,无错误返回时为Null
-// @param {result} 帐户余额
-function callback_balanceOf(error, result) {
-    console.log("callback_balanceOf-----");
-    console.log("callback_balanceOf error:" + error);
-    console.log("callback_balanceOf result:" + result);
-    console.log("callback_balanceOf-----");
-    handler.onCallback_BalanceOf(error, result);
-}
+        // 获取钱包余额回调
+        // @param {error} 错误信息,无错误返回时为Null
+        // @param {result} 帐户余额
+        function callback_balanceOf(error, result) {
+            console.log("callback_balanceOf-----");
+            console.log("callback_balanceOf error:" + error);
+            console.log("callback_balanceOf result:" + result);
+            console.log("callback_balanceOf-----");
+            handler.onCallback_BalanceOf(error, result);
+        }
 
-// 获取钱包余额
-// @param {target} 钱包地址
-// @return 成功则返回true,失败返回false
-function balanceOf(target) {
-    walletApi.balanceOf(target, callback_balanceOf);
-}
+        // 获取钱包余额
+        // @param {target} 钱包地址
+        // @return 成功则返回true,失败返回false
+        function balanceOf(target) {
+            walletApi.balanceOf(target, callback_balanceOf);
+        }
 
 
-// 获取交易费率
-// @param {error} 错误信息,无错误返回时为Null
-// @param {result} 交易费率
-function callback_getRate(error, result) {
-    console.log("callback_getRate-----");
-    console.log("callback_getRate error:" + error);
-    console.log("callback_getRate result:" + result);
-    console.log("callback_getRate-----");
-    handler.onCallback_getRate(error, result);
-}
+        // 获取交易费率
+        // @param {error} 错误信息,无错误返回时为Null
+        // @param {result} 交易费率
+        function callback_getRate(error, result) {
+            console.log("callback_getRate-----");
+            console.log("callback_getRate error:" + error);
+            console.log("callback_getRate result:" + result);
+            console.log("callback_getRate-----");
+            handler.onCallback_getRate(error, result);
+        }
 
-// 获取交易费率
-// @return 成功则返回true,失败返回false
-function getRate() {
-    return walletApi.getRate(callback_getRate);
-}
+        // 获取交易费率
+        // @return 成功则返回true,失败返回false
+        function getRate() {
+            return walletApi.getRate(callback_getRate);
+        }
 
-// 转账回调
-// @param {error} 错误信息,无错误返回时为Null
-// @param {result} 返回此交易的hash值
-function callback_transferByFee(error, result) {
-    console.log("callback_transferByFee-----");
-    console.log("callback_transferByFee,error:" + error);
-    console.log("callback_transferByFee,result:" + result);
-    console.log("callback_transferByFee-----");
-    handler.onCallback_transferByFee(error, result);
-}
+        // 转账回调
+        // @param {error} 错误信息,无错误返回时为Null
+        // @param {result} 返回此交易的hash值
+        function callback_transferByFee(error, result) {
+            console.log("callback_transferByFee-----");
+            console.log("callback_transferByFee,error:" + error);
+            console.log("callback_transferByFee,result:" + result);
+            console.log("callback_transferByFee-----");
+            handler.onCallback_transferByFee(error, result);
+        }
 
-// 执行带手续费的转账交易
-// @param {walletName} 钱包名字
-// @param {password} 钱包密码
-// @param {executeAccount} 转出账户
-// @param {toAccount} 转入账户
-// @param {amount} 转出金额
-// @return 成功则返回true,失败返回false
-function transferByFee(walletName, password, executeAccount, toAccount ,amount) {
-    return walletApi.transferByFee(walletName, password,executeAccount, toAccount,amount,callback_transferByFee);
-}
+        // 执行带手续费的转账交易
+        // @param {walletName} 钱包名字
+        // @param {password} 钱包密码
+        // @param {executeAccount} 转出账户
+        // @param {toAccount} 转入账户
+        // @param {amount} 转出金额
+        // @return 成功则返回true,失败返回false
+        function transferByFee(walletName, password, executeAccount, toAccount, amount) {
+            return walletApi.transferByFee(walletName, password, executeAccount, toAccount, amount, callback_transferByFee);
+        }
 
-// 查询指定账户所参与的交易记录回调
-// @param {error} 错误信息,无错误返回时为Null
-// @param {result} 查找结果,为数组类型,包含{from,to,value,date}
-function callback_history_transactions(error, result) {
-    console.log("error:" + error);
-    console.log("result:" + result);
-    handler.onCallback_historyTransactions(error, result);
-}
+        // 查询指定账户所参与的交易记录回调
+        // @param {error} 错误信息,无错误返回时为Null
+        // @param {result} 查找结果,为数组类型,包含{from,to,value,date}
+        function callback_history_transactions(error, result) {
+            console.log("error:" + error);
+            console.log("result:" + result);
+            handler.onCallback_historyTransactions(error, result);
+        }
 
-// 查询指定账户所参与的交易记录
-// @param {target} 需要查询的账户地址
-// @return 成功则返回true,失败返回false
-function showHistoryTransaction(target) {
-    return walletApi.showHistoryTransactions(target, callback_history_transactions);
-}
+        // 查询指定账户所参与的交易记录
+        // @param {target} 需要查询的账户地址
+        // @return 成功则返回true,失败返回false
+        function showHistoryTransaction(target) {
+            return walletApi.showHistoryTransactions(target, callback_history_transactions);
+        }
 
     </script>
 </head>
 <body>
-
+Api interface
 </body>
 </html>
 
