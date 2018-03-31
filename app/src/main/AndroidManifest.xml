@@ -75,7 +75,7 @@
             android:exported="false"
             android:label="@string/text_wallet_import"
             android:launchMode="singleInstance"
-            android:windowSoftInputMode="stateAlwaysVisible" />
+            android:windowSoftInputMode="stateAlwaysVisible|adjustPan" />
 
         <activity
             android:name=".transaction.TransactionActivity"
@@ -88,6 +88,13 @@
             android:name=".transaction.TransactionHistoryActivity"
             android:exported="false"
             android:label="@string/text_transaction_history"
+            android:launchMode="singleInstance"
+            android:windowSoftInputMode="stateHidden" />
+
+        <activity
+            android:name=".export.ExportActivity"
+            android:exported="false"
+            android:label="@string/text_export_keystore"
             android:launchMode="singleInstance"
             android:windowSoftInputMode="stateHidden" />
 

@@ -17,14 +17,22 @@
     <string name="text_remain">"余额"</string>
     <string name="text_account">"账户"</string>
     <string name="text_account_remain">"账户余额"</string>
+    <string name="text_input_password">"请输入密码"</string>
+    <string name="text_input_password_again">"请再次输入密码"</string>
+
+    <string name="text_cancel">"取消"</string>
+    <string name="text_sure">"确定"</string>
+    <string name="text_loading">"加载中&#8230;"</string>
+
 
     <string name="text_create_account">"新建账户"</string>
     <string name="error_wallet_name_short">"钱包名太短"</string>
-    <string name="hint_password">"请输入密码"</string>
-    <string name="hint_password_rep">"请再次输入密码"</string>
+    <string name="hint_password">@string/text_input_password</string>
+    <string name="hint_password_rep">"@string/text_input_password_again"</string>
     <string name="text_create_account_password_summary">"请设置一个不小于8为数的密码\n该密码用于账户的消费兑换,请务必妥善保存,丢失密码将没有任何方法找回."</string>
     <string name="error_two_password_invalid">"两次输入的密码不一致"</string>
     <string name="error_password_short">"密码长度不够"</string>
+    <string name="error_keystore_invalid">"输入密钥无效"</string>
 
     <string name="text_create_wallet_failed">"创建钱包失败"</string>
 
@@ -32,11 +40,23 @@
     <string name="text_copyed">"keystore已复制到剪贴板"</string>
 
     <string name="text_wallet_import">"导入钱包"</string>
-    <string name="hint_wallet_name">"请输入钱包名(5~10位)"</string>
+    <string name="hint_wallet_name">"请输入钱包名(2~10位)"</string>
     <string name="hint_wallet_keystore">"请输入钱包密钥"</string>
     <string name="text_import">"导入"</string>
     <string name="error_import_wallet_fail">"钱包导入失败"</string>
     <string name="text_wallet_import_success">"钱包导入成功"</string>
+
+    <string name="text_export_wallet_ing">"导出钱包中&#8230;"</string>
+    <string name="text_import_wallet_ing">"导入钱包中,请耐心等待"</string>
+
+    <string name="text_export_keystore">"导出Keystore"</string>
+    <string name="text_offline_save">"离线保存"</string>
+    <string name="text_offline_save_summary">"请复制粘贴 Keystore 文件到安全,离线的地方保存.切勿保存到邮箱,记事本,网盘,聊天工具等,非常危险"</string>
+    <string name="text_network_save">"请勿通过网络传输"</string>
+    <string name="text_network_save_summary">"请勿通过网络工具传输 Keystore 文件,一旦被黑客获取将造成不可挽回的资产损失.建议离线设备通过扫二维码方式传输."</string>
+    <string name="text_password_save">"保险箱保存"</string>
+    <string name="text_password_save_summary">"如需在线保存,则建议使用安全等级更高的 1Password等密码保管软件保存 Keystore"</string>
+    <string name="text_copy_keystore">"复制Keystore"</string>
 
     <string name="text_transaction">"交易"</string>
     <string name="hint_transaction_to_address">"转入钱包地址"</string>
@@ -53,7 +73,6 @@
 
     <string name="text_transaction_history">"转账记录"</string>
     <string name="text_no_transaction_history">"无转账历史记录"</string>
-    <string name="text_loading">"加载中&#8230;"</string>
     <string name="text_transaction_from">"转账自:"</string>
     <string name="text_transaction_to">"转账到:"</string>
     <string name="text_transaction_value">"转出额:"</string>

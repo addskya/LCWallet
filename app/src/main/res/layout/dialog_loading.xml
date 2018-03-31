@@ -1,19 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout
+<ProgressBar
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@drawable/dialog_bg">
+    android:layout_width="40dp"
+    android:layout_height="40dp"
+    android:layout_gravity="center"
+    android:background="@drawable/dialog_bg"
+    android:indeterminateDrawable="@anim/loading"
+    android:minHeight="20dp"
+    android:minWidth="20dp"
+    android:padding="10dp" />
 
-    <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="10dp"
-        android:indeterminateDrawable="@anim/loading"
-        android:maxHeight="20dp"
-        android:maxWidth="20dp"
-        android:minHeight="20dp"
-        android:minWidth="20dp" />
-</FrameLayout>

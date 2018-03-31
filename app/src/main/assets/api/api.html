@@ -25,13 +25,13 @@
             return walletApi.createWallet(walletName, password);
         }
 
-        // 使用口令打开钱包
-        // @param {walletName} 钱包名称,使用钱包名称区分不同钱包
-        // {password} 钱包访问口令
-        // {accountAddress optional} 账户地址信息
-        // @return 成功则返回账户私钥,失败则返回 null
-        function loadWallet(walletName, password, accountAddress) {
-            return walletApi.loadWallet(walletName, password, accountAddress);
+        // 导入 wallet keystore 信息
+        // @param {walletName} 导入钱包名称
+        // {keystore} 钱包 keystore 信息
+        // {password} keystore 保护口令
+        // @return 成功则导出 keystore 对应的账户地址信息,失败则返回 null
+        function importWallet(walletName, keystore, password) {
+            return walletApi.importWallet(walletName, keystore, password);
         }
 
         // 导出 wallet keystore 信息,导出前需要进行口令认证
@@ -42,13 +42,35 @@
             return walletApi.exportWallet(walletName, password);
         }
 
-        // 导入 wallet keystore 信息
-        // @param {walletName} 导入钱包名称
-        // {keystore} 钱包 keystore 信息
-        // {password} keystore 保护口令
-        // @return 成功则导出 keystore 对应的账户地址信息,失败则返回 null
-        function importWallet(walletName, keystore, password) {
-            return walletApi.importWallet(walletName, keystore, password);
+        // 使用口令打开钱包
+        // @param {walletName} 钱包名称,使用钱包名称区分不同钱包
+        // {password} 钱包访问口令
+        // {accountAddress optional} 账户地址信息
+        // @return 成功则返回账户私钥,失败则返回 null
+        function loadWallet(walletName, password, accountAddress) {
+            return walletApi.loadWallet(walletName, password, accountAddress);
+        }
+
+        function getWalletInfo() {
+            var value, walletObject, walletAddress, walletInfo;
+            var walletArray = new Array();
+
+            for(var key in localStorage){
+                value = localStorage.getItem(key);
+                walletObject = JSON.parse(value);
+                if(walletObject == null)
+                    break;
+
+                walletAddress = walletObject[0].address;
+
+                walletInfo = {
+                    "walletName": key,
+                    "address": walletAddress
+                };
+                walletArray.push(walletInfo);
+            }
+            console.log(JSON.stringify(walletArray));
+            return JSON.stringify(walletArray);
         }
 
         // 获取钱包余额回调
@@ -115,7 +137,10 @@
         function callback_history_transactions(error, result) {
             console.log("error:" + error);
             console.log("result:" + result);
-            handler.onCallback_historyTransactions(error, result);
+            console.log("-------------------------------");
+            var stringResult = JSON.stringify(result).toString();
+            console.log(stringResult);
+            handler.onCallback_historyTransactions(error, stringResult);
         }
 
         // 查询指定账户所参与的交易记录

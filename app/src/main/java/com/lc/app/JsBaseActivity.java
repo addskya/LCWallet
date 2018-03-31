@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import android.webkit.WebViewClient;
 import com.lc.app.javascript.JavaScriptApi;
 import com.lc.app.javascript.JsCallback;
 import com.lc.app.ui.LoadingDialog;
+import com.lc.app.ui.StatusDialog;
 
 /**
  * Created by Orange on 18-3-24.
@@ -27,7 +29,7 @@ import com.lc.app.ui.LoadingDialog;
 public abstract class JsBaseActivity extends BaseActivity {
     private static final String TAG = "JsBaseActivity";
     private WebView mWebView;
-    private LoadingDialog mDialog;
+    private BaseDialog mDialog;
     private Handler mHandler = new Handler(Looper.getMainLooper());
 
     @Override
@@ -193,6 +195,12 @@ public abstract class JsBaseActivity extends BaseActivity {
         mWebView.evaluateJavascript(call, new ValueCallbackWrapper<>(callback));
     }
 
+    protected void loadWallet(@Nullable ValueCallback<String> callback) {
+        String call = "javascript:getWalletInfo()";
+        Log.d(TAG,"execute:" + call);
+        mWebView.evaluateJavascript(call, new ValueCallbackWrapper<>(callback));
+    }
+
     /**
      * query the current rate for transfer
      *
@@ -262,6 +270,15 @@ public abstract class JsBaseActivity extends BaseActivity {
             mDialog.dismiss();
         }
         mDialog = null;
+    }
+
+
+    protected void showProgressDialog(@StringRes int status) {
+        dismissProgressDialog();
+        if (mDialog == null) {
+            mDialog = new StatusDialog(this, status);
+        }
+        mDialog.show();
     }
 
     @NonNull

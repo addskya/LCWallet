@@ -6,6 +6,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
+import com.google.gson.annotations.SerializedName;
 import com.lc.app.BR;
 
 import java.io.Serializable;
@@ -20,6 +21,7 @@ public class Account extends BaseObservable
     public static final int serialVersionUID = 0x00000001;
 
     // 钱包名称
+    //@SerializedName("name")
     private String walletName;
     // 钱包密码
     private String password;

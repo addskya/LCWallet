@@ -72,14 +72,14 @@ public class JavaScriptApi {
      * 查询转账历史记录
      *
      * @param error  正常情况下为null,或错误信息
-     * @param result 转账的历史记录,使用数组返回,{from,to,value,date}
+     * @param json 转账的历史记录,使用数组返回,{from,to,value,date}
      */
     @JavascriptInterface
-    public void onCallback_historyTransactions(String error, Object[] result) {
+    public void onCallback_historyTransactions(String error, String json) {
         Log.i(TAG, "onCallback_historyTransactions -> error:" + error);
-        Log.i(TAG, "onCallback_historyTransactions -> result:" + result);
+        Log.i(TAG, "onCallback_historyTransactions -> result:" + json);
         if (mCallBack != null) {
-            mCallBack.onCallback(JsCallback.MESSAGE_TRANSFER_HISTORY, error, result);
+            mCallBack.onCallback(JsCallback.MESSAGE_TRANSFER_HISTORY, error, json);
         }
     }
 }

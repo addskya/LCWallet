@@ -9,8 +9,11 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
+import android.webkit.ValueCallback;
 import android.widget.PopupMenu;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.lc.app.BaseAdapter;
@@ -139,7 +142,18 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
 
     @Override
     public void refresh() {
-        mPresenter.loadAccounts(getWalletFolder(), true);
+        //mPresenter.loadAccounts(getWalletFolder(), true);
+        loadWallet(new ValueCallback<String>() {
+            @Override
+            public void onReceiveValue(String value) {
+                Log.i(TAG,"value:" + value);
+                value = value.substring(1,value.length() - 1);
+                List<Account> list = new Gson().fromJson(value.replace("\\",""),new TypeToken<List<Account>>(){}.getType());
+                /*List<Account> list = new Gson().fromJson(value,  new TypeToken<List<Account>>() {
+                }.getType());*/
+                onLoadAccounts(list, true);
+            }
+        });
     }
 
     @Override
@@ -265,7 +279,7 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
             String address = account.getRealAddress();
             if (!TextUtils.isEmpty(address)) {
                 mQueryBalanceAccount = account;
-                balanceOf(address);
+                balanceOf("\"0x" + address + "\"");
             }
         }
     }

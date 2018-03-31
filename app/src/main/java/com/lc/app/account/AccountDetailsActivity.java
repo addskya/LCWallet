@@ -20,10 +20,12 @@ import com.lc.app.JsBaseActivity;
 import com.lc.app.R;
 import com.lc.app.code.QrCodeDialog;
 import com.lc.app.databinding.ActivityAccountDetailsBinding;
+import com.lc.app.export.ExportActivity;
 import com.lc.app.javascript.JsCallback;
 import com.lc.app.model.Account;
 import com.lc.app.transaction.TransactionActivity;
 import com.lc.app.transaction.TransactionHistoryActivity;
+import com.lc.app.ui.PromptDialog;
 import com.lc.app.utils.WalletUtil;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -218,39 +220,47 @@ public class AccountDetailsActivity extends JsBaseActivity implements
             return;
         }
 
-        final CharSequence walletName = account.getWalletName();
-        final CharSequence password = account.getPassword();
-        showProgressDialog();
-        exportWallet(walletName, password, new ValueCallback<String>() {
+        PromptDialog.intentTo(this, new PromptDialog.CallBack() {
             @Override
-            public void onReceiveValue(String value) {
-                Log.i(TAG, "export value:" + value);
-                dismissProgressDialog();
-                if (TextUtils.isEmpty(value) ||
-                        "null".equalsIgnoreCase(value)) {
-                    // Export failed.
-                    toastMessage(R.string.text_export_failed);
+            public void onCallback(@Nullable String input) {
+                if (TextUtils.isEmpty(input)) {
                     return;
                 }
 
-                account.setKeystore(value);
-                WalletUtil.updateWallet(getWalletFolder(), account)
-                        .subscribeOn(Schedulers.io())
-                        .unsubscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new DefaultObserver<Boolean>() {
+                if (TextUtils.equals(input, mAccount.getPassword())) {
+                    final CharSequence walletName = account.getWalletName();
+                    final CharSequence password = account.getPassword();
+                    showProgressDialog(R.string.text_export_wallet_ing);
+                    exportWallet(walletName, password, new ValueCallback<String>() {
+                        @Override
+                        public void onReceiveValue(String value) {
+                            Log.i(TAG, "export value:" + value);
+                            dismissProgressDialog();
+                            if (TextUtils.isEmpty(value) ||
+                                    "null".equalsIgnoreCase(value)) {
+                                // Export failed.
+                                toastMessage(R.string.text_export_failed);
+                                return;
+                            }
 
-                        });
-                // Copy the keystore to ClipBoradManager
+                            account.setKeystore(value);
+                            WalletUtil.updateWallet(getWalletFolder(), account)
+                                    .subscribeOn(Schedulers.io())
+                                    .unsubscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(new DefaultObserver<Boolean>() {
 
-                ClipboardManager manager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                if (manager != null) {
-                    ClipData data = ClipData.newPlainText("keystore", value);
-                    manager.setPrimaryClip(data);
-                    toastMessage(R.string.text_copyed);
+                                    });
+                            // Copy the keystore to ClipBoradManager
+
+                            ExportActivity.intentTo(AccountDetailsActivity.this, value);
+                        }
+                    });
+                } else {
+                    toastMessage(R.string.error_password_invalid);
                 }
             }
-        });
+        }).show();
     }
 
     @Override
@@ -265,7 +275,7 @@ public class AccountDetailsActivity extends JsBaseActivity implements
             public void run() {
                 String address = mAccount.getRealAddress();
                 showProgressDialog();
-                balanceOf(address);
+                balanceOf("\"0x" + address + "\"");
             }
         });
     }

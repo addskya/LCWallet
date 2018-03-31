@@ -49,7 +49,9 @@ public class ImportActivity extends JsBaseActivity {
         EditText keystoreView = findViewById(R.id.wallet_keystore);
 
         final CharSequence walletName = walletNameView.getText();
-        if (TextUtils.isEmpty(walletName)) {
+        if (TextUtils.isEmpty(walletName)
+                || TextUtils.getTrimmedLength(walletName) < getResources().getInteger(R.integer.min_wallet_name_length)) {
+            toastMessage(R.string.error_wallet_name_short);
             return;
         }
 
@@ -70,10 +72,11 @@ public class ImportActivity extends JsBaseActivity {
 
         final CharSequence keystore = keystoreView.getText();
         if (TextUtils.isEmpty(keystore)) {
+            toastMessage(R.string.error_keystore_invalid);
             return;
         }
 
-        showProgressDialog();
+        showProgressDialog(R.string.text_import_wallet_ing);
         importWallet(walletName, "'[" + keystore + "]'", password1, new ValueCallback<String>() {
             @Override
             public void onReceiveValue(String value) {
