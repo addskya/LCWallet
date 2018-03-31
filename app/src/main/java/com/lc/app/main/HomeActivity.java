@@ -36,8 +36,9 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
     private static final String TAG = "HomeActivity";
     private static final int REQUEST_CODE_CREATE_ACCOUNT = 0x10;
     private static final int REQUEST_CODE_IMPORT = 0x11;
+    private static final int REQUEST_CODE_TRANSLATE = 0x12;
     private static final int REQUEST_CODE_SCAN_QR_CODE = IntentIntegrator.REQUEST_CODE;
-    private HomeContract.Presenter mPresenter;
+    // private HomeContract.Presenter mPresenter;
     private BaseAdapter<Account, HomeContract.View> mAdapter;
     private ActivityHomeBinding mBinding;
     private PopupMenu mPopupMenu;
@@ -74,7 +75,7 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
         setContentView(R.layout.activity_home);
         mBinding = DataBindingUtil.setContentView(
                 this, R.layout.activity_home);
-        new HomePresenter(this);
+        // new HomePresenter(this);
         mBinding.setView(this);
         mBinding.executePendingBindings();
 
@@ -109,6 +110,11 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
                 Log.i(TAG, "content:" + content);
                 break;
             }
+            case REQUEST_CODE_TRANSLATE: {
+                List<Account> accounts = mAdapter.getDatas();
+                loadBalanceOf(accounts);
+                break;
+            }
             default: {
                 Log.w(TAG, "Unknown requestCode:" + requestCode);
             }
@@ -118,7 +124,6 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mPresenter.destroy();
         mOnMenuItemClickListener = null;
         mQueryBalance.clear();
         mQueryBalance = null;
@@ -137,20 +142,19 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
 
     @Override
     public void setPresenter(HomeContract.Presenter presenter) {
-        mPresenter = presenter;
     }
 
     @Override
     public void refresh() {
-        //mPresenter.loadAccounts(getWalletFolder(), true);
         loadWallet(new ValueCallback<String>() {
             @Override
             public void onReceiveValue(String value) {
                 Log.i(TAG,"value:" + value);
                 value = value.substring(1,value.length() - 1);
-                List<Account> list = new Gson().fromJson(value.replace("\\",""),new TypeToken<List<Account>>(){}.getType());
-                /*List<Account> list = new Gson().fromJson(value,  new TypeToken<List<Account>>() {
-                }.getType());*/
+                List<Account> list = new Gson().fromJson(
+                        value.replace("\\",""),new TypeToken<List<Account>>(){}.getType());
+                dismissProgressDialog();
+                mBinding.swipe.setRefreshing(false);
                 onLoadAccounts(list, true);
             }
         });
@@ -178,7 +182,7 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
 
     @Override
     public void showAccount(@NonNull Account account) {
-        AccountDetailsActivity.intentTo(this, account);
+        AccountDetailsActivity.intentTo(this, account, REQUEST_CODE_TRANSLATE);
     }
 
     @Override
@@ -194,7 +198,7 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
     @Override
     public float getAccountRemain() {
         List<Account> accounts = mAdapter.getDatas();
-        int accountRemain = 0;
+        float accountRemain = 0;
         for (Account a : accounts) {
             accountRemain += a.getRemain();
         }
@@ -279,7 +283,10 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
             String address = account.getRealAddress();
             if (!TextUtils.isEmpty(address)) {
                 mQueryBalanceAccount = account;
-                balanceOf("\"0x" + address + "\"");
+                balanceOf(address);
+            } else {
+                mBinding.swipe.setRefreshing(false);
+                dismissProgressDialog();
             }
         }
     }

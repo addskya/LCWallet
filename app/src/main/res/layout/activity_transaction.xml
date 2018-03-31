@@ -41,6 +41,7 @@
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
+        android:visibility="gone"
         app:hint="@string/hint_password" />
 
     <RelativeLayout

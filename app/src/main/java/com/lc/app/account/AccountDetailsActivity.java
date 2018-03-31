@@ -1,8 +1,6 @@
 package com.lc.app.account;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -78,11 +76,12 @@ public class AccountDetailsActivity extends JsBaseActivity implements
      * @param context the Activity context
      * @param account the account
      */
-    public static void intentTo(@NonNull Context context,
-                                @NonNull Account account) {
+    public static void intentTo(@NonNull Activity context,
+                                @NonNull Account account,
+                                int requestCode) {
         Intent intent = new Intent(context, AccountDetailsActivity.class);
         intent.putExtra(EXTRA_ACCOUNT, (Parcelable) account);
-        context.startActivity(intent);
+        context.startActivityForResult(intent, requestCode);
     }
 
     @Override
@@ -227,38 +226,34 @@ public class AccountDetailsActivity extends JsBaseActivity implements
                     return;
                 }
 
-                if (TextUtils.equals(input, mAccount.getPassword())) {
-                    final CharSequence walletName = account.getWalletName();
-                    final CharSequence password = account.getPassword();
-                    showProgressDialog(R.string.text_export_wallet_ing);
-                    exportWallet(walletName, password, new ValueCallback<String>() {
-                        @Override
-                        public void onReceiveValue(String value) {
-                            Log.i(TAG, "export value:" + value);
-                            dismissProgressDialog();
-                            if (TextUtils.isEmpty(value) ||
-                                    "null".equalsIgnoreCase(value)) {
-                                // Export failed.
-                                toastMessage(R.string.text_export_failed);
-                                return;
-                            }
-
-                            account.setKeystore(value);
-                            WalletUtil.updateWallet(getWalletFolder(), account)
-                                    .subscribeOn(Schedulers.io())
-                                    .unsubscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(new DefaultObserver<Boolean>() {
-
-                                    });
-                            // Copy the keystore to ClipBoradManager
-
-                            ExportActivity.intentTo(AccountDetailsActivity.this, value);
+                final CharSequence walletName = account.getWalletName();
+                final CharSequence password = input;
+                showProgressDialog(R.string.text_export_wallet_ing);
+                exportWallet(walletName, password, new ValueCallback<String>() {
+                    @Override
+                    public void onReceiveValue(String value) {
+                        Log.i(TAG, "export value:" + value);
+                        dismissProgressDialog();
+                        if (TextUtils.isEmpty(value) ||
+                                "null".equalsIgnoreCase(value)) {
+                            // Export failed.
+                            toastMessage(R.string.error_password_invalid);
+                            return;
                         }
-                    });
-                } else {
-                    toastMessage(R.string.error_password_invalid);
-                }
+
+                        /*account.setKeystore(value);
+                        WalletUtil.updateWallet(getWalletFolder(), account)
+                                .subscribeOn(Schedulers.io())
+                                .unsubscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new DefaultObserver<Boolean>() {
+
+                                });*/
+                        // Copy the keystore to ClipBoradManager
+
+                        ExportActivity.intentTo(AccountDetailsActivity.this, value);
+                    }
+                });
             }
         }).show();
     }
@@ -275,7 +270,7 @@ public class AccountDetailsActivity extends JsBaseActivity implements
             public void run() {
                 String address = mAccount.getRealAddress();
                 showProgressDialog();
-                balanceOf("\"0x" + address + "\"");
+                balanceOf(address);
             }
         });
     }
@@ -296,6 +291,8 @@ public class AccountDetailsActivity extends JsBaseActivity implements
                                     if (account != null) {
                                         account.setRemain(remain);
                                     }
+                                    mBinding.setAccount(account);
+                                    mBinding.executePendingBindings();
                                 } catch (NumberFormatException e) {
                                     e.printStackTrace();
                                 }

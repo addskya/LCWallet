@@ -82,7 +82,7 @@
             android:exported="false"
             android:label="@string/text_transaction"
             android:launchMode="singleInstance"
-            android:windowSoftInputMode="stateVisible|adjustResize" />
+            android:windowSoftInputMode="stateVisible|adjustPan" />
 
         <activity
             android:name=".transaction.TransactionHistoryActivity"

@@ -21,7 +21,7 @@ import com.lc.app.R;
 
 public class ExportActivity extends BaseActivity {
 
-    private static final String TAG = "";
+    private static final String TAG = "ExportActivity";
     private static final String EXTRA_KEYSTORE =
             "com.lc.app.EXTRA_KEYSTORE";
 

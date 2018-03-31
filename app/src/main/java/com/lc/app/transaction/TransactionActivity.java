@@ -11,6 +11,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.webkit.ValueCallback;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -22,7 +23,7 @@ import com.lc.app.R;
 import com.lc.app.code.QrCodeActivity;
 import com.lc.app.javascript.JsCallback;
 import com.lc.app.model.Account;
-import com.lc.app.ui.PasswordView;
+import com.lc.app.ui.PromptDialog;
 
 /**
  * Created by Orange on 18-3-27.
@@ -79,14 +80,17 @@ public class TransactionActivity extends JsBaseActivity {
                         }
 
                         // 转账结果
-                        case MESSAGE_TRANSFER: {
+                        /*case MESSAGE_TRANSFER: {
                             if (TextUtils.isEmpty(error)) {
                                 toastMessage(R.string.text_transaction_success);
-                                dismissProgressDialog();
+                                setResult(RESULT_OK);
                                 finish();
+                            } else {
+                                toastMessage(R.string.error_password_invalid);
                             }
+                            dismissProgressDialog();
                             break;
-                        }
+                        }*/
                     }
                 }
             });
@@ -192,7 +196,7 @@ public class TransactionActivity extends JsBaseActivity {
     private void updateCurrentRate(float rate) {
         TextView rateView = findViewById(R.id.rate);
         String rateText = getString(R.string.text_fee, rate);
-        rateView.setText(rateText);
+        rateView.setText(rateText + "%");
         mTransferAmountView.setEnabled(true);
     }
 
@@ -207,13 +211,14 @@ public class TransactionActivity extends JsBaseActivity {
     }
 
     public void onTransaction(View back) {
-        PasswordView passwordView = findViewById(R.id.password_1);
-        if (!TextUtils.equals(mAccount.getPassword(), passwordView.getText())) {
+        /*PasswordView passwordView = findViewById(R.id.password_1);
+        if (TextUtils.getTrimmedLength(passwordView.getText()) <
+                getResources().getInteger(R.integer.min_password_length)) {
             toastMessage(R.string.error_password_invalid);
             return;
-        }
+        }*/
 
-        EditText toAccountView = findViewById(R.id.toAddress);
+        final EditText toAccountView = findViewById(R.id.toAddress);
         if (TextUtils.isEmpty(toAccountView.getText())) {
             return;
         }
@@ -232,14 +237,49 @@ public class TransactionActivity extends JsBaseActivity {
             return;
         }
 
-        CharSequence walletName = mAccount.getWalletName();
-        CharSequence password = mAccount.getPassword();
-        CharSequence executeAccount = mAccount.getRealAddress();
-        CharSequence toAccount = toAccountView.getText();
-        if (amount <= 0) {
-            return;
-        }
-        showProgressDialog();
-        transferByFee(walletName, password, executeAccount, toAccount, amount);
+        final float transferAmount = amount;
+
+        PromptDialog.intentTo(this, new PromptDialog.CallBack() {
+            @Override
+            public void onCallback(@Nullable String input) {
+                if (!TextUtils.isEmpty(input)) {
+                    final CharSequence walletName = mAccount.getWalletName();
+                    final CharSequence password = input;
+                    final CharSequence executeAccount = mAccount.getRealAddress();
+                    final CharSequence toAccount = toAccountView.getText();
+                    String toAccountString = String.valueOf(toAccount).toLowerCase();
+                    if (toAccountString.startsWith("0x")) {
+                        toAccountString = toAccountString.substring(2);
+                    }
+
+                    if (transferAmount <= 0) {
+                        return;
+                    }
+                    showProgressDialog(R.string.text_transaction_ing);
+                    transferByFee(walletName,
+                            password,
+                            executeAccount,
+                            toAccountString,
+                            transferAmount,
+                            new ValueCallback<String>() {
+                                @Override
+                                public void onReceiveValue(String value) {
+                                    Log.i(TAG,"value:" + value);
+                                    Boolean success = Boolean.parseBoolean(value);
+                                    if (!success) {
+                                        toastMessage(R.string.error_password_invalid);
+                                    } else {
+                                        toastMessage(R.string.text_transaction_success);
+                                        setResult(RESULT_OK);
+                                        finish();
+                                    }
+                                    dismissProgressDialog();
+                                }
+                            });
+                }
+            }
+        }).show();
+
+
     }
 }

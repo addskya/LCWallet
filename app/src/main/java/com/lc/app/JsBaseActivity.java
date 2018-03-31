@@ -39,6 +39,12 @@ public abstract class JsBaseActivity extends BaseActivity {
     }
 
     @Override
+    public void finish() {
+        super.finish();
+        dismissProgressDialog();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         mWebView.destroy();
@@ -197,7 +203,7 @@ public abstract class JsBaseActivity extends BaseActivity {
 
     protected void loadWallet(@Nullable ValueCallback<String> callback) {
         String call = "javascript:getWalletInfo()";
-        Log.d(TAG,"execute:" + call);
+        Log.d(TAG, "execute:" + call);
         mWebView.evaluateJavascript(call, new ValueCallbackWrapper<>(callback));
     }
 
@@ -218,6 +224,7 @@ public abstract class JsBaseActivity extends BaseActivity {
      * @param address the wallet address
      */
     protected void balanceOf(@NonNull CharSequence address) {
+        address = "\"0x" + address + "\"";
         String call = "javascript:balanceOf(" + address + ")";
         Log.d(TAG, "execute:" + call);
         mWebView.evaluateJavascript(call, null);
@@ -236,7 +243,11 @@ public abstract class JsBaseActivity extends BaseActivity {
                                  @NonNull CharSequence password,
                                  @NonNull CharSequence executeAccount,
                                  @NonNull CharSequence toAccount,
-                                 @NonNull float amount) {
+                                 @NonNull float amount,
+                                 @Nullable ValueCallback<String> callback) {
+        executeAccount = "\"0x" + executeAccount + "\"";
+        toAccount = "0x" + toAccount + "";
+
         String call = "javascript:transferByFee("
                 + "\"" + walletName + "\","
                 + "\"" + password + "\","
@@ -244,7 +255,7 @@ public abstract class JsBaseActivity extends BaseActivity {
                 + "\"" + toAccount + "\","
                 + amount + ")";
         Log.d(TAG, "execute:" + call);
-        mWebView.evaluateJavascript(call, null);
+        mWebView.evaluateJavascript(call, new ValueCallbackWrapper<>(callback));
     }
 
     /**
@@ -253,6 +264,7 @@ public abstract class JsBaseActivity extends BaseActivity {
      * @param target 目标账户
      */
     protected void showHistoryTransaction(String target) {
+        target = "\"0x" + target + "\"";
         String call = "javascript:showHistoryTransaction(" + target + ")";
         Log.d(TAG, "execute:" + call);
         mWebView.evaluateJavascript(call, null);

@@ -28,7 +28,7 @@
     <string name="text_create_account">"新建账户"</string>
     <string name="error_wallet_name_short">"钱包名太短"</string>
     <string name="hint_password">@string/text_input_password</string>
-    <string name="hint_password_rep">"@string/text_input_password_again"</string>
+    <string name="hint_password_rep">@string/text_input_password_again</string>
     <string name="text_create_account_password_summary">"请设置一个不小于8为数的密码\n该密码用于账户的消费兑换,请务必妥善保存,丢失密码将没有任何方法找回."</string>
     <string name="error_two_password_invalid">"两次输入的密码不一致"</string>
     <string name="error_password_short">"密码长度不够"</string>
@@ -43,7 +43,7 @@
     <string name="hint_wallet_name">"请输入钱包名(2~10位)"</string>
     <string name="hint_wallet_keystore">"请输入钱包密钥"</string>
     <string name="text_import">"导入"</string>
-    <string name="error_import_wallet_fail">"钱包导入失败"</string>
+    <string name="error_import_wallet_fail">"钱包导入失败,请检查密码是否正确"</string>
     <string name="text_wallet_import_success">"钱包导入成功"</string>
 
     <string name="text_export_wallet_ing">"导出钱包中&#8230;"</string>
@@ -70,6 +70,7 @@
     <string name="error_password_invalid">"密码输入有误"</string>
     <string name="error_transfer_amount_invalid">"转出金额输入有误"</string>
     <string name="text_transaction_success">"转账成功"</string>
+    <string name="text_transaction_ing">"处理中,请稍后&#8230;"</string>
 
     <string name="text_transaction_history">"转账记录"</string>
     <string name="text_no_transaction_history">"无转账历史记录"</string>

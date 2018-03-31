@@ -9,5 +9,5 @@
     android:indeterminateDrawable="@anim/loading"
     android:minHeight="20dp"
     android:minWidth="20dp"
-    android:padding="10dp" />
+    android:padding="15dp" />
 

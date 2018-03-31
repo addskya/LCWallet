@@ -66,7 +66,7 @@ public class Account extends BaseObservable
             return address;
         } else {
             StringBuilder sb = new StringBuilder(address);
-            sb.replace(sb.length() - 10, sb.length(), "**********");
+            sb.replace(sb.length() - 20, sb.length(), "********************");
             return sb.toString();
         }
     }
