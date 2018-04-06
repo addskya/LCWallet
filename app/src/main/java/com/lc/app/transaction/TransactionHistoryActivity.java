@@ -67,7 +67,6 @@ public class TransactionHistoryActivity extends JsBaseActivity {
 
     private TextView mStatusView;
 
-    private View mSwipeView;
 
     private RecyclerView mListView;
     private HistoryAdapter mAdapter;
@@ -78,7 +77,6 @@ public class TransactionHistoryActivity extends JsBaseActivity {
         setContentView(R.layout.activity_transaction_history);
 
         mStatusView = findViewById(R.id.statusView);
-        mSwipeView = findViewById(R.id.swipe);
         mListView = findViewById(R.id.list);
         mAdapter = new HistoryAdapter(getLayoutInflater(), this);
         mListView.setAdapter(mAdapter);
@@ -131,7 +129,6 @@ public class TransactionHistoryActivity extends JsBaseActivity {
         if (!TextUtils.isEmpty(error)) {
             mStatusView.setText(error);
             mStatusView.setVisibility(View.VISIBLE);
-            mSwipeView.setVisibility(View.GONE);
             return;
         }
 
@@ -139,10 +136,8 @@ public class TransactionHistoryActivity extends JsBaseActivity {
             //No result
             mStatusView.setText(R.string.text_no_transaction_history);
             mStatusView.setVisibility(View.VISIBLE);
-            mSwipeView.setVisibility(View.GONE);
         } else {
             mStatusView.setVisibility(View.GONE);
-            mSwipeView.setVisibility(View.VISIBLE);
             Gson gson = new Gson();
             List<History> list = gson.fromJson(String.valueOf(result),
                     new TypeToken<List<History>>() {
