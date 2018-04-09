@@ -3,6 +3,7 @@
 
     <string name="text_scan_account">"账户扫描"</string>
     <string name="text_account_details">"账户详情"</string>
+    <string name="text_no_data">"暂无数据"</string>
 
     <string name="menu_create_account">"新增账户"</string>
     <string name="menu_import_account">"导入账户"</string>

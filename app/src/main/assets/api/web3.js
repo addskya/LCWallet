@@ -44405,7 +44405,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           };
 
           if (kdf === 'pbkdf2') {
-            kdfparams.c = options.c || 262144;
+            kdfparams.c = options.c || 65536;
             kdfparams.prf = 'hmac-sha256';
             derivedKey = cryp.pbkdf2Sync(new Buffer(password), salt, kdfparams.c, kdfparams.dklen, 'sha256');
           } else if (kdf === 'scrypt') {
@@ -53329,7 +53329,22 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     }, {}], 385: [function (require, module, exports) {
       module.exports = require('crypto');
     }, { "crypto": 384 }], 386: [function (require, module, exports) {
-      var randomHex = function randomHex(size, callback) {
+
+      	if (typeof Symbol !== "undefined" && Symbol.iterator) {
+         var ArrayFrom = typeof Array.from === "function" ? function (v) {
+          return Array.from(v);
+         } : function (v) {
+          var ret = [];
+          var it = v[Symbol.iterator]();
+          var itResult;
+          while (!(itResult = it.next()).done) {
+            ret.push(itResult.value);
+          }
+          return ret;
+         };
+		}
+
+		var randomHex = function randomHex(size, callback) {
         var crypto = require('./crypto.js');
         var isCallback = typeof callback === 'function';
 
@@ -53368,7 +53383,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
           if (cryptoLib && cryptoLib.getRandomValues) {
             var randomBytes = cryptoLib.getRandomValues(new Uint8Array(size));
-            var returnValue = '0x' + Array.from(randomBytes).map(function (arr) {
+            var returnValue = '0x' + ArrayFrom(randomBytes).map(function (arr) {
               return arr.toString(16);
             }).join('');
 

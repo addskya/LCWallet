@@ -46,9 +46,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:gravity="center"
-                android:text="@{String.valueOf(view.accountRemain),default=999.01}"
+                android:text="@string/text_no_data"
                 android:textColor="@color/yellow"
-                android:textSize="40sp" />
+                android:textSize="32sp" />
         </LinearLayout>
 
     </RelativeLayout>

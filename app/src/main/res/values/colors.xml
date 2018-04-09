@@ -4,10 +4,14 @@
     <color name="colorPrimaryDark">#161616</color>
     <color name="colorAccent">#161616</color>
 
+    <color name="black">#000000</color>
     <color name="white">#FFFFFFFF</color>
+
     <color name="gray">#c6c6c6</color>
     <color name="green">#91D45E</color>
     <color name="yellow">#FFFF00</color>
+
+    <color name="black_light">#2C5CA4</color>
     <!-- Common color - -->
 
 </resources>

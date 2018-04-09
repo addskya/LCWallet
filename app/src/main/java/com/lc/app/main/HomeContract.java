@@ -37,7 +37,7 @@ public interface HomeContract {
 
         void onLoadAccountCompleted();
 
-        float getAccountRemain();
+        String getAccountRemain();
     }
 
     interface Presenter extends BasePresenter {

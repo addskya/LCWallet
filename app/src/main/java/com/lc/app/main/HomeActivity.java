@@ -150,6 +150,10 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
             @Override
             public void onReceiveValue(String value) {
                 Log.i(TAG,"value:" + value);
+                if (TextUtils.isEmpty(value)
+                        || "null".equalsIgnoreCase(value)) {
+                    return;
+                }
                 value = value.substring(1,value.length() - 1);
                 List<Account> list = new Gson().fromJson(
                         value.replace("\\",""),new TypeToken<List<Account>>(){}.getType());
@@ -196,13 +200,13 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
      * @return 所有钱包余额之和
      */
     @Override
-    public float getAccountRemain() {
+    public String getAccountRemain() {
         List<Account> accounts = mAdapter.getDatas();
         float accountRemain = 0;
         for (Account a : accounts) {
             accountRemain += a.getRemain();
         }
-        return accountRemain;
+        return String.valueOf(accountRemain);
     }
 
     @Override

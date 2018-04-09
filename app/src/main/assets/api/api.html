@@ -3,8 +3,8 @@
 <html>
 
 <head>
-    <script type="text/javascript" src="./web3.min.js"></script>
-    <script type="text/javascript" src="./ctoken.min.js"></script>
+    <script type="text/javascript" src="./web3.js"></script>
+    <script type="text/javascript" src="./ctoken.js"></script>
     <script type="text/javascript">
 
         var URL = "http://47.100.55.67:8545/";
@@ -52,25 +52,7 @@
         }
 
         function getWalletInfo() {
-            var value, walletObject, walletAddress, walletInfo;
-            var walletArray = new Array();
-
-            for(var key in localStorage){
-                value = localStorage.getItem(key);
-                walletObject = JSON.parse(value);
-                if(walletObject == null)
-                    break;
-
-                walletAddress = walletObject[0].address;
-
-                walletInfo = {
-                    "walletName": key,
-                    "address": walletAddress
-                };
-                walletArray.push(walletInfo);
-            }
-            console.log(JSON.stringify(walletArray));
-            return JSON.stringify(walletArray);
+            return walletApi.getWalletList();
         }
 
         // 获取钱包余额回调
