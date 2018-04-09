@@ -39,6 +39,9 @@ public class WalletUtil {
             FileOutputStream fos = new FileOutputStream(file);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(account);
+            fos.flush();
+            fos.close();
+            fos = null;
         } catch (IOException e) {
             return Observable.error(e);
         }
@@ -71,10 +74,12 @@ public class WalletUtil {
                                                    @NonNull Account account) {
         File parent = new File(accountFilePath);
         File file = new File(parent, generateWalletFileName(account));
-        if (file.delete()) {
-            return saveWallet(accountFilePath, account);
+        if (file.exists()) {
+            if (!file.delete()) {
+                return Observable.just(false);
+            }
         }
-        return Observable.just(false);
+        return saveWallet(accountFilePath, account);
     }
 
     public static Observable<List<Account>> queryWallet(@NonNull String walletFolderPath) {

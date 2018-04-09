@@ -45,10 +45,15 @@ public interface HomeContract {
         void loadAccounts(@NonNull String walletFolderPath,
                           boolean refresh);
 
+        void updateAccount(@NonNull String walletFolderPath,
+                           @NonNull Account account);
     }
 
     interface Model {
 
         Observable<List<Account>> queryAccount(@NonNull String walletFolderPath);
+
+        Observable<Boolean> updateAccount(@NonNull String walletFolderPath,
+                                          @NonNull Account account);
     }
 }

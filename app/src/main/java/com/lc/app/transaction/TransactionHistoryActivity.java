@@ -46,6 +46,10 @@ public class TransactionHistoryActivity extends JsBaseActivity {
                             showHistoryResult(error, result);
                             break;
                         }
+                        case MESSAGE_INIT_WALLET: {
+                            onWalletInitResult(error, result);
+                            break;
+                        }
                     }
                 }
             });

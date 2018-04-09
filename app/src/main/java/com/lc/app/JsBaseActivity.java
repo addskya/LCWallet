@@ -16,6 +16,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import com.lc.app.javascript.JavaScriptApi;
 import com.lc.app.javascript.JsCallback;
@@ -132,7 +133,7 @@ public abstract class JsBaseActivity extends BaseActivity {
         mWebView.evaluateJavascript(call, new ValueCallback<String>() {
             @Override
             public void onReceiveValue(String value) {
-                onWalletInitCompleted();
+                Log.i(TAG, "initWallet:" + value);
             }
         });
     }
@@ -142,6 +143,19 @@ public abstract class JsBaseActivity extends BaseActivity {
      */
     protected void onWalletInitCompleted() {
         Log.d(TAG, "onWalletInitCompleted");
+    }
+
+    /**
+     * 钱包初始化
+     */
+    protected void onWalletInitResult(final String error,
+                                      final Object result) {
+        if (Boolean.parseBoolean(error)) {
+            Toast.makeText(this, R.string.error_init_wallet, Toast.LENGTH_SHORT).show();
+            dismissProgressDialog();
+        } else {
+            onWalletInitCompleted();
+        }
     }
 
     /**
@@ -224,7 +238,7 @@ public abstract class JsBaseActivity extends BaseActivity {
      * @param address the wallet address
      */
     protected void balanceOf(@NonNull CharSequence address) {
-        address = "\"0x" + address + "\"";
+        address = "\"" + address + "\"";
         String call = "javascript:balanceOf(" + address + ")";
         Log.d(TAG, "execute:" + call);
         mWebView.evaluateJavascript(call, null);
@@ -245,8 +259,8 @@ public abstract class JsBaseActivity extends BaseActivity {
                                  @NonNull CharSequence toAccount,
                                  @NonNull float amount,
                                  @Nullable ValueCallback<String> callback) {
-        executeAccount = "\"0x" + executeAccount + "\"";
-        toAccount = "0x" + toAccount + "";
+        executeAccount = "\"" + executeAccount + "\"";
+        toAccount = "" + toAccount + "";
 
         String call = "javascript:transferByFee("
                 + "\"" + walletName + "\","
@@ -264,7 +278,7 @@ public abstract class JsBaseActivity extends BaseActivity {
      * @param target 目标账户
      */
     protected void showHistoryTransaction(String target) {
-        target = "\"0x" + target + "\"";
+        target = "\"" + target + "\"";
         String call = "javascript:showHistoryTransaction(" + target + ")";
         Log.d(TAG, "execute:" + call);
         mWebView.evaluateJavascript(call, null);

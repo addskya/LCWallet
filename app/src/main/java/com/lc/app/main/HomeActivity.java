@@ -38,7 +38,9 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
     private static final int REQUEST_CODE_IMPORT = 0x11;
     private static final int REQUEST_CODE_TRANSLATE = 0x12;
     private static final int REQUEST_CODE_SCAN_QR_CODE = IntentIntegrator.REQUEST_CODE;
-    // private HomeContract.Presenter mPresenter;
+
+
+    private HomeContract.Presenter mPresenter;
     private BaseAdapter<Account, HomeContract.View> mAdapter;
     private ActivityHomeBinding mBinding;
     private PopupMenu mPopupMenu;
@@ -69,13 +71,15 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
                 }
             };
 
+    private boolean mHasUpdateBalance;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         mBinding = DataBindingUtil.setContentView(
                 this, R.layout.activity_home);
-        // new HomePresenter(this);
+        new HomePresenter(this);
         mBinding.setView(this);
         mBinding.executePendingBindings();
 
@@ -87,6 +91,7 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
 
         mAdapter = new AccountAdapter(getLayoutInflater(), this);
         mBinding.account.setAdapter(mAdapter);
+        mPresenter.loadAccounts(getWalletFolder(), false);
     }
 
     @Override
@@ -127,6 +132,8 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
         mOnMenuItemClickListener = null;
         mQueryBalance.clear();
         mQueryBalance = null;
+        mPresenter.destroy();
+        mPresenter = null;
     }
 
     @Override
@@ -142,21 +149,24 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
 
     @Override
     public void setPresenter(HomeContract.Presenter presenter) {
+        mPresenter = presenter;
     }
 
     @Override
     public void refresh() {
+        mHasUpdateBalance = false;
         loadWallet(new ValueCallback<String>() {
             @Override
             public void onReceiveValue(String value) {
-                Log.i(TAG,"value:" + value);
+                Log.i(TAG, "value:" + value);
                 if (TextUtils.isEmpty(value)
                         || "null".equalsIgnoreCase(value)) {
                     return;
                 }
-                value = value.substring(1,value.length() - 1);
+                value = value.substring(1, value.length() - 1);
                 List<Account> list = new Gson().fromJson(
-                        value.replace("\\",""),new TypeToken<List<Account>>(){}.getType());
+                        value.replace("\\", ""), new TypeToken<List<Account>>() {
+                        }.getType());
                 dismissProgressDialog();
                 mBinding.swipe.setRefreshing(false);
                 onLoadAccounts(list, true);
@@ -201,11 +211,16 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
      */
     @Override
     public String getAccountRemain() {
+        if (!mHasUpdateBalance) {
+            return getString(R.string.text_no_data);
+        }
+
         List<Account> accounts = mAdapter.getDatas();
         float accountRemain = 0;
         for (Account a : accounts) {
             accountRemain += a.getRemain();
         }
+
         return String.valueOf(accountRemain);
     }
 
@@ -215,8 +230,12 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
     }
 
     @Override
-    public void onLoadAccounts(List<Account> accounts, boolean refresh) {
+    public void onLoadAccounts(List<Account> accounts,
+                               boolean refresh) {
         mAdapter.addOrSetData(accounts, refresh);
+        for (Account a : accounts) {
+            Log.i(TAG,"load:" + a);
+        }
         loadBalanceOf(accounts);
     }
 
@@ -247,12 +266,17 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
                                     float remain = Float.parseFloat(String.valueOf(result));
                                     if (mQueryBalanceAccount != null) {
                                         mQueryBalanceAccount.setRemain(remain);
+                                        mPresenter.updateAccount(getWalletFolder(), mQueryBalanceAccount);
                                         mAdapter.notifyDataSetChanged();
                                         startQueryBalance();
                                     }
                                 } catch (NumberFormatException e) {
                                     e.printStackTrace();
                                 }
+                                break;
+                            }
+                            case MESSAGE_INIT_WALLET: {
+                                onWalletInitResult(error, result);
                                 break;
                             }
                         }
@@ -292,6 +316,9 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
                 mBinding.swipe.setRefreshing(false);
                 dismissProgressDialog();
             }
+        } else {
+            mHasUpdateBalance = true;
+            mAdapter.notifyItemChanged(0);
         }
     }
 }

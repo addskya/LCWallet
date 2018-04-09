@@ -31,20 +31,24 @@ var CToken = function(Provider, contract){
  * 
  * @method initCToken 
  * @param {callback(error, result)} 可选，回调返回函数
- * 			连接成功error返回为false，result为“connected success”
- * 			连接失败error返回为true, result为“connected failed”
+ * 			连接成功error返回为false，result为“network connected success”
+ * 			连接失败error返回为true, result为“network connected failed”
  * @return 成功返回true，失败返回false。
  * @note   因为Web3js是异步回调机制，当函数返回为true时，并不代表已经成功建立连接。
  * 			此时应该进一步通过回调函数获取详细的连接建立信息。 
  */
 CToken.prototype.initCToken = function(callback){
 	var _this = this;
-	
+	console.log('5555555555555');
     //尝试连接以太坊网络，获取web3对象
     if(typeof _this.web3 !== 'undefined') {
         web3 = new Web3(_this.web3.currentProvider);
+		if(typeof callback != 'undefined'){
+			callback(false, "network connected success");
+		}
 		return true;
     } else {
+    console.log('66666666666666');
 		//判断是http还是websocket
 		var locate = _this.currentProvider.indexOf(':');
 		var mode = _this.currentProvider.slice(0, locate);
@@ -56,6 +60,9 @@ CToken.prototype.initCToken = function(callback){
 			web3 = new Web3(new Web3.providers.HttpProvider(_this.currentProvider));
 		}else{
 			console.log("sorry, do not support network mode");
+			if(typeof callback != 'undefined'){
+				callback(true, "network connected failed");
+			}	
 			return false;
 		}
 
@@ -86,19 +93,21 @@ CToken.prototype.initCToken = function(callback){
 					_this.chainID = value[1];
 					owner = value[2];
 					_this.contractOwner = '0x' + owner.slice(26);
-
+                    console.log('11111111111111111111');
 					if(typeof callback != 'undefined'){
-						callback(true, "network connected success");
-					}		
+					console.log('22222222222222222222222');
+						callback(null, "network connected success");
+					}
+					console.log('333333333333333333333');
 				});			
-
+                console.log('444444444444444444');
 			}else{
 				//无法连接网络
 				_this.isConnected = false;
 				console.log('can not connect network');
 				web3.setProvider(_this.currentProvider);
 				if(typeof callback != 'undefined'){
-					callback(false, "network connected failed");
+					callback(true, "network connected failed");
 				}
 			}
 		});
@@ -389,10 +398,10 @@ CToken.prototype.getWalletList = function(){
 		//如果为空，则继续
 		if(wallet == null)
 			continue;
-		
+			
 		walletInfo = {
 			"name": key,
-			"address": '0x' + wallet.address.toLowerCase()
+			"address": '0x' + wallet[0].address.toLowerCase()
 		};
 		
 		walletList.push(walletInfo);

@@ -78,6 +78,10 @@ public class TransactionActivity extends JsBaseActivity {
                             }
                             break;
                         }
+                        case MESSAGE_INIT_WALLET: {
+                            onWalletInitResult(error, result);
+                            break;
+                        }
 
                         // 转账结果
                         /*case MESSAGE_TRANSFER: {

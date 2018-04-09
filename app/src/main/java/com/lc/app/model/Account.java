@@ -21,24 +21,28 @@ public class Account extends BaseObservable
     public static final int serialVersionUID = 0x00000001;
 
     // 钱包名称
-    //@SerializedName("name")
+    @SerializedName("name")
     private String walletName;
+
     // 钱包密码
     private String password;
+
     // 钱包地址
     private String address;
+
     // 钱包密钥
     private String keystore;
+
     // 钱包余额
     private float remain;
+
+    // 交易 历史数据
+    private String transactionHistoryJson;
 
     private transient boolean secret = true;
 
     public Account() {
     }
-
-
-
 
     @Bindable
     public String getWalletName() {
@@ -103,14 +107,25 @@ public class Account extends BaseObservable
         this.remain = remain;
     }
 
+    @Bindable
+    public String getTransactionHistoryJson() {
+        return transactionHistoryJson;
+    }
+
+    public void setTransactionHistoryJson(String transactionHistoryJson) {
+        this.transactionHistoryJson = transactionHistoryJson;
+        notifyPropertyChanged(BR.transactionHistoryJson);
+    }
+
     @Override
     public String toString() {
         return "Account{" +
                 "walletName='" + walletName + '\'' +
                 ", password='" + password + '\'' +
-                ", keystore='" + keystore + '\'' +
                 ", address='" + address + '\'' +
+                ", keystore='" + keystore + '\'' +
                 ", remain=" + remain +
+                ", transactionHistoryJson='" + transactionHistoryJson + '\'' +
                 '}';
     }
 
@@ -136,6 +151,7 @@ public class Account extends BaseObservable
         dest.writeString(this.address);
         dest.writeString(this.keystore);
         dest.writeFloat(this.remain);
+        dest.writeString(this.transactionHistoryJson);
     }
 
     protected Account(Parcel in) {
@@ -144,9 +160,10 @@ public class Account extends BaseObservable
         this.address = in.readString();
         this.keystore = in.readString();
         this.remain = in.readFloat();
+        this.transactionHistoryJson = in.readString();
     }
 
-    public static final Parcelable.Creator<Account> CREATOR = new Parcelable.Creator<Account>() {
+    public static final Creator<Account> CREATOR = new Creator<Account>() {
         @Override
         public Account createFromParcel(Parcel source) {
             return new Account(source);

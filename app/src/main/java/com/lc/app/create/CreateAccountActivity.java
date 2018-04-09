@@ -22,13 +22,14 @@ import com.lc.app.model.Account;
  * Created by Orange on 18-3-18.
  * Email:addskya@163.com
  */
-public class CreateAccountActivity extends JsBaseActivity implements CreateContract.View {
+public class CreateAccountActivity extends JsBaseActivity
+        implements CreateContract.View {
 
     private static final String TAG = "CreateAccountActivity";
     private static final String KEY_ACCOUNT =
             "com.lc.app.EXTRA_ACCOUNT";
     private ActivityCreateAccountBinding mBinding;
-    // private CreateContract.Presenter mPresenter;
+    private CreateContract.Presenter mPresenter;
 
     /**
      * Create a Account
@@ -53,7 +54,7 @@ public class CreateAccountActivity extends JsBaseActivity implements CreateContr
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(
                 this, R.layout.activity_create_account);
-        // new CreatePresenter(this);
+        new CreatePresenter(this);
         mBinding.setView(this);
         mBinding.executePendingBindings();
         setResult(RESULT_CANCELED);
@@ -62,13 +63,13 @@ public class CreateAccountActivity extends JsBaseActivity implements CreateContr
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // mPresenter.destroy();
-        // mPresenter = null;
+        mPresenter.destroy();
+        mPresenter = null;
     }
 
     @Override
     public void setPresenter(CreateContract.Presenter presenter) {
-        // mPresenter = presenter;
+        mPresenter = presenter;
     }
 
     @Override
@@ -141,10 +142,11 @@ public class CreateAccountActivity extends JsBaseActivity implements CreateContr
                 account.setWalletName(walletName);
                 account.setPassword(String.valueOf(password1));
                 account.setAddress(value);
-                setResult(RESULT_OK, packResult(account));
-                dismissProgressDialog();
-                finish();
-                // mPresenter.saveWallet(getWalletFolder(), account);
+                account.setRemain(0);
+                account.setKeystore(null);
+                account.setTransactionHistoryJson(null);
+
+                mPresenter.saveWallet(getWalletFolder(), account);
             }
         });
     }

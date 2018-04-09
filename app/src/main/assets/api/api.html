@@ -7,15 +7,24 @@
     <script type="text/javascript" src="./ctoken.js"></script>
     <script type="text/javascript">
 
-        var URL = "http://47.100.55.67:8545/";
+        var URL = "ws://47.100.55.67:8546/";
         var contract = "0x4230deEe19c832D6e7F2AaC175427c7eEB5E04eC";
 
         var walletApi;
 
+        // CallBack  初始化钱包
+        // error boolean,True connect success, false connect error
+        // result connect description
+        function callback_InitWallet(error, result) {
+            console.log('callback_InitWallet:' + error);
+            return handler.onCallback_initWallet(error, result);
+        }
+
+
         // Call only one time
         function initWallet() {
             walletApi = new CToken(URL, contract);
-            return walletApi.initCToken();
+            return walletApi.initCToken(callback_InitWallet);
         }
 
         // 创建钱包,一个钱包仅允许一个账户,并使用口令进行加密保护
@@ -131,6 +140,8 @@
         function showHistoryTransaction(target) {
             return walletApi.showHistoryTransactions(target, callback_history_transactions);
         }
+
+
 
     </script>
 </head>

@@ -3,15 +3,18 @@ package com.lc.app.portim;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.webkit.ValueCallback;
 import android.widget.EditText;
 
 import com.lc.app.JsBaseActivity;
 import com.lc.app.R;
+import com.lc.app.model.Account;
 import com.lc.app.ui.PasswordView;
 
 /**
@@ -20,7 +23,7 @@ import com.lc.app.ui.PasswordView;
  * 导入钱包UI
  */
 
-public class ImportActivity extends JsBaseActivity {
+public class ImportActivity extends JsBaseActivity implements ImportContract.View {
 
     public static void intentTo(@NonNull Activity activity,
                                 int requestCode) {
@@ -28,11 +31,25 @@ public class ImportActivity extends JsBaseActivity {
         activity.startActivityForResult(intent, requestCode);
     }
 
+    private static final String TAG = "ImportActivity";
+
+    private static final String KEY_ACCOUNT =
+            "com.lc.app.EXTRA_ACCOUNT";
+
+    private static Intent packResult(@NonNull Account account) {
+        Intent intent = new Intent();
+        intent.putExtra(KEY_ACCOUNT, (Parcelable) account);
+        return intent;
+    }
+
+    private ImportContract.Presenter mPresenter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setResult(RESULT_CANCELED);
         setContentView(R.layout.activity_import);
+        new ImportPresenter(this);
     }
 
     public void onBack(View view) {
@@ -89,9 +106,46 @@ public class ImportActivity extends JsBaseActivity {
 
                 toastMessage(R.string.text_wallet_import_success);
                 dismissProgressDialog();
-                setResult(RESULT_OK);
-                finish();
+                Account account = new Account();
+                account.setWalletName(String.valueOf(walletName));
+                account.setKeystore(String.valueOf(keystore));
+                account.setPassword(String.valueOf(password1));
+                account.setAddress(value);
+
+                // 导入钱包,无余额,无交易流水
+                account.setRemain(0);
+                account.setTransactionHistoryJson(null);
+
+                mPresenter.saveWallet(getWalletFolder(), account);
             }
         });
+    }
+
+    @Override
+    public void setPresenter(ImportContract.Presenter presenter) {
+        mPresenter = presenter;
+    }
+
+    @Override
+    public void onSaveWalletStart() {
+        showProgressDialog();
+    }
+
+    @Override
+    public void onSaveWalletSuccess(@NonNull Boolean success,
+                                    @NonNull Account account) {
+        setResult(RESULT_OK, packResult(account));
+    }
+
+    @Override
+    public void onSaveWalletError(Throwable error) {
+        Log.e(TAG, "onSaveWalletError", error);
+        dismissProgressDialog();
+    }
+
+    @Override
+    public void onSaveWalletCompleted() {
+        dismissProgressDialog();
+        finish();
     }
 }

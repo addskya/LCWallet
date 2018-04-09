@@ -299,6 +299,10 @@ public class AccountDetailsActivity extends JsBaseActivity implements
                                 dismissProgressDialog();
                                 break;
                             }
+                            case MESSAGE_INIT_WALLET: {
+                                onWalletInitResult(error, result);
+                                break;
+                            }
                         }
                     }
                 });

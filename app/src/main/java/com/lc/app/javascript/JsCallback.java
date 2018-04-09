@@ -7,13 +7,15 @@ package com.lc.app.javascript;
 
 public interface JsCallback {
 
-    int MESSAGE_BALANCE = 0;
+    int MESSAGE_INIT_WALLET = 0;
 
-    int MESSAGE_RATE = 10;
+    int MESSAGE_BALANCE = 10;
 
-    int MESSAGE_TRANSFER = 20;
+    int MESSAGE_RATE = 20;
 
-    int MESSAGE_TRANSFER_HISTORY = 30;
+    int MESSAGE_TRANSFER = 30;
+
+    int MESSAGE_TRANSFER_HISTORY = 40;
 
     /**
      * The callback when call JavaScript

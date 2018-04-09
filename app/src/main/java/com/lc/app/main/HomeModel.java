@@ -18,4 +18,10 @@ class HomeModel implements HomeContract.Model {
     public Observable<List<Account>> queryAccount(@NonNull String walletFolderPath) {
         return WalletUtil.queryWallet(walletFolderPath);
     }
+
+    @Override
+    public Observable<Boolean> updateAccount(@NonNull String walletFolderPath,
+                                             @NonNull Account account) {
+        return WalletUtil.updateWallet(walletFolderPath, account);
+    }
 }

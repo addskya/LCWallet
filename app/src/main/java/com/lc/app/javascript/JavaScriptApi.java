@@ -23,6 +23,16 @@ public class JavaScriptApi {
         mCallBack = callback;
     }
 
+    @JavascriptInterface
+    public void onCallback_initWallet(String error, String result) {
+        Log.i(TAG, "onCallback_initWallet -> error:" + error);
+        Log.i(TAG, "onCallback_initWallet -> result:" + result);
+        if (mCallBack != null) {
+            mCallBack.onCallback(JsCallback.MESSAGE_INIT_WALLET, error, result);
+        }
+    }
+
+
     /**
      * 查询账户余额回调
      *
@@ -71,8 +81,8 @@ public class JavaScriptApi {
     /**
      * 查询转账历史记录
      *
-     * @param error  正常情况下为null,或错误信息
-     * @param json 转账的历史记录,使用数组返回,{from,to,value,date}
+     * @param error 正常情况下为null,或错误信息
+     * @param json  转账的历史记录,使用数组返回,{from,to,value,date}
      */
     @JavascriptInterface
     public void onCallback_historyTransactions(String error, String json) {

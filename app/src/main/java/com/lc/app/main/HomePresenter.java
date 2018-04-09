@@ -1,12 +1,14 @@
 package com.lc.app.main;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.lc.app.DefaultObserver;
 import com.lc.app.model.Account;
 
 import java.util.List;
 
+import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -67,7 +69,23 @@ class HomePresenter implements HomeContract.Presenter {
     }
 
     @Override
+    public void updateAccount(@NonNull String walletFolderPath,
+                              @NonNull Account account) {
+        mData.updateAccount(walletFolderPath, account)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DefaultObserver<Boolean>() {
+                    @Override
+                    public void onNext(Boolean response) {
+                        Log.i(TAG, "updateAccount:" + response);
+                    }
+                });
+    }
+
+    @Override
     public void destroy() {
         mView = null;
+        mData = null;
     }
 }

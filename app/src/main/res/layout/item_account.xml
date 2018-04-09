@@ -48,7 +48,7 @@
             android:layout_toEndOf="@id/account_logo"
             android:text="@{account.walletName,default=NameOfAccount}"
             android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:textSize="28sp" />
 
         <TextView
             android:id="@+id/remain"
