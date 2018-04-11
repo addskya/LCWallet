@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
@@ -23,6 +24,7 @@ import com.lc.app.javascript.JsCallback;
 import com.lc.app.model.Account;
 import com.lc.app.transaction.TransactionActivity;
 import com.lc.app.transaction.TransactionHistoryActivity;
+import com.lc.app.transaction.TransactionHistoryFragment;
 import com.lc.app.ui.PromptDialog;
 import com.lc.app.utils.WalletUtil;
 
@@ -45,24 +47,19 @@ public class AccountDetailsActivity extends JsBaseActivity implements
     private Account mAccount;
     private ActivityAccountDetailsBinding mBinding;
     private AccountDetailsContract.Presenter mPresenter;
+
+    private TransactionHistoryFragment mTransactionFragment;
     private PopupMenu mPopupMenu;
     private PopupMenu.OnMenuItemClickListener mOnMenuItemClickListener =
             new PopupMenu.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
                     switch (item.getItemId()) {
-                        case R.id.menu_transaction: {
-                            TransactionActivity.intentTo(AccountDetailsActivity.this,
-                                    mAccount,
-                                    REQUEST_CODE_TRANSACTION);
-                            return true;
-                        }
-
-                        case R.id.menu_transaction_history: {
+                        /*case R.id.menu_transaction_history: {
                             TransactionHistoryActivity.intentTo(AccountDetailsActivity.this,
                                     mAccount);
                             return true;
-                        }
+                        }*/
                         default: {
                             return false;
                         }
@@ -96,7 +93,8 @@ public class AccountDetailsActivity extends JsBaseActivity implements
         mPopupMenu.getMenuInflater().inflate(R.menu.menu_wallet,
                 mPopupMenu.getMenu());
         mPopupMenu.setOnMenuItemClickListener(mOnMenuItemClickListener);
-
+        mTransactionFragment = (TransactionHistoryFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.transaction);
         parseIntent(getIntent());
     }
 
@@ -201,6 +199,13 @@ public class AccountDetailsActivity extends JsBaseActivity implements
     }
 
     @Override
+    public void gotoTransaction() {
+        TransactionActivity.intentTo(AccountDetailsActivity.this,
+                mAccount,
+                REQUEST_CODE_TRANSACTION);
+    }
+
+    @Override
     public void onAccountVisibleChanged(boolean isChecked) {
         Account account = mAccount;
         if (account != null) {
@@ -262,6 +267,7 @@ public class AccountDetailsActivity extends JsBaseActivity implements
     protected void onWalletInitCompleted() {
         super.onWalletInitCompleted();
         queryBalance();
+        loadTransactionHistory();
     }
 
     private void queryBalance() {
@@ -271,6 +277,16 @@ public class AccountDetailsActivity extends JsBaseActivity implements
                 String address = mAccount.getRealAddress();
                 showProgressDialog();
                 balanceOf(address);
+            }
+        });
+    }
+
+    private void loadTransactionHistory() {
+        sendCommand(new Runnable() {
+            @Override
+            public void run() {
+                // mStatusView.setText(R.string.text_loading);
+                showHistoryTransaction(mAccount.getRealAddress());
             }
         });
     }
@@ -301,6 +317,12 @@ public class AccountDetailsActivity extends JsBaseActivity implements
                             }
                             case MESSAGE_INIT_WALLET: {
                                 onWalletInitResult(error, result);
+                                break;
+                            }
+                            case MESSAGE_TRANSFER_HISTORY: {
+                                Log.d(TAG, "error:" + error);
+                                Log.d(TAG, "result:" + result);
+                                mTransactionFragment.showHistoryResult(error, result);
                                 break;
                             }
                         }

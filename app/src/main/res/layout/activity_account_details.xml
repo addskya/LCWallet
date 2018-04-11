@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
 
@@ -24,6 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:background="#FAFAFA"
         tools:context=".account.AccountDetailsActivity">
 
         <RelativeLayout
@@ -53,19 +55,18 @@
                 android:onClick="@{() -> view.showMoreOperate()}"
                 android:paddingEnd="5dp"
                 android:paddingStart="5dp"
-                android:src="@drawable/ic_more" />
+                android:src="@drawable/ic_more"
+                android:visibility="visible" />
 
             <TextView
                 android:id="@+id/account_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@+id/back"
-                android:layout_toStartOf="@+id/more"
                 android:gravity="center"
-                android:text="@{account.walletName}"
+                android:layout_centerInParent="true"
+                android:text="@{account.walletName,default=abd}"
                 android:textColor="@color/white"
-                android:textSize="20sp" />
+                android:textSize="22sp" />
 
         </RelativeLayout>
 
@@ -151,6 +152,7 @@
                 android:background="@drawable/transaction_bg"
                 android:gravity="center"
                 android:text="@string/text_start_transaction"
+                android:onClick="@{() -> view.gotoTransaction()}"
                 android:textColor="#DAB542"
                 android:textSize="20sp" />
 
@@ -181,6 +183,24 @@
                 android:padding="5dp" />
 
         </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/text_transaction_history"
+            android:textColor="#343434"
+            android:textSize="20sp" />
+
+        <fragment
+            android:id="@+id/transaction"
+            android:name="com.lc.app.transaction.TransactionHistoryFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="0dp"
+            android:layout_marginStart="0dp" />
 
     </LinearLayout>
 

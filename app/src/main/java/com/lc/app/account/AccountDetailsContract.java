@@ -21,6 +21,8 @@ public interface AccountDetailsContract {
 
         void showMoreOperate();
 
+        void gotoTransaction();
+
         void onAccountVisibleChanged(boolean isChecked);
 
         void backup(@NonNull Account account);

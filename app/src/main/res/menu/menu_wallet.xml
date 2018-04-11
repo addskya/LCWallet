@@ -2,15 +2,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/menu_transaction"
+        android:id="@+id/menu_export"
         android:icon="@drawable/ic_add"
-        android:title="@string/menu_wallet_transaction"
+        android:title="@string/menu_wallet_export"
         android:visible="true" />
 
     <item
-        android:id="@+id/menu_transaction_history"
+        android:id="@+id/menu_rename"
         android:icon="@drawable/ic_add"
-        android:title="@string/menu_wallet_transaction_history"
+        android:title="@string/menu_wallet_rename"
         android:visible="true" />
 
+    <item
+        android:id="@+id/menu_delete"
+        android:icon="@drawable/ic_add"
+        android:title="@string/menu_wallet_delete"
+        android:visible="true" />
 </menu>

@@ -3,6 +3,7 @@ package com.lc.app.transaction;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -21,6 +22,7 @@ import com.lc.app.DefaultTextWatcher;
 import com.lc.app.JsBaseActivity;
 import com.lc.app.R;
 import com.lc.app.code.QrCodeActivity;
+import com.lc.app.databinding.ActivityTransactionBinding;
 import com.lc.app.javascript.JsCallback;
 import com.lc.app.model.Account;
 import com.lc.app.ui.PromptDialog;
@@ -109,10 +111,13 @@ public class TransactionActivity extends JsBaseActivity {
         activity.startActivityForResult(intent, requestCode);
     }
 
+    private ActivityTransactionBinding mBinding;
+
     @Override
     public void onCreate(@Nullable Bundle bundle) {
         super.onCreate(bundle);
-        setContentView(R.layout.activity_transaction);
+        mBinding = DataBindingUtil.setContentView(
+                this, R.layout.activity_transaction);
         setResult(RESULT_CANCELED);
 
         Intent intent = getIntent();
@@ -122,7 +127,7 @@ public class TransactionActivity extends JsBaseActivity {
         }
 
         mAccount = intent.getParcelableExtra(EXTRA_ACCOUNT);
-
+        mBinding.setAccount(mAccount);
         mTransferAmountView = findViewById(R.id.amount);
         mTransferAmountView.addTextChangedListener(new DefaultTextWatcher() {
             @Override
@@ -142,6 +147,7 @@ public class TransactionActivity extends JsBaseActivity {
                 }
             }
         });
+        mBinding.executePendingBindings();
     }
 
     public void onPickAddress(View view) {

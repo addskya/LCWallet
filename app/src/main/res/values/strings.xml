@@ -15,6 +15,9 @@
     <string name="menu_wallet_transaction">"交易转账"</string>
     <string name="menu_wallet_transaction_history">"交易历史"</string>
 
+    <string name="menu_wallet_export">"导出备份"</string>
+    <string name="menu_wallet_rename">"重新命名"</string>
+    <string name="menu_wallet_delete">"删除钱包"</string>
 
     <string name="text_remain">"余额"</string>
     <string name="text_account">"账户"</string>
@@ -76,10 +79,12 @@
 
     <string name="text_transaction_history">"转账记录"</string>
     <string name="text_no_transaction_history">"无转账历史记录"</string>
-    <string name="text_transaction_from">"转账自:"</string>
-    <string name="text_transaction_to">"转账到:"</string>
-    <string name="text_transaction_value">"转出额:"</string>
-    <string name="text_transaction_date">"发生日期:"</string>
+    <string name="text_transaction_from">"转自:"</string>
+    <string name="text_transaction_to">"转到:"</string>
+    <string name="text_transaction_value">"金额:"</string>
+    <string name="text_transaction_date">"日期:"</string>
     <string name="text_start_transaction">"发起转账"</string>
+
+    <string name="text_account_from">"转出账户"</string>
 
 </resources>
