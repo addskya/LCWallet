@@ -13,10 +13,10 @@ import com.lc.app.BaseAdapter;
  * Email:addskya@163.com
  */
 
-class HistoryAdapter extends BaseAdapter<History,Object> {
+class HistoryAdapter extends BaseAdapter<History, TransactionHistoryContract.View> {
 
-    public HistoryAdapter(@NonNull LayoutInflater inflater,
-                          @Nullable Object view) {
+    HistoryAdapter(@NonNull LayoutInflater inflater,
+                   @Nullable TransactionHistoryContract.View view) {
         super(inflater, view);
     }
 
@@ -25,15 +25,15 @@ class HistoryAdapter extends BaseAdapter<History,Object> {
     protected RecyclerView.ViewHolder newHolder(@NonNull LayoutInflater inflater,
                                                 @Nullable ViewGroup parent,
                                                 int viewType) {
-        return HistoryViewHolder.newHolder(inflater,parent);
+        return HistoryViewHolder.newHolder(inflater, parent);
     }
 
     @Override
     protected void bindViewHolder(@NonNull RecyclerView.ViewHolder holder,
                                   @Nullable History data,
-                                  @Nullable Object view) {
+                                  @Nullable TransactionHistoryContract.View view) {
         if (holder instanceof HistoryViewHolder) {
-            ((HistoryViewHolder)holder).bind(data);
+            ((HistoryViewHolder) holder).bind(data, view);
         }
     }
 }

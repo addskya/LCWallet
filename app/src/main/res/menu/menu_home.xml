@@ -12,6 +12,12 @@
         android:title="@string/menu_import_account" />
 
     <item
+        android:id="@+id/menu_common_address"
+        android:icon="@drawable/ic_add"
+        android:title="@string/text_common_account"
+        android:visible="true" />
+
+    <item
         android:id="@+id/menu_verify_account"
         android:icon="@drawable/ic_add"
         android:title="@string/menu_verify_account"

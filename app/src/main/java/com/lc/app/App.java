@@ -14,6 +14,7 @@ import java.util.UUID;
 public class App extends Application {
 
     private static final String WALLET_FOLDER_NAME = "wallet";
+    private static final String COMMON_FOLDER_NAME = "common";
 
     @Override
     public void onCreate() {
@@ -25,4 +26,7 @@ public class App extends Application {
         return new File(getFilesDir(), WALLET_FOLDER_NAME).getAbsolutePath();
     }
 
+    public String getCommonFolder() {
+        return new File(getFilesDir(), COMMON_FOLDER_NAME).getAbsolutePath();
+    }
 }

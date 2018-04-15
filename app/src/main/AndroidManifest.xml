@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          package="com.lc.app">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.lc.app">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -96,6 +96,21 @@
             android:label="@string/text_export_keystore"
             android:launchMode="singleInstance"
             android:windowSoftInputMode="stateHidden" />
+
+        <activity
+            android:name=".common.CommonActivity"
+            android:exported="false"
+            android:label="@string/text_common_account"
+            android:launchMode="standard"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+
+
+        <activity
+            android:name=".transaction.record.RecordActivity"
+            android:exported="false"
+            android:label="@string/text_transaction_record"
+            android:launchMode="standard"
+            android:windowSoftInputMode="stateAlwaysHidden" />
 
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"

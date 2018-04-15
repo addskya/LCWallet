@@ -28,9 +28,11 @@ class HistoryViewHolder extends RecyclerView.ViewHolder {
         return new HistoryViewHolder(binding.getRoot());
     }
 
-    void bind(@Nullable History data) {
+    void bind(@Nullable History data,
+              @Nullable TransactionHistoryContract.View view) {
         ItemTransactionHistoryBinding binding = DataBindingUtil.getBinding(itemView);
         binding.setHistory(data);
+        binding.setView(view);
         binding.executePendingBindings();
     }
 }

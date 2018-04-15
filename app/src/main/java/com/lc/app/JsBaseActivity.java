@@ -30,7 +30,7 @@ import com.lc.app.ui.StatusDialog;
 public abstract class JsBaseActivity extends BaseActivity {
     private static final String TAG = "JsBaseActivity";
     private WebView mWebView;
-    private BaseDialog mDialog;
+
     private Handler mHandler = new Handler(Looper.getMainLooper());
 
     @Override
@@ -284,28 +284,7 @@ public abstract class JsBaseActivity extends BaseActivity {
         mWebView.evaluateJavascript(call, null);
     }
 
-    protected void showProgressDialog() {
-        if (mDialog == null) {
-            mDialog = new LoadingDialog(this);
-        }
-        mDialog.show();
-    }
 
-    protected void dismissProgressDialog() {
-        if (mDialog != null) {
-            mDialog.dismiss();
-        }
-        mDialog = null;
-    }
-
-
-    protected void showProgressDialog(@StringRes int status) {
-        dismissProgressDialog();
-        if (mDialog == null) {
-            mDialog = new StatusDialog(this, status);
-        }
-        mDialog.show();
-    }
 
     @NonNull
     protected String getWalletFolder() {

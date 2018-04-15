@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/add_common_bg"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="15sp"
+        android:gravity="center"
+        android:text="@string/text_add_common"
+        android:textColor="@color/black_light"
+        android:textSize="15sp" />
+
+    <EditText
+        android:id="@+id/account_name"
+        style="@style/LoginInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|start"
+        android:hint="@string/hint_common_name"
+        android:minHeight="40dp"
+        android:paddingEnd="20dp"
+        android:paddingStart="20dp" />
+
+    <EditText
+        android:id="@+id/account_address"
+        style="@style/LoginInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:gravity="start|top"
+        android:hint="@string/hint_common_address"
+        android:lines="2"
+        android:maxLength="42"
+        android:maxLines="2"
+        android:minHeight="80dp"
+        android:paddingEnd="20dp"
+        android:paddingStart="20dp"
+        android:singleLine="false" />
+
+    <Button
+        android:id="@+id/commit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/account_bg"
+        android:text="@string/text_sure"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp" />
+
+</LinearLayout>

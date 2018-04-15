@@ -86,5 +86,21 @@
     <string name="text_start_transaction">"发起转账"</string>
 
     <string name="text_account_from">"转出账户"</string>
+    <string name="empty_common_account">"无常用地址,点击添加一个吧"</string>
+    <string name="text_add_common">"添加常用地址"</string>
+    <string name="text_common_account">"常用地址"</string>
+    <string name="text_pick_account">"选择地址"</string>
+    <string name="hint_common_name">"请输入账户名"</string>
+    <string name="hint_common_address">"请输入账户地址"</string>
+    <string name="error_address_invalid">"输入地址无效"</string>
+
+    <string name="text_delete_address">"是否删除该转账账户"</string>
+
+    <string name="text_transaction_record">"交易记录"</string>
+    <string name="text_transaction_account">"交易账户"</string>
+    <string name="text_transaction_time">"交易时间"</string>
+    <string name="text_transaction_amount">"交易金额"</string>
+    <string name="text_transaction_rate">"手续费"</string>
+    <string name="text_address_copy">"交易地址已复制到剪贴板"</string>
 
 </resources>

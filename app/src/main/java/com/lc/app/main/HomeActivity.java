@@ -22,6 +22,7 @@ import com.lc.app.R;
 import com.lc.app.account.AccountDetailsActivity;
 import com.lc.app.code.QrCodeActivity;
 import com.lc.app.code.QrCodeDialog;
+import com.lc.app.common.CommonActivity;
 import com.lc.app.create.CreateAccountActivity;
 import com.lc.app.databinding.ActivityHomeBinding;
 import com.lc.app.javascript.JsCallback;
@@ -58,6 +59,11 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
                             ImportActivity.intentTo(HomeActivity.this, REQUEST_CODE_IMPORT);
                             break;
                         }
+                        case R.id.menu_common_address: {
+                            CommonActivity.intentTo(HomeActivity.this);
+                            break;
+                        }
+
                         case R.id.menu_verify_account: {
 
                             break;
@@ -234,7 +240,7 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
                                boolean refresh) {
         mAdapter.addOrSetData(accounts, refresh);
         for (Account a : accounts) {
-            Log.i(TAG,"load:" + a);
+            Log.i(TAG, "load:" + a);
         }
         loadBalanceOf(accounts);
     }

@@ -1,13 +1,15 @@
 package com.lc.app.transaction;
 
 import android.databinding.BaseObservable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Created by Orange on 18-3-29.
  * Email:addskya@163.com
  */
 
-public class History extends BaseObservable {
+public class History extends BaseObservable implements Parcelable {
 
 
     /**
@@ -53,4 +55,40 @@ public class History extends BaseObservable {
     public void setTime(String time) {
         this.time = time;
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.from);
+        dest.writeString(this.to);
+        dest.writeValue(this.value);
+        dest.writeString(this.time);
+    }
+
+    public History() {
+    }
+
+    protected History(Parcel in) {
+        this.from = in.readString();
+        this.to = in.readString();
+        this.value = (Float) in.readValue(Float.class.getClassLoader());
+        this.time = in.readString();
+    }
+
+    public static final Parcelable.Creator<History> CREATOR = new Parcelable.Creator<History>() {
+        @Override
+        public History createFromParcel(Parcel source) {
+            return new History(source);
+        }
+
+        @Override
+        public History[] newArray(int size) {
+            return new History[size];
+        }
+    };
 }

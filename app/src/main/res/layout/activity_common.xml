@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="view"
+            type="com.lc.app.common.CommonContract.View" />
+    </data>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:minHeight="48dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/text_common_account"
+                android:textColor="@color/white"
+                android:textSize="24sp" />
+
+            <ImageView
+                android:id="@+id/operate"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="10dp"
+                android:contentDescription="@null"
+                android:onClick="@{() -> view.addAccount()}"
+                android:src="@drawable/ic_add" />
+
+        </RelativeLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <com.lc.app.ui.RecyclerView
+                android:id="@+id/list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:overScrollMode="never"
+                android:visibility="gone"
+                app:layoutManager="LinearLayoutManager"
+                app:listDivider="@drawable/divider_list" />
+
+            <Button
+                android:id="@+id/empty_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/account_bg"
+                android:minHeight="50dp"
+                android:onClick="@{() -> view.addAccount()}"
+                android:paddingEnd="20dp"
+                android:paddingStart="20dp"
+                android:text="@string/empty_common_account"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+</layout>

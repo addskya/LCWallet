@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="history"
+            type="com.lc.app.transaction.History" />
+
+        <variable
+            name="view"
+            type="com.lc.app.transaction.record.RecordContract.View" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FAFAFA"
+        android:orientation="vertical"
+        tools:context=".account.AccountDetailsActivity">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            android:minHeight="50dp">
+
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:contentDescription="@null"
+                android:onClick="@{() -> view.back()}"
+                android:src="@drawable/ic_back" />
+
+            <TextView
+                android:id="@+id/account_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text="@string/text_transaction_record"
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/gray"
+            android:minHeight="100dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:text="@{String.valueOf(history.value)}"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_centerVertical="true"
+                android:orientation="horizontal"
+                android:paddingEnd="50dp"
+                android:paddingStart="50dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_transaction_amount"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+
+                <android.support.v4.widget.Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_transaction_rate"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#FF0000" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/text_transaction_account"
+            android:textColor="@color/gray"
+            android:textSize="20sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:lines="2"
+                android:maxWidth="250dp"
+                android:text="@{history.to}"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="10dp"
+                android:background="@color/gray"
+                android:contentDescription="@null"
+                android:onClick="@{() -> view.copy(history)}"
+                android:src="@drawable/ic_copy" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/text_transaction_time"
+            android:textColor="@color/gray"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:text="@{history.time}"
+            android:textColor="@color/gray"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+</layout>

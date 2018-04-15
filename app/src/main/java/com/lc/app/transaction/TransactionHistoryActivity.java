@@ -18,6 +18,7 @@ import com.lc.app.JsBaseActivity;
 import com.lc.app.R;
 import com.lc.app.javascript.JsCallback;
 import com.lc.app.model.Account;
+import com.lc.app.transaction.record.RecordActivity;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ import java.util.List;
  * Email:addskya@163.com
  */
 
-public class TransactionHistoryActivity extends JsBaseActivity {
+public class TransactionHistoryActivity extends JsBaseActivity implements TransactionHistoryContract.View {
 
     private static final String TAG = "TransactionHistory";
 
@@ -148,5 +149,15 @@ public class TransactionHistoryActivity extends JsBaseActivity {
                     }.getType());
             mAdapter.addOrSetData(list, true);
         }
+    }
+
+    @Override
+    public void setPresenter(TransactionHistoryContract.Presenter presenter) {
+
+    }
+
+    @Override
+    public void showHistory(@Nullable History history) {
+        RecordActivity.intent(this, history);
     }
 }

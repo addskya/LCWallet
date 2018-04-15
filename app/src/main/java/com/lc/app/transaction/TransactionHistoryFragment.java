@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.lc.app.R;
+import com.lc.app.transaction.record.RecordActivity;
 
 import java.util.List;
 
@@ -20,12 +21,11 @@ import java.util.List;
  * Created by orange on 18-4-11.
  */
 
-public class TransactionHistoryFragment extends Fragment {
+public class TransactionHistoryFragment extends Fragment implements TransactionHistoryContract.View {
 
     private TextView mStatusView;
 
 
-    private RecyclerView mListView;
     private HistoryAdapter mAdapter;
 
     @Override
@@ -38,16 +38,16 @@ public class TransactionHistoryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_transaction_history, container,false);
-        return view;
+        return inflater.inflate(R.layout.fragment_transaction_history,
+                container, false);
     }
 
     @Override
-    public void onViewCreated(View view,
+    public void onViewCreated(@Nullable View view,
                               @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mStatusView = view.findViewById(R.id.statusView);
-        mListView = view.findViewById(R.id.list);
+        RecyclerView mListView = view.findViewById(R.id.list);
         mAdapter = new HistoryAdapter(getLayoutInflater(), this);
         mListView.setAdapter(mAdapter);
     }
@@ -71,5 +71,15 @@ public class TransactionHistoryFragment extends Fragment {
                     }.getType());
             mAdapter.addOrSetData(list, true);
         }
+    }
+
+    @Override
+    public void setPresenter(TransactionHistoryContract.Presenter presenter) {
+
+    }
+
+    @Override
+    public void showHistory(@Nullable History history) {
+        RecordActivity.intent(getContext(), history);
     }
 }

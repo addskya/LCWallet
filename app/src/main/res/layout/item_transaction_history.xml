@@ -7,6 +7,10 @@
             name="history"
             type="com.lc.app.transaction.History" />
 
+        <variable
+            name="view"
+            type="com.lc.app.transaction.TransactionHistoryContract.View" />
+
     </data>
 
     <RelativeLayout
@@ -14,7 +18,8 @@
         android:layout_height="wrap_content"
         android:background="#F3F3F3"
         android:paddingBottom="5dp"
-        android:paddingTop="5dp">
+        android:paddingTop="5dp"
+        android:onClick="@{() -> view.showHistory(history)}">
 
         <ImageView
             android:id="@+id/icon"
