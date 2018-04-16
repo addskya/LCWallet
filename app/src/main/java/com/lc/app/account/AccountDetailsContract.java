@@ -28,6 +28,8 @@ public interface AccountDetailsContract {
         void backup(@NonNull Account account);
 
         void export(@Nullable Account account);
+
+        void copyAddress(@Nullable Account account);
     }
 
     interface Presenter extends BasePresenter {

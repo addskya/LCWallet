@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,12 +63,29 @@ public class QrCodeDialog extends BaseDialog {
         CharSequence content = account.getRealAddress();
         Log.i(TAG, "content:" + content);
 
-        File outputFile = new File(getBaseContext().getCacheDir(), "account_qr.png");
+        // 文件名每次产生一个新文件,以避免Fresco默认文件缓存问题
+        final File outputFile = new File(getBaseContext().getCacheDir(),
+                TextUtils.concat(content, ".png").toString());
+        if (outputFile.exists()) {
+            boolean delete = outputFile.delete();
+            Log.i(TAG, "delete:" + delete);
+        }
         boolean success = QrCodeUtil.createQRImage(content, 500, 500, outputFile);
         if (success) {
             final Uri uri = Uri.fromFile(outputFile);
             mQrCodeImageView.setImageURI(uri);
             mAccountName.setText(account.getWalletName());
         }
+
+        setOnDismissListener(new OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                // Delete the QrCodeFile
+                if (!outputFile.delete()) {
+                    outputFile.deleteOnExit();
+                }
+                Log.i(TAG, "Delete the Cache QrCode File:" + outputFile);
+            }
+        });
     }
 }

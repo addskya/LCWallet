@@ -1,19 +1,23 @@
 package com.lc.app.account;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.webkit.ValueCallback;
 import android.widget.PopupMenu;
+import android.widget.Toast;
 
+import com.lc.app.App;
 import com.lc.app.DefaultObserver;
 import com.lc.app.JsBaseActivity;
 import com.lc.app.R;
@@ -23,8 +27,8 @@ import com.lc.app.export.ExportActivity;
 import com.lc.app.javascript.JsCallback;
 import com.lc.app.model.Account;
 import com.lc.app.transaction.TransactionActivity;
-import com.lc.app.transaction.TransactionHistoryActivity;
 import com.lc.app.transaction.TransactionHistoryFragment;
+import com.lc.app.ui.ConfirmDialog;
 import com.lc.app.ui.PromptDialog;
 import com.lc.app.utils.WalletUtil;
 
@@ -55,15 +59,23 @@ public class AccountDetailsActivity extends JsBaseActivity implements
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
                     switch (item.getItemId()) {
-                        /*case R.id.menu_transaction_history: {
-                            TransactionHistoryActivity.intentTo(AccountDetailsActivity.this,
-                                    mAccount);
-                            return true;
-                        }*/
+                        case R.id.menu_export: {
+                            export(mAccount);
+                            break;
+                        }
+                        case R.id.menu_rename: {
+
+                            break;
+                        }
+                        case R.id.menu_delete: {
+                            delete(mAccount);
+                            break;
+                        }
                         default: {
                             return false;
                         }
                     }
+                    return true;
                 }
             };
 
@@ -200,6 +212,12 @@ public class AccountDetailsActivity extends JsBaseActivity implements
 
     @Override
     public void gotoTransaction() {
+        // 如果当前账户的全额为零,禁止发起转账
+        Account account = mAccount;
+        if (account.getRemain() <= 0) {
+            Toast.makeText(this, R.string.error_remain_zero, Toast.LENGTH_SHORT).show();
+            return;
+        }
         TransactionActivity.intentTo(AccountDetailsActivity.this,
                 mAccount,
                 REQUEST_CODE_TRANSACTION);
@@ -261,6 +279,44 @@ public class AccountDetailsActivity extends JsBaseActivity implements
                 });
             }
         }).show();
+    }
+
+    @Override
+    public void copyAddress(@Nullable Account account) {
+        if (account == null) {
+            return;
+        }
+
+        ClipboardManager manager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        if (manager != null) {
+            String keystore = String.valueOf(account.getRealAddress());
+            ClipData data = ClipData.newPlainText("address", keystore);
+            manager.setPrimaryClip(data);
+            toastMessage(R.string.text_address_copy);
+        }
+    }
+
+    private void delete(@Nullable final Account account) {
+        if (account == null) {
+            return;
+        }
+        ConfirmDialog.intentTo(this,
+                null,
+                getString(R.string.warn_delete_account),
+                getString(R.string.text_delete_account),
+                getString(R.string.text_thinking),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case DialogInterface.BUTTON_NEGATIVE: {
+                                String accountPath = ((App) getApplication()).getWalletFolder();
+                                WalletUtil.deleteWallet(accountPath, account);
+                                finish();
+                            }
+                        }
+                    }
+                });
     }
 
     @Override

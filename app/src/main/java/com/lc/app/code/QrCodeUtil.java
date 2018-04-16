@@ -64,6 +64,7 @@ class QrCodeUtil {
 
             FileOutputStream fos = new FileOutputStream(outputFile);
             boolean success = bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
             fos.close();
             if (!bitmap.isRecycled()) {
                 bitmap.recycle();

@@ -137,7 +137,7 @@
                 android:layout_below="@id/account"
                 android:layout_marginEnd="10dp"
                 android:layout_marginTop="10dp"
-                android:lines="2"
+                android:lines="3"
                 android:maxWidth="180dp"
                 android:text="@{String.valueOf(account.address),default=12345678931456}"
                 android:textColor="@color/white"
@@ -158,21 +158,21 @@
 
             <ImageView
                 android:id="@+id/export"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_alignBottom="@+id/account_number"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignTop="@+id/account_number"
                 android:layout_alignParentEnd="true"
                 android:layout_marginBottom="15dp"
                 android:layout_marginEnd="15dp"
                 android:contentDescription="@null"
-                android:onClick="@{() -> view.export(account)}"
+                android:onClick="@{() -> view.copyAddress(account)}"
                 android:src="@drawable/ic_copy" />
 
             <CheckBox
                 android:id="@+id/see"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:layout_alignBottom="@+id/account_number"
+                android:layout_alignTop="@+id/account_number"
                 android:layout_marginBottom="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_toStartOf="@+id/export"

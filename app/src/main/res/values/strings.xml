@@ -103,4 +103,9 @@
     <string name="text_transaction_rate">"手续费"</string>
     <string name="text_address_copy">"交易地址已复制到剪贴板"</string>
 
+    <string name="error_remain_zero">"当前账户余额不足"</string>
+    <string name="warn_delete_account">"删除的账户将不在App内显示,请备份后再操作.是否确认删除该账户?"</string>
+    <string name="text_thinking">"我再想想"</string>
+    <string name="text_delete_account">"删除账户"</string>
+
 </resources>
