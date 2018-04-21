@@ -88,7 +88,7 @@
     <string name="text_account_from">"转出账户"</string>
     <string name="empty_common_account">"无常用地址,点击添加一个吧"</string>
     <string name="text_add_common">"添加常用地址"</string>
-    <string name="text_common_account">"常用地址"</string>
+    <string name="text_common_account">"常用账户"</string>
     <string name="text_pick_account">"选择地址"</string>
     <string name="hint_common_name">"请输入账户名"</string>
     <string name="hint_common_address">"请输入账户地址"</string>

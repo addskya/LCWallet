@@ -19,7 +19,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark">
 
             <ImageView
                 android:layout_width="40dp"
@@ -36,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="@string/text_transaction"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="24sp" />
 
         </RelativeLayout>
@@ -110,12 +111,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_marginEnd="20dp"
-            android:drawableStart="@drawable/ic_copy"
             android:gravity="start|center_vertical"
             android:onClick="onPickCommonAddress"
             android:text="@string/text_common_account"
-            android:textColor="@color/black"
-            android:textSize="20sp" />
+            android:textColor="@color/yellow_dark"
+            android:textSize="18sp" />
 
         <RelativeLayout
             android:layout_width="match_parent"

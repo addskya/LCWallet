@@ -127,53 +127,6 @@ public class AccountDetailsActivity extends JsBaseActivity implements
         mAccount = account;
         mBinding.setAccount(account);
         mBinding.executePendingBindings();
-
-        final CharSequence walletName = account.getWalletName();
-        final CharSequence password = account.getPassword();
-        final CharSequence address = account.getRealAddress();
-        final CharSequence keystore = account.getKeystore();
-
-        if (TextUtils.isEmpty(keystore) && false) {
-            showProgressDialog();
-            loadWallet(walletName, password, address, new ValueCallback<String>() {
-                @Override
-                public void onReceiveValue(String value) {
-                    dismissProgressDialog();
-                    if (TextUtils.isEmpty(value)
-                            || "null".equalsIgnoreCase(value)) {
-                        return;
-                    }
-                    account.setKeystore(value);
-                    WalletUtil.updateWallet(getWalletFolder(), account)
-                            .subscribeOn(Schedulers.io())
-                            .unsubscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new DefaultObserver<Boolean>() {
-                                @Override
-                                public void onStart() {
-                                    showProgressDialog();
-                                }
-
-                                @Override
-                                public void onNext(Boolean response) {
-                                    super.onNext(response);
-                                }
-
-                                @Override
-                                public void onError(Throwable e) {
-                                    dismissProgressDialog();
-                                    e.printStackTrace();
-                                }
-
-                                @Override
-                                public void onCompleted() {
-                                    dismissProgressDialog();
-                                }
-                            });
-                }
-            });
-        }
-
     }
 
     @Override
@@ -263,16 +216,6 @@ public class AccountDetailsActivity extends JsBaseActivity implements
                             toastMessage(R.string.error_password_invalid);
                             return;
                         }
-
-                        /*account.setKeystore(value);
-                        WalletUtil.updateWallet(getWalletFolder(), account)
-                                .subscribeOn(Schedulers.io())
-                                .unsubscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(new DefaultObserver<Boolean>() {
-
-                                });*/
-                        // Copy the keystore to ClipBoradManager
 
                         ExportActivity.intentTo(AccountDetailsActivity.this, value);
                     }
@@ -392,40 +335,6 @@ public class AccountDetailsActivity extends JsBaseActivity implements
                 }
             }
         });
-
-        /*
-        ConfirmDialog.intentTo(this,
-                null,
-                getString(R.string.warn_delete_account),
-                getString(R.string.text_delete_account),
-                getString(R.string.text_thinking),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case DialogInterface.BUTTON_POSITIVE: {
-
-                                CharSequence walletName = account.getWalletName();
-                                CharSequence password = null;
-                                // removeWallet();
-
-
-                                String accountPath = ((App) getApplication()).getWalletFolder();
-                                WalletUtil.deleteWallet(accountPath, account)
-                                .subscribeOn(Schedulers.io())
-                                .unsubscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(new DefaultObserver<Boolean>(){
-                                    @Override
-                                    public void onNext(Boolean response) {
-                                        super.onNext(response);
-                                    }
-                                });
-                                finish();
-                            }
-                        }
-                    }
-                });*/
     }
 
     @Override
@@ -440,7 +349,8 @@ public class AccountDetailsActivity extends JsBaseActivity implements
             @Override
             public void run() {
                 String address = mAccount.getRealAddress();
-                showProgressDialog();
+                // 2018.04.21 要求查余额不转圈
+                // showProgressDialog();
                 balanceOf(address);
             }
         });

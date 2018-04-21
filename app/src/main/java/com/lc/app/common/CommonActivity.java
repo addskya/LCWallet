@@ -50,6 +50,7 @@ public class CommonActivity extends BaseActivity implements CommonContract.View 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setResult(RESULT_CANCELED);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_common);
         mBinding.setView(this);
 
@@ -133,6 +134,7 @@ public class CommonActivity extends BaseActivity implements CommonContract.View 
     public void onAddAccountCompleted() {
         //Nothing
         dismissProgressDialog();
+        setResult(RESULT_OK);
     }
 
     @Override
@@ -214,6 +216,11 @@ public class CommonActivity extends BaseActivity implements CommonContract.View 
                 mPresenter.addAccount(getCommonPath(), entry);
             }
         });
+    }
+
+    @Override
+    public void onBack() {
+        finish();
     }
 
     private String getCommonPath() {

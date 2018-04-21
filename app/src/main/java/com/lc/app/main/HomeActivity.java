@@ -161,6 +161,7 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
 
     @Override
     public void refresh() {
+        mQueryBalance.clear();
         mHasUpdateBalance = false;
         loadWallet(new ValueCallback<String>() {
             @Override

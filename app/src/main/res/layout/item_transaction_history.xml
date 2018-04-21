@@ -16,15 +16,16 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:background="#F3F3F3"
-        android:paddingBottom="5dp"
-        android:paddingTop="5dp"
-        android:onClick="@{() -> view.showHistory(history)}">
+        android:onClick="@{() -> view.showHistory(history)}"
+        android:paddingBottom="2dp"
+        android:paddingTop="2dp">
 
         <ImageView
             android:id="@+id/icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginStart="5dp"
@@ -38,9 +39,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_toEndOf="@+id/icon"
-            android:text="@string/text_transaction_to"
+            android:text="@{history.value > 0 ? @string/text_transaction_from :  @string/text_transaction_to}"
             android:textColor="@color/black_light"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/to_value"
@@ -48,9 +49,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_toEndOf="@+id/to"
-            android:text="@{history.to.substring(history.to.length()-4)}"
+            android:text="@{history.value > 0 ? history.from.substring(history.from.length()-4) : history.to.substring(history.to.length()-4)}"
             android:textColor="@color/black_light"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/date"
@@ -61,7 +62,7 @@
             android:layout_toEndOf="@+id/icon"
             android:text="@{history.time,default=20170101}"
             android:textColor="@color/black_light"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -71,7 +72,7 @@
             android:layout_marginEnd="15dp"
             android:text="@{String.valueOf(history.value)}"
             android:textColor="@color/black"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
     </RelativeLayout>
 </layout>

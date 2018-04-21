@@ -59,6 +59,8 @@ public interface CommonContract {
 
         // Click
         void addAccount();
+
+        void onBack();
     }
 
 

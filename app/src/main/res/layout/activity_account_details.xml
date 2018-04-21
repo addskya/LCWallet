@@ -83,7 +83,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="270dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginEnd="20dp"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="10dp"
@@ -113,7 +113,7 @@
                         android:layout_alignParentStart="true"
                         android:layout_alignParentTop="true"
                         android:layout_marginStart="10dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="10dp"
                         android:text="@string/text_remain"
                         android:textColor="@color/white"
                         android:textSize="20sp" />
@@ -122,9 +122,9 @@
                         android:id="@+id/account_remain"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignStart="@id/remain"
-                        android:layout_below="@id/remain"
+                        android:layout_marginStart="10dp"
                         android:layout_marginTop="10dp"
+                        android:layout_toEndOf="@id/remain"
                         android:text="@{String.valueOf(account.remain),default=555}"
                         android:textColor="@color/white"
                         android:textSize="20sp" />
@@ -133,9 +133,9 @@
                         android:id="@+id/account"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignStart="@id/account_remain"
+                        android:layout_alignStart="@id/remain"
                         android:layout_below="@id/account_remain"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="5dp"
                         android:text="@string/text_account"
                         android:textColor="@color/white"
                         android:textSize="20sp" />
@@ -147,7 +147,7 @@
                         android:layout_alignStart="@id/account"
                         android:layout_below="@id/account"
                         android:layout_marginEnd="10dp"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="5dp"
                         android:lines="3"
                         android:maxWidth="180dp"
                         android:text="@{String.valueOf(account.address),default=12345678931456}"
@@ -157,16 +157,16 @@
                     <TextView
                         android:layout_width="200dp"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
                         android:layout_below="@+id/account_number"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginBottom="20dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="00dp"
                         android:background="@drawable/transaction_bg"
                         android:gravity="center"
+                        android:minHeight="40dp"
                         android:onClick="@{() -> view.gotoTransaction()}"
                         android:text="@string/text_start_transaction"
-                        android:textColor="#DAB542"
+                        android:textColor="@color/yellow_dark"
                         android:textSize="20sp" />
 
                     <ImageView

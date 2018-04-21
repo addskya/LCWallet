@@ -110,8 +110,15 @@ public class ImportActivity extends JsBaseActivity implements ImportContract.Vie
                 account.setWalletName(String.valueOf(walletName));
                 account.setKeystore(String.valueOf(keystore));
                 account.setPassword(String.valueOf(password1));
-                account.setAddress(value);
 
+                StringBuilder sb = new StringBuilder(value);
+                if (value.startsWith("\"")) {
+                    sb.deleteCharAt(0);
+                }
+                if (value.endsWith("\"")) {
+                    sb.deleteCharAt(sb.length() - 1);
+                }
+                account.setAddress(sb.toString());
                 // 导入钱包,无余额,无交易流水
                 account.setRemain(0);
                 account.setTransactionHistoryJson(null);
