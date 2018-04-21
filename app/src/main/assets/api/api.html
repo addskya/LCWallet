@@ -8,7 +8,7 @@
     <script type="text/javascript">
 
         var URL = "ws://47.100.55.67:8546/";
-        var contract = "0x4230deEe19c832D6e7F2AaC175427c7eEB5E04eC";
+        var contract = "0xDB38440083fF4cAB97dcf698411F40242aB59eF8";
 
         var walletApi;
 
@@ -42,6 +42,22 @@
         function importWallet(walletName, keystore, password) {
             return walletApi.importWallet(walletName, keystore, password);
         }
+
+        // 删除指定钱包
+        // @param {walletName} 删除钱包名
+        // @param {password} 钱包密码
+        // @param {address} 钱包地址
+        function removeWallet(walletName, password, address) {
+            return walletApi.removeWallet(walletName, password, address);
+        }
+
+        // 重命名钱包
+        // @param {oldName} 原钱包名
+        // @param {newName} 新的钱包名
+        function renameWallet(oldName, address, newName) {
+            return walletApi.renameWallet(oldName, address, newName);
+        }
+
 
         // 导出 wallet keystore 信息,导出前需要进行口令认证
         // @param {walletName} 钱包名称,使用钱包名称区分不同钱包

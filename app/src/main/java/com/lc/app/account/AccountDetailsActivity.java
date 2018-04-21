@@ -28,7 +28,6 @@ import com.lc.app.javascript.JsCallback;
 import com.lc.app.model.Account;
 import com.lc.app.transaction.TransactionActivity;
 import com.lc.app.transaction.TransactionHistoryFragment;
-import com.lc.app.ui.ConfirmDialog;
 import com.lc.app.ui.PromptDialog;
 import com.lc.app.utils.WalletUtil;
 
@@ -64,7 +63,7 @@ public class AccountDetailsActivity extends JsBaseActivity implements
                             break;
                         }
                         case R.id.menu_rename: {
-
+                            rename(mAccount);
                             break;
                         }
                         case R.id.menu_delete: {
@@ -296,10 +295,97 @@ public class AccountDetailsActivity extends JsBaseActivity implements
         }
     }
 
+    private void rename(@Nullable final Account account) {
+        if (account == null) {
+            return;
+        }
+
+        final CharSequence accountName = account.getWalletName();
+        RenameWalletDialog.intentTo(this, accountName, new RenameWalletDialog.CallBack() {
+            @Override
+            public void onCallback(int which, @Nullable final CharSequence input) {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                    case DialogInterface.BUTTON_NEUTRAL: {
+                        Log.i(TAG, "BUTTON_NEUTRAL:BUTTON_POSITIVE");
+                        break;
+                    }
+                    case DialogInterface.BUTTON_NEGATIVE: {
+                        Log.i(TAG, "BUTTON_NEGATIVE:" + input);
+
+                        renameWallet(accountName, mAccount.getRealAddress(),
+                                input, new ValueCallback<String>() {
+                                    @Override
+                                    public void onReceiveValue(String value) {
+                                        Boolean renamed = Boolean.valueOf(value);
+                                        if (renamed) {
+                                            toastMessage(R.string.text_rename_success);
+                                            mAccount.setWalletName(String.valueOf(input));
+                                            setResult(RESULT_OK);
+                                        } else {
+                                            toastMessage(R.string.error_rename_failed);
+                                        }
+                                    }
+                                });
+                        break;
+                    }
+                }
+            }
+        });
+    }
+
+
     private void delete(@Nullable final Account account) {
         if (account == null) {
             return;
         }
+
+        RemoveWalletDialog.intentTo(this, new RemoveWalletDialog.CallBack() {
+            @Override
+            public void onCallback(int which, @Nullable CharSequence input) {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE: {
+                        Log.i(TAG, "BUTTON_POSITIVE");
+                        break;
+                    }
+                    case DialogInterface.BUTTON_NEGATIVE: {
+                        CharSequence walletName = account.getWalletName();
+                        CharSequence password = input;
+                        CharSequence address = account.getRealAddress();
+                        removeWallet(walletName, password, address, new ValueCallback<String>() {
+                            @Override
+                            public void onReceiveValue(String value) {
+                                Log.i(TAG, "value:" + value);
+                                Boolean deleted = Boolean.valueOf(value);
+                                if (deleted) {
+                                    String accountPath = ((App) getApplication()).getWalletFolder();
+                                    WalletUtil.deleteWallet(accountPath, account)
+                                            .subscribeOn(Schedulers.io())
+                                            .unsubscribeOn(Schedulers.io())
+                                            .observeOn(AndroidSchedulers.mainThread())
+                                            .subscribe(new DefaultObserver<Boolean>() {
+                                                @Override
+                                                public void onNext(Boolean response) {
+                                                    setResult(RESULT_OK);
+                                                    finish();
+                                                }
+                                            });
+                                } else {
+                                    toastMessage(R.string.error_invalid_password);
+                                }
+                            }
+                        });
+                        break;
+                    }
+                    case DialogInterface.BUTTON_NEUTRAL: {
+                        Log.i(TAG, "BUTTON_NEUTRAL");
+                        break;
+                    }
+                }
+            }
+        });
+
+        /*
         ConfirmDialog.intentTo(this,
                 null,
                 getString(R.string.warn_delete_account),
@@ -309,14 +395,29 @@ public class AccountDetailsActivity extends JsBaseActivity implements
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
-                            case DialogInterface.BUTTON_NEGATIVE: {
+                            case DialogInterface.BUTTON_POSITIVE: {
+
+                                CharSequence walletName = account.getWalletName();
+                                CharSequence password = null;
+                                // removeWallet();
+
+
                                 String accountPath = ((App) getApplication()).getWalletFolder();
-                                WalletUtil.deleteWallet(accountPath, account);
+                                WalletUtil.deleteWallet(accountPath, account)
+                                .subscribeOn(Schedulers.io())
+                                .unsubscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new DefaultObserver<Boolean>(){
+                                    @Override
+                                    public void onNext(Boolean response) {
+                                        super.onNext(response);
+                                    }
+                                });
                                 finish();
                             }
                         }
                     }
-                });
+                });*/
     }
 
     @Override

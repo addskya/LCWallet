@@ -173,6 +173,42 @@ public abstract class JsBaseActivity extends BaseActivity {
         mWebView.evaluateJavascript(call, new ValueCallbackWrapper<>(callback));
     }
 
+    /**
+     * 删除指定钱包
+     *
+     * @param walletName 钱包名字
+     * @param password   钱包密码
+     * @param address    钱包地址
+     */
+    protected void removeWallet(@NonNull CharSequence walletName,
+                                @NonNull CharSequence password,
+                                @NonNull CharSequence address,
+                                @Nullable ValueCallback<String> callback) {
+        String call = "javascript:removeWallet(\"" + walletName
+                + "\",\"" + password
+                + "\",\"" + address
+                + "\")";
+        Log.d(TAG, "execute:" + call);
+        mWebView.evaluateJavascript(call, new ValueCallbackWrapper<>(callback));
+    }
+
+    /**
+     * 重命名钱包
+     *
+     * @param oldName  钱包的原始名
+     * @param address  钱包地址
+     * @param newName  钱包的新名字
+     * @param callback 回调结果
+     */
+    protected void renameWallet(@NonNull CharSequence oldName,
+                                @NonNull CharSequence address,
+                                @NonNull CharSequence newName,
+                                @Nullable ValueCallback<String> callback) {
+        String call = "javascript:renameWallet(\"" + oldName + "\",\"" + address + "\",\"" + newName + "\")";
+        Log.d(TAG, "execute:" + call);
+        mWebView.evaluateJavascript(call, new ValueCallbackWrapper<>(callback));
+    }
+
     @SuppressWarnings("nouse")
     protected void loadWallet(@NonNull CharSequence walletName,
                               @NonNull CharSequence password,
@@ -283,7 +319,6 @@ public abstract class JsBaseActivity extends BaseActivity {
         Log.d(TAG, "execute:" + call);
         mWebView.evaluateJavascript(call, null);
     }
-
 
 
     @NonNull

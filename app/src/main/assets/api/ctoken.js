@@ -39,16 +39,16 @@ var CToken = function(Provider, contract){
  */
 CToken.prototype.initCToken = function(callback){
 	var _this = this;
-	console.log('5555555555555');
+	
     //尝试连接以太坊网络，获取web3对象
     if(typeof _this.web3 !== 'undefined') {
         web3 = new Web3(_this.web3.currentProvider);
+
 		if(typeof callback != 'undefined'){
 			callback(false, "network connected success");
-		}
+		}			
 		return true;
     } else {
-    console.log('66666666666666');
 		//判断是http还是websocket
 		var locate = _this.currentProvider.indexOf(':');
 		var mode = _this.currentProvider.slice(0, locate);
@@ -60,9 +60,10 @@ CToken.prototype.initCToken = function(callback){
 			web3 = new Web3(new Web3.providers.HttpProvider(_this.currentProvider));
 		}else{
 			console.log("sorry, do not support network mode");
+
 			if(typeof callback != 'undefined'){
 				callback(true, "network connected failed");
-			}	
+			}
 			return false;
 		}
 
@@ -93,14 +94,12 @@ CToken.prototype.initCToken = function(callback){
 					_this.chainID = value[1];
 					owner = value[2];
 					_this.contractOwner = '0x' + owner.slice(26);
-                    console.log('11111111111111111111');
+
 					if(typeof callback != 'undefined'){
-					console.log('22222222222222222222222');
-						callback(null, "network connected success");
-					}
-					console.log('333333333333333333333');
+						callback(false, "network connected success");
+					}		
 				});			
-                console.log('444444444444444444');
+
 			}else{
 				//无法连接网络
 				_this.isConnected = false;
@@ -201,7 +200,6 @@ CToken.prototype.createWallet = function(walletName, password){
     }
 }
 
-
 /**
  * 根据钱包名称和钱包地址删除钱包 
  * 
@@ -294,6 +292,66 @@ CToken.prototype.exportWallet = function(walletName, password){
 }
 
 /**
+ * 重命名钱包
+ * 
+ * @method renameWallet
+ * @param {oldName} 原钱包名称 
+ * 		  {accountAddress} 钱包地址信息
+ * 		  {newName} 新钱包名称
+ * @return 成功则返回true，失败则返回false
+ */
+CToken.prototype.renameWallet = function(oldName, accountAddress, newName){
+	var value, wallet, address;
+	var finded;
+
+	if(!web3.utils.isAddress(accountAddress)){
+        console.log("invalid account");
+        return false;
+    }
+
+	//遍历本地localStorage，查找原钱包信息
+	for(var key in localStorage){
+		//检查是否钱包重名
+		if(key.localeCompare(oldName) == 0){
+			finded = true;
+			value = localStorage.getItem(key);
+			break;
+		}
+	}
+	
+	if(!finded){
+		console.log("wallet " + oldName + " don't exist");
+		return false; //localStorage里面没有该钱包
+	}
+
+	//解析value为json格式,判断钱包地址是否匹配
+    wallet = JSON.parse(value);
+    address = '0x' + wallet[0].address.toLowerCase();
+	if(accountAddress.toLowerCase().localeCompare(address) != 0){
+		console.log("wallet address wrong");
+		return false;
+	}
+
+	//遍历本地localStorage，查找新钱包信息
+	for(var key in localStorage){
+		//检查是否钱包重名
+		if(key.localeCompare(newName) == 0){
+			console.log("wallet " + newName + " already register");
+			return false;
+		}
+	}
+
+	//删除localStorage
+	localStorage.removeItem(oldName);
+
+	//导入keystore数据
+	localStorage.setItem(newName, value);
+
+	return true;
+}
+
+
+/**
  * 导入wallet keystore信息
  * 
  * @method importWallet 
@@ -349,37 +407,6 @@ CToken.prototype.importWallet = function(walletName, keystore, password){
 }
 
 /**
- * 根据钱包名称和地址查找本地是否有钱包
- * 
- * @method findWallet 
- * @param {walletName} 导入钱包名称
- * 		  {accountAddress} 钱包地址信息
- * @return 成功则返回true，失败则返回false
- */
-CToken.prototype.findWallet = function(walletName, accountAddress){
-	var value, wallet;
-	
-	//遍历本地localStorage
-	for(var key in localStorage){
-		value = localStorage.getItem(key);
-		wallet = JSON.parse(value);
-
-		//如果钱包为空，则退出
-		if(wallet == null)
-			continue;	
-
-		//进行钱包名称和地址是否匹配检查
-		if(key.localeCompare(walletName) == 0){
-			var address = '0x' + wallet[0].address;
-			if(address.toLowerCase().localeCompare(accountAddress.toLowerCase()) == 0){
-				return true;
-			}
-		}
-	}
-	return false;
-}		
-
-/**
  * 获取本地所有钱包信息
  *
  * @method getWalletList 
@@ -398,7 +425,7 @@ CToken.prototype.getWalletList = function(){
 		//如果为空，则继续
 		if(wallet == null)
 			continue;
-			
+		
 		walletInfo = {
 			"name": key,
 			"address": '0x' + wallet[0].address.toLowerCase()
@@ -505,7 +532,7 @@ CToken.prototype.setInitAccount = function(walletName, password, executeAccount,
  * @param 	{wallName} 钱包名称，通过walletName和executeAccount来确定判断钱包里面账户正确性
  * 			{password} 账户访问口令
  * 			{executeAccount} 合约执行的发起账户
- * 			{rating} 交易费率，合约控制交易费率在1.00%~3.00%之间
+ * 			{rating} 交易费率，合约控制交易费率在0.10%~25.00%之间
  * 			{callback(error, result)} 可选，回调返回函数，正常情况下error为null，result返回该交易hash值
  * @return 成功则返回true，失败则返回false
  */
@@ -522,7 +549,7 @@ CToken.prototype.setRate = function(walletName, password, executeAccount, rating
         return false;
 	}
 	
-	if(rating > 3.00 || rating < 1.00){
+	if(rating > 25.00 || rating < 0.10){
         console.log("invalid rate");
 		return false;	
 	}
@@ -948,7 +975,7 @@ CToken.prototype.registerUser = function(walletName, password, executeAccount, u
                 console.log("don't find valid wallet");
                 return false;
             }
-            
+          
             //格式化合约执行数据
             formatedData = web3.eth.abi.encodeFunctionSignature('registerUser(address)');
             formatedData += web3.eth.abi.encodeParameter('address', user).slice(2);
@@ -962,16 +989,15 @@ CToken.prototype.registerUser = function(walletName, password, executeAccount, u
             //评估合约执行代码的gas量和获取账户nonce
             var pEstimateGas = web3.eth.estimateGas(rawTx);
             var pNonce = web3.eth.getTransactionCount(executeAccount);
-            Promise.all([pEstimateGas, pNonce]).then(function(value){
-                var gasLimit = value[0];
-				var nonce = value[1];
+            Promise.all([pNonce]).then(function(value){
+				var nonce = value[0];
                 
                 rawTx = {
                     nonce: nonce,
                     to: _this.contractAccount,
                     value: '0x00',
                     gasPrice: _this.gasPrice,
-                    gasLimit: gasLimit*10, //why estimate isn't correct
+                    gasLimit: 47000*10, //why estimate isn't correct
                     data: formatedData,
                     chainId: _this.chainID
                 };
@@ -1014,12 +1040,12 @@ CToken.prototype.checkUser = function(user, callback){
         console.log("connect network failed");
         return false;
 	}
-
+/*
 	if(!web3.utils.isAddress(user)){
 		console.log("invalid user account");
 		return false;
 	}
-
+*/
 	//检查callback函数
 	if(typeof callback == 'undefined'){
 		console.log("error, please input callback function");
@@ -1427,7 +1453,7 @@ CToken.prototype.balanceOwner = function(owner, callback){
  * @method showHistoryTransaction
  * @param  {target} 目标账户 
  * 		   {callback(error, result)} 回调返回函数，正常情况下error为null。
- * 		   result返回查找结果，为数组类型，包含{from,to,value,date}。
+ * 		   result返回查找结果，为数组类型，包含{from,to,value,fee,date}。
  * @return 成功则返回true，失败则返回false
  */
 CToken.prototype.showHistoryTransactions = function(target, callback){
@@ -1455,7 +1481,7 @@ CToken.prototype.showHistoryTransactions = function(target, callback){
 
 	//生成opcode
 	extAddress = web3.utils.leftPad(target, 64);
-	opcode = web3.eth.abi.encodeEventSignature('TransferByTime(address,address,uint256,uint256)');
+	opcode = web3.eth.abi.encodeEventSignature('TransferByFeeAndTime(address,address,uint256,uint256,uint256)');
 	
 	//查询交易源事件信息
 	pLogs1 = web3.eth.getPastLogs({
@@ -1489,15 +1515,22 @@ CToken.prototype.showHistoryTransactions = function(target, callback){
 			//解析金额
 			value = res1[i].data.slice(0,66);
             value = web3.utils.hexToNumber(value)/(1.0*Math.pow(10, _this.tokenDecimals));
-			result.value = value.toFixed(_this.tokenDecimals);
+			value = value.toFixed(_this.tokenDecimals);
+			result.value = "-" + value.toString();
+
+			//解析交易费
+			value = '0x' + res1[i].data.slice(66,130);
+            value = web3.utils.hexToNumber(value)/(1.0*Math.pow(10, _this.tokenDecimals));
+			result.fee = value.toFixed(_this.tokenDecimals);
 
 			//解析时间
-			timestamp = '0x' + res1[i].data.slice(67,131);
+			timestamp = '0x' + res1[i].data.slice(130);
             timestamp = web3.utils.hexToNumber(timestamp);
 			time.setTime(timestamp * 1000);
-			result.time = time.toString();
 
-            history.push(result);
+			result.time = time.toLocaleString();
+
+			history.push(result);
         }
 
 		//格式化目的记录查询信息
@@ -1513,13 +1546,20 @@ CToken.prototype.showHistoryTransactions = function(target, callback){
 			//解析金额
 			value = res2[i].data.slice(0,66);
             value = web3.utils.hexToNumber(value)/(1.0*Math.pow(10, _this.tokenDecimals));
-			result.value = value.toFixed(_this.tokenDecimals);
+			value = value.toFixed(_this.tokenDecimals);
+			result.value = "+" + value.toString();
+
+			//解析交易费
+			value = '0x' + res1[i].data.slice(66,130);
+            value = web3.utils.hexToNumber(value)/(1.0*Math.pow(10, _this.tokenDecimals));
+			result.fee = value.toFixed(_this.tokenDecimals);
 
 			//解析时间
-			timestamp = '0x' + res2[i].data.slice(67,131);
+			timestamp = '0x' + res2[i].data.slice(130);
             timestamp = web3.utils.hexToNumber(timestamp);
 			time.setTime(timestamp * 1000);
-			result.time = time.toString();
+
+			result.time = time.toLocaleString();
 
             history.push(result);
         }
@@ -1531,19 +1571,3 @@ CToken.prototype.showHistoryTransactions = function(target, callback){
 	return true;
 }
 
-/*
-var subscription;
-
-CToken.prototype.subscribe = function(target, callback){	
-	var _this = this;
-
-	//生成opcode
-	var extAddress = web3.utils.leftPad(target, 64);
-	var opcode = web3.eth.abi.encodeEventSignature('Transfer(address,address,uint256)');
-	subscription = web3.eth.subscribe('logs', {
-		fromBlock: 'latest',
-		address: _this.contractAccount,
-		topics: [opcode, null, extAddress]
-	}, callback);	
-}
-*/

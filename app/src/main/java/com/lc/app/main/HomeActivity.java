@@ -122,8 +122,9 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
                 break;
             }
             case REQUEST_CODE_TRANSLATE: {
-                List<Account> accounts = mAdapter.getDatas();
-                loadBalanceOf(accounts);
+                // List<Account> accounts = mAdapter.getDatas();
+                // loadBalanceOf(accounts);
+                refresh();
                 break;
             }
             default: {
