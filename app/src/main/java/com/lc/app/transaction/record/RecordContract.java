@@ -16,6 +16,8 @@ public interface RecordContract {
 
         void copy(History history);
 
+        String getFormat(float value);
+
     }
 
     interface Presenter extends BasePresenter{}

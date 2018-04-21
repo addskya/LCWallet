@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
@@ -321,7 +322,14 @@ public class AccountDetailsActivity extends JsBaseActivity implements
                                         if (renamed) {
                                             toastMessage(R.string.text_rename_success);
                                             mAccount.setWalletName(String.valueOf(input));
-                                            setResult(RESULT_OK);
+                                            String accountPath = ((App) getApplication()).getWalletFolder();
+                                            WalletUtil.updateWallet(accountPath, mAccount)
+                                                    .subscribe(new DefaultObserver<Boolean>() {
+                                                        @Override
+                                                        public void onNext(Boolean response) {
+                                                            setResult(RESULT_OK);
+                                                        }
+                                                    });
                                         } else {
                                             toastMessage(R.string.error_rename_failed);
                                         }
@@ -487,5 +495,15 @@ public class AccountDetailsActivity extends JsBaseActivity implements
                 });
             }
         };
+    }
+
+    @Override
+    public void refresh() {
+        parseIntent(getIntent());
+        SwipeRefreshLayout swipeView = findViewById(R.id.swipe);
+        swipeView.setRefreshing(false);
+        Log.i(TAG, "refresh");
+        queryBalance();
+        loadTransactionHistory();
     }
 }

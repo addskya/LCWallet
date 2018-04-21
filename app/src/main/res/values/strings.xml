@@ -114,4 +114,6 @@
     <string name="text_rename_success">"钱包名修改成功."</string>
     <string name="error_rename_failed">"钱包重命令失败,钱包名可能已经存在."</string>
 
+    <string name="text_symbol">"-"</string>
+    <string name="format_float">"%1.4f"</string>
 </resources>

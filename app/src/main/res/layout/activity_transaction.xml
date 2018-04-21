@@ -74,7 +74,7 @@
         <RelativeLayout
             android:id="@+id/toAccount"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="80dp"
             android:layout_marginEnd="20dp"
             android:layout_marginStart="20dp"
             android:layout_marginTop="30dp">
@@ -96,9 +96,10 @@
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginEnd="8dp"
                 android:contentDescription="@null"
                 android:onClick="onPickAddress"
                 android:src="@drawable/ic_qr_code_grey" />
@@ -108,10 +109,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="20dp"
             android:drawableStart="@drawable/ic_copy"
             android:gravity="start|center_vertical"
-            android:text="abdefefa"
+            android:onClick="onPickCommonAddress"
+            android:text="@string/text_common_account"
             android:textColor="@color/black"
             android:textSize="20sp" />
 

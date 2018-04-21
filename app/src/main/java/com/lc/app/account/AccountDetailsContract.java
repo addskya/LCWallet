@@ -30,6 +30,8 @@ public interface AccountDetailsContract {
         void export(@Nullable Account account);
 
         void copyAddress(@Nullable Account account);
+
+        void refresh();
     }
 
     interface Presenter extends BasePresenter {

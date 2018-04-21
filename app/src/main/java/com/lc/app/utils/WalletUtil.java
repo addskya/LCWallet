@@ -25,7 +25,7 @@ import rx.Observable;
 public class WalletUtil {
 
     private static String generateWalletFileName(@NonNull Account account) {
-        return account.getWalletName() + ".wallet";
+        return account.getRealAddress() + ".wallet";
     }
 
     public static Observable<Boolean> saveWallet(@NonNull String accountFilePath,

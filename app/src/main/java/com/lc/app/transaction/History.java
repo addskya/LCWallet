@@ -21,7 +21,8 @@ public class History extends BaseObservable implements Parcelable {
 
     private String from;
     private String to;
-    private Float value;
+    private float value;
+    private float fee;
     private String time;
 
     public String getFrom() {
@@ -40,12 +41,20 @@ public class History extends BaseObservable implements Parcelable {
         this.to = to;
     }
 
-    public Float getValue() {
+    public float getValue() {
         return value;
     }
 
-    public void setValue(Float value) {
+    public void setValue(float value) {
         this.value = value;
+    }
+
+    public float getFee() {
+        return fee;
+    }
+
+    public void setFee(float fee) {
+        this.fee = fee;
     }
 
     public String getTime() {
@@ -66,7 +75,8 @@ public class History extends BaseObservable implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.from);
         dest.writeString(this.to);
-        dest.writeValue(this.value);
+        dest.writeFloat(this.value);
+        dest.writeFloat(this.fee);
         dest.writeString(this.time);
     }
 
@@ -76,11 +86,12 @@ public class History extends BaseObservable implements Parcelable {
     protected History(Parcel in) {
         this.from = in.readString();
         this.to = in.readString();
-        this.value = (Float) in.readValue(Float.class.getClassLoader());
+        this.value = in.readFloat();
+        this.fee = in.readFloat();
         this.time = in.readString();
     }
 
-    public static final Parcelable.Creator<History> CREATOR = new Parcelable.Creator<History>() {
+    public static final Creator<History> CREATOR = new Creator<History>() {
         @Override
         public History createFromParcel(Parcel source) {
             return new History(source);

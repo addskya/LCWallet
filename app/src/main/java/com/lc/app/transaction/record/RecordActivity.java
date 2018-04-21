@@ -74,4 +74,9 @@ public class RecordActivity extends BaseActivity implements RecordContract.View 
             toastMessage(R.string.text_address_copy);
         }
     }
+
+    @Override
+    public String getFormat(float value) {
+        return getString(R.string.format_float, value);
+    }
 }

@@ -1,7 +1,6 @@
 package com.lc.app.common;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,7 +17,6 @@ import com.lc.app.R;
 import com.lc.app.databinding.ActivityCommonBinding;
 import com.lc.app.model.CommonEntry;
 import com.lc.app.ui.ConfirmDialog;
-import com.lc.app.ui.PromptDialog;
 
 import java.util.List;
 
@@ -69,6 +67,7 @@ public class CommonActivity extends BaseActivity implements CommonContract.View 
             Intent data = new Intent();
             data.putExtra("data", (Parcelable) entry);
             setResult(RESULT_OK, data);
+            finish();
         } else {
             AddCommonDialog.intentTo(this, entry,
                     new AddCommonDialog.CallBack() {
@@ -82,6 +81,10 @@ public class CommonActivity extends BaseActivity implements CommonContract.View 
 
     @Override
     public boolean onLongTap(@Nullable final CommonEntry entry) {
+        if (mPickMode) {
+            return true;
+        }
+
         ConfirmDialog.intentTo(this,
                 null,
                 getString(R.string.text_delete_address),

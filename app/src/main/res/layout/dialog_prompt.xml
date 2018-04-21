@@ -10,7 +10,7 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="160dp"
-        android:background="@drawable/dialog_bg">
+        android:background="@drawable/add_common_bg">
 
         <TextView
             android:id="@+id/title"

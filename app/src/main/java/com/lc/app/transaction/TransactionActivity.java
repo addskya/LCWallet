@@ -9,6 +9,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Editable;
+import android.text.Selection;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -22,9 +23,11 @@ import com.lc.app.DefaultTextWatcher;
 import com.lc.app.JsBaseActivity;
 import com.lc.app.R;
 import com.lc.app.code.QrCodeActivity;
+import com.lc.app.common.CommonActivity;
 import com.lc.app.databinding.ActivityTransactionBinding;
 import com.lc.app.javascript.JsCallback;
 import com.lc.app.model.Account;
+import com.lc.app.model.CommonEntry;
 import com.lc.app.ui.PromptDialog;
 
 /**
@@ -39,6 +42,7 @@ public class TransactionActivity extends JsBaseActivity {
             "com.lc.app.EXTRA_ACCOUNT";
 
     private static final int REQUEST_CODE_SCAN_QR_CODE = IntentIntegrator.REQUEST_CODE;
+    private static final int REQUEST_CODE_PICK_ADDRESS = 30;
     private Account mAccount;
     private float mCurrentRate = -100;
     private float mWalletAmount;
@@ -164,6 +168,10 @@ public class TransactionActivity extends JsBaseActivity {
         });
     }
 
+    public void onPickCommonAddress(View view) {
+        CommonActivity.intentTo(this, REQUEST_CODE_PICK_ADDRESS);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -178,6 +186,14 @@ public class TransactionActivity extends JsBaseActivity {
                 Log.i(TAG, "content:" + content);
                 EditText toAddressView = findViewById(R.id.toAddress);
                 toAddressView.setText(content);
+                Selection.setSelection(toAddressView.getText(), content.length());
+                break;
+            }
+            case REQUEST_CODE_PICK_ADDRESS: {
+                CommonEntry picked = data.getParcelableExtra("data");
+                EditText toAddressView = findViewById(R.id.toAddress);
+                toAddressView.setText(picked.getAddress());
+                Selection.setSelection(toAddressView.getText(), toAddressView.getText().length());
                 break;
             }
         }
@@ -274,7 +290,7 @@ public class TransactionActivity extends JsBaseActivity {
                             new ValueCallback<String>() {
                                 @Override
                                 public void onReceiveValue(String value) {
-                                    Log.i(TAG,"value:" + value);
+                                    Log.i(TAG, "value:" + value);
                                     Boolean success = Boolean.parseBoolean(value);
                                     if (!success) {
                                         toastMessage(R.string.error_password_invalid);
