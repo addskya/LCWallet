@@ -141,7 +141,15 @@ public class CreateAccountActivity extends JsBaseActivity
                 Account account = new Account();
                 account.setWalletName(walletName);
                 account.setPassword(String.valueOf(password1));
-                account.setAddress(value);
+                StringBuilder sb = new StringBuilder(value);
+                if (value.startsWith("\"")) {
+                    sb.deleteCharAt(0);
+                }
+                if (value.endsWith("\"")) {
+                    sb.deleteCharAt(sb.length() - 1);
+                }
+
+                account.setAddress(sb.toString());
                 account.setRemain(0);
                 account.setKeystore(null);
                 account.setTransactionHistoryJson(null);

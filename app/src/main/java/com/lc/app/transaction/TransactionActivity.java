@@ -30,6 +30,8 @@ import com.lc.app.model.Account;
 import com.lc.app.model.CommonEntry;
 import com.lc.app.ui.PromptDialog;
 
+import java.text.NumberFormat;
+
 /**
  * Created by Orange on 18-3-27.
  * Email:addskya@163.com
@@ -142,8 +144,13 @@ public class TransactionActivity extends JsBaseActivity {
                     float maxTransferAmount = mWalletAmount - feeAmount;
                     if (transferAmount > maxTransferAmount) {
                         mTransferAmountView.removeTextChangedListener(this);
-                        mTransferAmountView.setText(
-                                String.valueOf(Math.min(transferAmount, maxTransferAmount)));
+
+                        NumberFormat format = NumberFormat.getInstance();
+                        format.setGroupingUsed(false);
+                        String number = format.format(Math.min(transferAmount, maxTransferAmount));
+                        mTransferAmountView.setText(number);
+                        Editable text = mTransferAmountView.getText();
+                        Selection.setSelection(text, text.length());
                         mTransferAmountView.addTextChangedListener(this);
                     }
                 } catch (NumberFormatException e) {
@@ -260,6 +267,11 @@ public class TransactionActivity extends JsBaseActivity {
         } catch (NumberFormatException e) {
             e.printStackTrace();
             toastMessage(R.string.error_transfer_amount_invalid);
+            return;
+        }
+
+        if (Float.compare(amount, 1.0F) < 0) {
+            toastMessage(R.string.error_transfer_amount_to_low);
             return;
         }
 
