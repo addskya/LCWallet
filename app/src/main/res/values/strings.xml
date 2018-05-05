@@ -31,10 +31,10 @@
 
 
     <string name="text_create_account">"新建账户"</string>
-    <string name="error_wallet_name_short">"钱包名太短"</string>
+    <string name="error_wallet_name_short">"钱包昵称太短"</string>
     <string name="hint_password">@string/text_input_password</string>
     <string name="hint_password_rep">@string/text_input_password_again</string>
-    <string name="text_create_account_password_summary">"请设置一个不小于8为数的密码\n该密码用于账户的消费兑换,请务必妥善保存,丢失密码将没有任何方法找回."</string>
+    <string name="text_create_account_password_summary">"请设置一个不小于8位数的密码\n该密码用于账户的消费兑换,请务必妥善保存,丢失密码将没有任何方法找回."</string>
     <string name="error_two_password_invalid">"两次输入的密码不一致"</string>
     <string name="error_password_short">"密码长度不够"</string>
     <string name="error_keystore_invalid">"输入密钥无效"</string>
@@ -45,7 +45,7 @@
     <string name="text_copyed">"keystore已复制到剪贴板"</string>
 
     <string name="text_wallet_import">"导入钱包"</string>
-    <string name="hint_wallet_name">"请输入钱包名(2~10位)"</string>
+    <string name="hint_wallet_name">"请输入钱包昵称(2~10位)"</string>
     <string name="hint_wallet_keystore">"请输入钱包密钥"</string>
     <string name="text_import">"导入"</string>
     <string name="error_import_wallet_fail">"钱包导入失败,请检查密码是否正确"</string>
@@ -112,8 +112,8 @@
 
     <string name="text_rename">"重命名"</string>
     <string name="hint_new_name">"请输入新的名字"</string>
-    <string name="text_rename_success">"钱包名修改成功."</string>
-    <string name="error_rename_failed">"钱包重命令失败,钱包名可能已经存在."</string>
+    <string name="text_rename_success">"钱包昵称修改成功."</string>
+    <string name="error_rename_failed">"钱包重命令失败,钱包昵称可能已经存在."</string>
 
     <string name="text_symbol">"-"</string>
     <string name="format_float">"%1.4f"</string>
