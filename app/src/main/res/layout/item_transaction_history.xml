@@ -3,6 +3,8 @@
 
     <data>
 
+        <import type="com.lc.app.utils.DecimalUtil" />
+
         <variable
             name="history"
             type="com.lc.app.transaction.History" />
@@ -70,7 +72,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="15dp"
-            android:text="@{String.valueOf(history.value)}"
+            android:text="@{DecimalUtil.valueOf(history.value)}"
             android:textColor="@color/black"
             android:textSize="16sp" />
 

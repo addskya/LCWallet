@@ -32,6 +32,7 @@
 
     <string name="text_create_account">"新建账户"</string>
     <string name="error_wallet_name_short">"钱包昵称太短"</string>
+    <string name="error_wallet_name_exists">"已存在相同名的钱包,请重新输入钱包名."</string>
     <string name="hint_password">@string/text_input_password</string>
     <string name="hint_password_rep">@string/text_input_password_again</string>
     <string name="text_create_account_password_summary">"请设置一个不小于8位数的密码\n该密码用于账户的消费兑换,请务必妥善保存,丢失密码将没有任何方法找回."</string>
@@ -71,10 +72,11 @@
     <string name="text_fee_loading">"正在读取当前费率"</string>
     <string name="text_fee">"当前费率: %1f"</string>
     <string name="text_fee_error">"查询当前费率出错"</string>
-    <string name="hint_fee_summary">"交易费 = 当前费率 * 0.01 * 转出金额"</string>
+    <string name="hint_fee_summary">"交易费 = 交易费率*转出金额。如果交易费低于0.1币，每笔交易按0.1币收取，其它情况按正常交易费收取。"</string>
     <string name="error_password_invalid">"密码输入有误"</string>
     <string name="error_transfer_amount_invalid">"转出金额输入有误"</string>
     <string name="error_transfer_amount_to_low">"转出金额至少为1"</string>
+    <string name="error_transfer_amount_retry">"重新输入转出金额"</string>
     <string name="text_transaction_success">"转账成功"</string>
     <string name="text_transaction_ing">"处理中,请稍后&#8230;"</string>
 

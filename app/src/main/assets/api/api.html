@@ -7,8 +7,8 @@
     <script type="text/javascript" src="./ctoken.min.js"></script>
     <script type="text/javascript">
 
-        var URL = "ws://47.100.55.67:8546/";
-        var contract = "0xDB38440083fF4cAB97dcf698411F40242aB59eF8";
+        var URL = "ws://47.100.55.67:8546";
+        var contract = "0xddc68d4094D4f046F776da56Ed4cDB7D6D8c72d0";
 
         var walletApi;
 
@@ -157,7 +157,12 @@
             return walletApi.showHistoryTransactions(target, callback_history_transactions);
         }
 
-
+        // 查询指定钱包名是否存在
+        // @param {walletName} 需要查询的钱包名
+        // @return 如果指定的钱包名已经存在,返回true, 否则false
+        function existsWallet(walletName) {
+            return walletApi.findWallet(walletName);
+        }
 
     </script>
 </head>

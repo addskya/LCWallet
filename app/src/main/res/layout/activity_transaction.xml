@@ -134,6 +134,7 @@
                 android:hint="@string/hint_transaction_amount"
                 android:inputType="numberDecimal"
                 android:maxLength="15"
+                android:textSize="15sp"
                 android:minHeight="40dp" />
 
             <TextView
@@ -146,7 +147,7 @@
                 android:layout_marginStart="25dp"
                 android:text="@string/text_wallet_amount_loading"
                 android:textColor="@color/green"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
         </RelativeLayout>
 

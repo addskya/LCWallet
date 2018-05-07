@@ -7,6 +7,8 @@
 
         <import type="com.lc.app.main.HomeContract.View" />
 
+        <import type="com.lc.app.utils.DecimalUtil" />
+
         <variable
             name="account"
             type="Account" />
@@ -70,7 +72,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="5dp"
             android:layout_toEndOf="@+id/account_logo"
-            android:text="@{String.valueOf(account.remain),default=5555}"
+            android:text="@{DecimalUtil.valueOf(account.remain),default=5555}"
             android:textColor="@color/white"
             android:textSize="18sp" />
 

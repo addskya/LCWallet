@@ -11,6 +11,8 @@
 
         <import type="com.lc.app.model.Account" />
 
+        <import type="com.lc.app.utils.DecimalUtil" />
+
         <variable
             name="view"
             type="View" />
@@ -125,7 +127,7 @@
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="10dp"
                         android:layout_toEndOf="@id/remain"
-                        android:text="@{String.valueOf(account.remain),default=555}"
+                        android:text="@{DecimalUtil.valueOf(account.remain),default=555}"
                         android:textColor="@color/white"
                         android:textSize="20sp" />
 

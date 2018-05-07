@@ -30,8 +30,6 @@ import com.lc.app.model.Account;
 import com.lc.app.model.CommonEntry;
 import com.lc.app.ui.PromptDialog;
 
-import java.text.NumberFormat;
-
 /**
  * Created by Orange on 18-3-27.
  * Email:addskya@163.com
@@ -137,11 +135,16 @@ public class TransactionActivity extends JsBaseActivity {
         mTransferAmountView = findViewById(R.id.amount);
         mTransferAmountView.addTextChangedListener(new DefaultTextWatcher() {
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(Editable input) {
                 try {
-                    float transferAmount = Float.valueOf(String.valueOf(s));
+                    float transferAmount = Float.valueOf(String.valueOf(input));
                     float feeAmount = mCurrentRate * 0.01f * transferAmount;
-                    float maxTransferAmount = mWalletAmount - feeAmount;
+                    if (transferAmount + feeAmount > mWalletAmount) {
+                        mTransferAmountView.setError(
+                                getString(R.string.error_transfer_amount_retry));
+                    }
+
+                    /*float maxTransferAmount = mWalletAmount - feeAmount;
                     if (transferAmount > maxTransferAmount) {
                         mTransferAmountView.removeTextChangedListener(this);
 
@@ -152,7 +155,7 @@ public class TransactionActivity extends JsBaseActivity {
                         Editable text = mTransferAmountView.getText();
                         Selection.setSelection(text, text.length());
                         mTransferAmountView.addTextChangedListener(this);
-                    }
+                    }*/
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }

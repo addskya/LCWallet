@@ -257,27 +257,38 @@ public class AccountDetailsActivity extends JsBaseActivity implements
                     case DialogInterface.BUTTON_NEGATIVE: {
                         Log.i(TAG, "BUTTON_NEGATIVE:" + input);
 
-                        renameWallet(accountName, mAccount.getRealAddress(),
-                                input, new ValueCallback<String>() {
-                                    @Override
-                                    public void onReceiveValue(String value) {
-                                        Boolean renamed = Boolean.valueOf(value);
-                                        if (renamed) {
-                                            toastMessage(R.string.text_rename_success);
-                                            mAccount.setWalletName(String.valueOf(input));
-                                            String accountPath = ((App) getApplication()).getWalletFolder();
-                                            WalletUtil.updateWallet(accountPath, mAccount)
-                                                    .subscribe(new DefaultObserver<Boolean>() {
-                                                        @Override
-                                                        public void onNext(Boolean response) {
-                                                            setResult(RESULT_OK);
-                                                        }
-                                                    });
-                                        } else {
-                                            toastMessage(R.string.error_rename_failed);
-                                        }
-                                    }
-                                });
+                        // 先判断钱包名是否已经存在了
+                        existsWallet(accountName, new ValueCallback<String>() {
+                            @Override
+                            public void onReceiveValue(String value) {
+                                Boolean exists = Boolean.parseBoolean(value);
+                                if (exists) {
+                                    toastMessage(R.string.error_wallet_name_exists);
+                                } else {
+                                    renameWallet(accountName, mAccount.getRealAddress(),
+                                            input, new ValueCallback<String>() {
+                                                @Override
+                                                public void onReceiveValue(String value) {
+                                                    Boolean renamed = Boolean.valueOf(value);
+                                                    if (renamed) {
+                                                        toastMessage(R.string.text_rename_success);
+                                                        mAccount.setWalletName(String.valueOf(input));
+                                                        String accountPath = ((App) getApplication()).getWalletFolder();
+                                                        WalletUtil.updateWallet(accountPath, mAccount)
+                                                                .subscribe(new DefaultObserver<Boolean>() {
+                                                                    @Override
+                                                                    public void onNext(Boolean response) {
+                                                                        setResult(RESULT_OK);
+                                                                    }
+                                                                });
+                                                    } else {
+                                                        toastMessage(R.string.error_rename_failed);
+                                                    }
+                                                }
+                                            });
+                                }
+                            }
+                        });
                         break;
                     }
                 }

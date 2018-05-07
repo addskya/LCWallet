@@ -125,37 +125,49 @@ public class CreateAccountActivity extends JsBaseActivity
             return;
         }
 
-        showProgressDialog();
-        createWallet(walletName, password1, new ValueCallback<String>() {
+        // 先判断钱包名是否已经存在了
+        existsWallet(walletName, new ValueCallback<String>() {
             @Override
             public void onReceiveValue(String value) {
-                dismissProgressDialog();
-                if (TextUtils.isEmpty(value)
-                        || "null".equalsIgnoreCase(value)) {
-                    toastMessage(R.string.text_create_wallet_failed);
-                    return;
-                }
+                Boolean exists = Boolean.parseBoolean(value);
+                if (exists) {
+                    toastMessage(R.string.error_wallet_name_exists);
+                } else {
+                    showProgressDialog();
+                    createWallet(walletName, password1, new ValueCallback<String>() {
+                        @Override
+                        public void onReceiveValue(String value) {
+                            dismissProgressDialog();
+                            if (TextUtils.isEmpty(value)
+                                    || "null".equalsIgnoreCase(value)) {
+                                toastMessage(R.string.text_create_wallet_failed);
+                                return;
+                            }
 
-                // 成功时,返回钱包内部账户地址信息,失败时为空
-                Log.i(TAG, "onReceiveValue:" + value);
-                Account account = new Account();
-                account.setWalletName(walletName);
-                account.setPassword(String.valueOf(password1));
-                StringBuilder sb = new StringBuilder(value);
-                if (value.startsWith("\"")) {
-                    sb.deleteCharAt(0);
-                }
-                if (value.endsWith("\"")) {
-                    sb.deleteCharAt(sb.length() - 1);
-                }
+                            // 成功时,返回钱包内部账户地址信息,失败时为空
+                            Log.i(TAG, "onReceiveValue:" + value);
+                            Account account = new Account();
+                            account.setWalletName(walletName);
+                            account.setPassword(String.valueOf(password1));
+                            StringBuilder sb = new StringBuilder(value);
+                            if (value.startsWith("\"")) {
+                                sb.deleteCharAt(0);
+                            }
+                            if (value.endsWith("\"")) {
+                                sb.deleteCharAt(sb.length() - 1);
+                            }
 
-                account.setAddress(sb.toString());
-                account.setRemain(0);
-                account.setKeystore(null);
-                account.setTransactionHistoryJson(null);
+                            account.setAddress(sb.toString());
+                            account.setRemain(0);
+                            account.setKeystore(null);
+                            account.setTransactionHistoryJson(null);
 
-                mPresenter.saveWallet(getWalletFolder(), account);
+                            mPresenter.saveWallet(getWalletFolder(), account);
+                        }
+                    });
+                }
             }
         });
+
     }
 }

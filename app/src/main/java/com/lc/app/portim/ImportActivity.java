@@ -93,37 +93,48 @@ public class ImportActivity extends JsBaseActivity implements ImportContract.Vie
             return;
         }
 
-        showProgressDialog(R.string.text_import_wallet_ing);
-        importWallet(walletName, "'[" + keystore + "]'", password1, new ValueCallback<String>() {
+        // 先判断钱包名是否已经存在了
+        existsWallet(walletName, new ValueCallback<String>() {
             @Override
             public void onReceiveValue(String value) {
-                dismissProgressDialog();
-                if (TextUtils.isEmpty(value)
-                        || "null".equalsIgnoreCase(value)) {
-                    toastMessage(R.string.error_import_wallet_fail);
-                    return;
-                }
+                Boolean exists = Boolean.parseBoolean(value);
+                if (exists) {
+                    toastMessage(R.string.error_wallet_name_exists);
+                } else {
+                    showProgressDialog(R.string.text_import_wallet_ing);
+                    importWallet(walletName, "'[" + keystore + "]'", password1, new ValueCallback<String>() {
+                        @Override
+                        public void onReceiveValue(String value) {
+                            dismissProgressDialog();
+                            if (TextUtils.isEmpty(value)
+                                    || "null".equalsIgnoreCase(value)) {
+                                toastMessage(R.string.error_import_wallet_fail);
+                                return;
+                            }
 
-                toastMessage(R.string.text_wallet_import_success);
-                dismissProgressDialog();
-                Account account = new Account();
-                account.setWalletName(String.valueOf(walletName));
-                account.setKeystore(String.valueOf(keystore));
-                account.setPassword(String.valueOf(password1));
+                            toastMessage(R.string.text_wallet_import_success);
+                            dismissProgressDialog();
+                            Account account = new Account();
+                            account.setWalletName(String.valueOf(walletName));
+                            account.setKeystore(String.valueOf(keystore));
+                            account.setPassword(String.valueOf(password1));
 
-                StringBuilder sb = new StringBuilder(value);
-                if (value.startsWith("\"")) {
-                    sb.deleteCharAt(0);
-                }
-                if (value.endsWith("\"")) {
-                    sb.deleteCharAt(sb.length() - 1);
-                }
-                account.setAddress(sb.toString());
-                // 导入钱包,无余额,无交易流水
-                account.setRemain(0);
-                account.setTransactionHistoryJson(null);
+                            StringBuilder sb = new StringBuilder(value);
+                            if (value.startsWith("\"")) {
+                                sb.deleteCharAt(0);
+                            }
+                            if (value.endsWith("\"")) {
+                                sb.deleteCharAt(sb.length() - 1);
+                            }
+                            account.setAddress(sb.toString());
+                            // 导入钱包,无余额,无交易流水
+                            account.setRemain(0);
+                            account.setTransactionHistoryJson(null);
 
-                mPresenter.saveWallet(getWalletFolder(), account);
+                            mPresenter.saveWallet(getWalletFolder(), account);
+                        }
+                    });
+                }
             }
         });
     }

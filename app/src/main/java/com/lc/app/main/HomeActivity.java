@@ -28,6 +28,7 @@ import com.lc.app.databinding.ActivityHomeBinding;
 import com.lc.app.javascript.JsCallback;
 import com.lc.app.model.Account;
 import com.lc.app.portim.ImportActivity;
+import com.lc.app.utils.DecimalUtil;
 
 import java.util.List;
 import java.util.Stack;
@@ -229,7 +230,7 @@ public class HomeActivity extends JsBaseActivity implements HomeContract.View {
             accountRemain += a.getRemain();
         }
 
-        return String.valueOf(accountRemain);
+        return DecimalUtil.getNumber(accountRemain);
     }
 
     @Override

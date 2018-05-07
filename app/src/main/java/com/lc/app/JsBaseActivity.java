@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +19,6 @@ import android.widget.Toast;
 
 import com.lc.app.javascript.JavaScriptApi;
 import com.lc.app.javascript.JsCallback;
-import com.lc.app.ui.LoadingDialog;
-import com.lc.app.ui.StatusDialog;
 
 /**
  * Created by Orange on 18-3-24.
@@ -320,6 +317,18 @@ public abstract class JsBaseActivity extends BaseActivity {
         mWebView.evaluateJavascript(call, null);
     }
 
+    /**
+     * 判断指定的钱包名是否已经存在,
+     *
+     * @param walletName 指定的钱包名
+     * @param callback   回调
+     */
+    protected void existsWallet(@NonNull CharSequence walletName,
+                                @Nullable ValueCallback<String> callback) {
+        String call = "javascript:existsWallet(\"" + walletName + "\")";
+        Log.d(TAG, "execute:" + call);
+        mWebView.evaluateJavascript(call, new ValueCallbackWrapper<>(callback));
+    }
 
     @NonNull
     protected String getWalletFolder() {
