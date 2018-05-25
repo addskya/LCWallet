@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">"低碳钱包"</string>
+    <string name="app_name">"钱包"</string>
 
     <string name="text_scan_account">"账户扫描"</string>
     <string name="text_account_details">"账户详情"</string>
