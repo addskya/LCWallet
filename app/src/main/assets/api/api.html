@@ -49,6 +49,7 @@
         // @param {walletName} 删除钱包名
         // @param {password} 钱包密码
         // @param {address} 钱包地址
+        // @return 成功返回true,失败返回false
         function removeWallet(walletName, password, address) {
             return walletApi.removeWallet(walletName, password, address);
         }
@@ -78,6 +79,9 @@
             return walletApi.loadWallet(walletName, password, accountAddress);
         }
 
+        // 获取本地所有钱包信息
+        // @param null
+        // @return 返回钱包信息列表(json 格式),包括{name, address}
         function getWalletInfo() {
             return walletApi.getWalletList();
         }
@@ -104,6 +108,7 @@
         // 获取交易费率
         // @param {error} 错误信息,无错误返回时为Null
         // @param {result} 交易费率
+        @return 成功则返回 true,失败则返回 false
         function callback_getRate(error, result) {
             console.log("callback_getRate-----");
             console.log("callback_getRate error:" + error);
@@ -135,6 +140,7 @@
         // @param {executeAccount} 转出账户
         // @param {toAccount} 转入账户
         // @param {amount} 转出金额
+        // @param {transactionID} 可选,外部输入的交易 ID,此交易 ID 可以作为所有交易的检索标识
         // @return 成功则返回true,失败返回false
         function transferByFee(walletName, password, executeAccount, toAccount, amount) {
             return walletApi.transferByFee(walletName, password, executeAccount, toAccount, amount, callback_transferByFee);
@@ -164,6 +170,20 @@
         // @return 如果指定的钱包名已经存在,返回true, 否则false
         function existsWallet(walletName) {
             return walletApi.findWallet(walletName);
+        }
+
+        // 网络是否正常回调
+        // @param {error} error 为 null,result 为"network connected success" 表示网络处于连通状态,
+        // error 为 1, result 为 null 表示网络异常
+        function callback_is_listening(error, result) {
+            console.log("isListening error:" + error);
+            console.log("isListening result:" + result);
+            handler.onCallback_isListening(error, result);
+        }
+
+        // 检测网络状态,检测当前连接是否断开,如果断开则重新建立连接
+        function isListening() {
+            return walletApi.isListening(callback_is_listening);
         }
 
     </script>

@@ -92,4 +92,19 @@ public class JavaScriptApi {
             mCallBack.onCallback(JsCallback.MESSAGE_TRANSFER_HISTORY, error, json);
         }
     }
+
+    /**
+     * 网络是否正常的回调
+     *
+     * @param error  当error为1时,表明网络连接已经断开
+     * @param result 网络连接正常时,显示为:network connected success, 其他时候为Null
+     */
+    @JavascriptInterface
+    public void onCallback_isListening(String error, String result) {
+        Log.i(TAG, "onCallback_isListening -> error:" + error);
+        Log.i(TAG, "onCallback_isListening -> result:" + result);
+        if (mCallBack != null) {
+            mCallBack.onCallback(JsCallback.MESSAGE_IS_LISTENING, error, result);
+        }
+    }
 }

@@ -17,6 +17,8 @@ public interface JsCallback {
 
     int MESSAGE_TRANSFER_HISTORY = 40;
 
+    int MESSAGE_IS_LISTENING = 50;
+
     /**
      * The callback when call JavaScript
      *
