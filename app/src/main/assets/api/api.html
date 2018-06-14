@@ -7,10 +7,10 @@
     <script type="text/javascript" src="./ctoken.min.js"></script>
     <script type="text/javascript">
 
-        // var URL = "ws://47.100.55.67:8546";
-        // var contract = "0xddc68d4094D4f046F776da56Ed4cDB7D6D8c72d0";
-        var URL = "ws://47.100.215.220:33333";
-        var contract = "0x3cf47B8f012C7BF663Ec6fF34c73672b4cd48213";
+        var URL = "ws://47.100.55.67:8546";
+        var contract = "0xcBC36160755f92B007733678B201Eb932c88468A";
+        //var URL = "ws://47.100.215.220:33333";
+        //var contract = "0x3cf47B8f012C7BF663Ec6fF34c73672b4cd48213";
 
         var walletApi;
 
@@ -108,7 +108,7 @@
         // 获取交易费率
         // @param {error} 错误信息,无错误返回时为Null
         // @param {result} 交易费率
-        @return 成功则返回 true,失败则返回 false
+        // @return 成功则返回 true,失败则返回 false
         function callback_getRate(error, result) {
             console.log("callback_getRate-----");
             console.log("callback_getRate error:" + error);
